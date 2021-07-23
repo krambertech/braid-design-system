@@ -1,22 +1,21 @@
 import { atom } from 'recoil';
-import panzoom from 'panzoom';
 
 export const zoom = atom({
   key: 'zoom',
   default: 1,
 });
 
-export type FitToScreenDimensions = {
+export type Position = {
   x: number;
   y: number;
   scale: number;
 };
-export const fitToScreenDimensions = atom<FitToScreenDimensions | null>({
-  key: 'fitToScreenDimensions',
-  default: null,
-});
 
-export const controller = atom<ReturnType<typeof panzoom> | null>({
-  key: 'controller',
-  default: null,
+export const fitToScreenDimensions = atom<Position>({
+  key: 'fitToScreenDimensions',
+  default: {
+    x: 0,
+    y: 0,
+    scale: 1,
+  },
 });

@@ -15,7 +15,8 @@ import {
 } from 'recoil';
 import { chunk, memoize } from 'lodash';
 import copy from 'copy-to-clipboard';
-import panzoom from 'panzoom';
+import { useGesture } from '@use-gesture/react';
+import { useSpring, a, to } from '@react-spring/web';
 
 import {
   BraidProvider,
@@ -58,8 +59,7 @@ import * as icons from '../../../../../lib/components/icons';
 import {
   zoom as zoomState,
   fitToScreenDimensions,
-  controller as controllerState,
-  FitToScreenDimensions,
+  Position,
 } from './galleryState';
 import { GalleryPanel } from './GalleryPanel';
 import { IconButton } from '../../../../../lib/components/iconButtons/IconButton';
@@ -179,8 +179,6 @@ const GalleryItem = ({
   item: typeof galleryComponents[number];
   jumpTo: JumpTo;
 }) => {
-  const { theme } = useThemeSettings();
-
   const componentDocs = getComponentDocs(item.name);
   const relevantNames = componentDocs.subComponents
     ? [item.name, ...componentDocs.subComponents]
@@ -265,16 +263,14 @@ const GalleryItem = ({
                     key={`${example.label}_${index}`}
                     className={styles.animationsOnlyOnHover}
                   >
-                    <BraidProvider styleBody={false} theme={theme}>
-                      <PlayroomStateProvider>
-                        <RenderExample
-                          id={`${item.name.toLowerCase()}_${
-                            index + 1 + idx * COLUMN_SIZE
-                          }`}
-                          example={example}
-                        />
-                      </PlayroomStateProvider>
-                    </BraidProvider>
+                    <PlayroomStateProvider>
+                      <RenderExample
+                        id={`${item.name.toLowerCase()}_${
+                          index + 1 + idx * COLUMN_SIZE
+                        }`}
+                        example={example}
+                      />
+                    </PlayroomStateProvider>
                   </Box>
                 ))}
               </Stack>
@@ -359,7 +355,7 @@ const jumpToEdgeThreshold = 80;
 
 const calculateFitToScreenDimensions = (
   contentEl: HTMLDivElement,
-): FitToScreenDimensions => {
+): Position => {
   const width = contentEl.scrollWidth;
   const height = contentEl.scrollHeight;
   const xScale =
@@ -375,10 +371,11 @@ const calculateFitToScreenDimensions = (
   };
 };
 
-const zoomStep = 0.4;
+// const zoomStep = 0.4;
 const GalleryInternal = () => {
-  const { ready: themeReady } = useThemeSettings();
-  const [ready, setReady] = useState(false);
+  const { ready } = useThemeSettings();
+
+  const contentWrapperRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const zoomInRef = useRef<HTMLButtonElement | null>(null);
   const zoomOutRef = useRef<HTMLButtonElement | null>(null);
@@ -387,180 +384,157 @@ const GalleryInternal = () => {
     fitToScreenDimensions,
   );
   const setZoom = useSetRecoilState(zoomState);
-  const [controller, setController] = useRecoilState(controllerState);
 
-  const zoomOut = useCallback(() => {
-    if (controller) {
-      const { scale } = controller.getTransform();
-      const newScale = Math.ceil(scale / zoomStep) * zoomStep - zoomStep;
-      const roundedNew = Math.round(newScale * 100) / 100;
-      const roundedOld = Math.round(scale * 100) / 100;
+  const [{ x, y, scale }, api] = useSpring(() => ({
+    ...fitToScreenDims,
+    config: { mass: 1, tension: 350, friction: 40 },
+  }));
 
-      controller.smoothZoomAbs(
-        document.documentElement.clientWidth / 2,
-        document.documentElement.clientHeight / 2,
-        roundedNew === roundedOld ? roundedNew - zoomStep : roundedNew,
-      );
-    }
-  }, [controller]);
+  const updatePosition = useCallback(
+    (newPosition: Partial<Position>) => {
+      api.start(newPosition);
 
-  const zoomIn = useCallback(() => {
-    if (controller) {
-      const { scale } = controller.getTransform();
-      const newScale = Math.floor(scale / zoomStep) * zoomStep + zoomStep;
-      const roundedNew = Math.round(newScale * 100) / 100;
-      const roundedOld = Math.round(scale * 100) / 100;
-
-      controller.smoothZoomAbs(
-        document.documentElement.clientWidth / 2,
-        document.documentElement.clientHeight / 2,
-        roundedNew === roundedOld ? roundedNew + zoomStep : roundedNew,
-      );
-    }
-  }, [controller]);
-
-  const fitToScreen = () => {
-    if (controller && fitToScreenDims) {
-      controller.zoomAbs(0, 0, fitToScreenDims.scale);
-      controller.moveTo(fitToScreenDims.x, fitToScreenDims.y);
-    }
-  };
-
-  const actualSize = () => {
-    if (controller) {
-      controller.smoothZoomAbs(
-        document.documentElement.clientWidth / 2,
-        document.documentElement.clientHeight / 2,
-        1,
-      );
-    }
-  };
-  useEffect(() => {
-    if (themeReady && fitToScreenDims) {
-      setReady(true);
-
-      const keyboardZoomHandler = (e: KeyboardEvent) => {
-        const cmdOrCtrl = navigator.platform.match('Mac')
-          ? e.metaKey
-          : e.ctrlKey;
-
-        const plus = e.keyCode === 187;
-        const minus = e.keyCode === 189;
-
-        if (cmdOrCtrl && (plus || minus)) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          if (plus && zoomInRef.current) {
-            zoomInRef.current.focus();
-            zoomIn();
-          }
-
-          if (minus && zoomOutRef.current) {
-            zoomOutRef.current.focus();
-            zoomOut();
-          }
-        }
-      };
-
-      const resizeHandler = () => {
-        if (contentRef.current && controller) {
-          const dimensions = calculateFitToScreenDimensions(contentRef.current);
-          controller.setMinZoom(dimensions.scale);
-          setFitToScreenDimensions(dimensions);
-        }
-      };
-
-      window.addEventListener('keydown', keyboardZoomHandler);
-      window.addEventListener('resize', resizeHandler);
-
-      return () => {
-        window.removeEventListener('keydown', keyboardZoomHandler);
-        window.removeEventListener('resize', resizeHandler);
-      };
-    }
-  }, [
-    themeReady,
-    fitToScreenDims,
-    controller,
-    setFitToScreenDimensions,
-    zoomIn,
-    zoomOut,
-  ]);
-
-  const jumpTo = useCallback(
-    (name: string) => {
-      const component = document.querySelector<HTMLDivElement>(
-        `[data-braid-component-name=${name}]`,
-      );
-
-      if (controller && component) {
-        const { scale } = controller.getTransform();
-        const viewportWidth = document.documentElement.clientWidth;
-        const viewportHeight = document.documentElement.clientHeight;
-        const clientRect = component.getBoundingClientRect();
-        const actualWidth = clientRect.width / scale + jumpToEdgeThreshold * 2;
-        const actualHeight =
-          clientRect.height / scale + jumpToEdgeThreshold * 2;
-
-        const targetScale = Math.min(
-          viewportWidth / actualWidth,
-          viewportHeight / actualHeight,
-        );
-
-        const scaled = (n: number) => n * targetScale;
-        const targetX =
-          scaled(-component.offsetLeft + jumpToEdgeThreshold) +
-          (viewportWidth - scaled(actualWidth)) / 2;
-        const targetY =
-          scaled(-component.offsetTop + jumpToEdgeThreshold) +
-          (viewportHeight - scaled(actualHeight)) / 2;
-
-        controller.zoomAbs(targetX, targetY, targetScale);
-        controller.moveTo(targetX, targetY);
+      if (typeof newPosition.scale !== 'undefined') {
+        setZoom(newPosition.scale);
       }
     },
-    [controller],
+    [api, setZoom],
   );
 
   useEffect(() => {
     if (contentRef.current) {
-      const contentEl = contentRef.current;
-      const dimensions = calculateFitToScreenDimensions(contentEl);
-
-      const c = panzoom(contentEl, {
-        maxZoom: 20,
-        minZoom: dimensions.scale,
-        zoomDoubleClickSpeed: 1,
-        filterKey: () => true, // disables panzoom default handling of keys
-        beforeDoubleClick: () => true,
-        beforeTouch: (e) =>
-          // @ts-expect-error
-          /^(a|button|select)$/i.test(e.target.tagName) ||
-          // @ts-expect-error
-          e.target.getAttribute('role') === 'button',
-        beforeMouseDown: (e) =>
-          // @ts-expect-error
-          /^(a|button|select)$/i.test(e.target.tagName) ||
-          // @ts-expect-error
-          e.target.getAttribute('role') === 'button',
-      });
-
-      c.on('zoom', () => {
-        if (c) {
-          setZoom(c.getTransform().scale);
-        }
-      });
-
-      c.zoomAbs(dimensions.x, dimensions.y, dimensions.scale);
-      setController(c);
+      const dimensions = calculateFitToScreenDimensions(contentRef.current);
       setFitToScreenDimensions(dimensions);
-
-      return () => {
-        c?.dispose();
-      };
+      api.set({ scale: dimensions.scale });
     }
-  }, [setZoom, setFitToScreenDimensions, setController]);
+  }, [api, setFitToScreenDimensions]);
+
+  const zoomIn = useCallback(() => {
+    if (scale.get() < 1) {
+      updatePosition({ scale: Math.min(scale.get() * 1.5, 1) });
+    }
+  }, [scale, updatePosition]);
+
+  const zoomOut = useCallback(() => {
+    if (scale.get() > fitToScreenDims.scale) {
+      updatePosition({
+        scale: Math.max(fitToScreenDims.scale, scale.get() / 1.5),
+      });
+    }
+  }, [scale, fitToScreenDims, updatePosition]);
+
+  const fitToScreen = useCallback(() => {
+    updatePosition({ x: 0, y: 0, scale: fitToScreenDims.scale });
+  }, [updatePosition, fitToScreenDims]);
+
+  const actualSize = useCallback(() => {
+    updatePosition({ x: 0, y: 0, scale: 1 });
+  }, [updatePosition]);
+
+  useEffect(() => {
+    const keyboardZoomHandler = (e: KeyboardEvent) => {
+      const cmdOrCtrl = navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey;
+
+      const plus = e.keyCode === 187;
+      const minus = e.keyCode === 189;
+
+      if (cmdOrCtrl && (plus || minus)) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (plus && zoomInRef.current) {
+          zoomInRef.current.focus();
+          zoomIn();
+        }
+
+        if (minus && zoomOutRef.current) {
+          zoomOutRef.current.focus();
+          zoomOut();
+        }
+      }
+    };
+
+    const resizeHandler = () => {
+      if (contentRef.current) {
+        setFitToScreenDimensions(
+          calculateFitToScreenDimensions(contentRef.current),
+        );
+      }
+    };
+
+    window.addEventListener('keydown', keyboardZoomHandler);
+    window.addEventListener('resize', resizeHandler);
+
+    const preventDefault = (e: Event) => e.preventDefault();
+    document.addEventListener('gesturestart', preventDefault);
+    document.addEventListener('gesturechange', preventDefault);
+
+    return () => {
+      window.removeEventListener('keydown', keyboardZoomHandler);
+      window.removeEventListener('resize', resizeHandler);
+      document.removeEventListener('gesturestart', preventDefault);
+      document.removeEventListener('gesturechange', preventDefault);
+    };
+  }, [setFitToScreenDimensions, zoomIn, zoomOut]);
+
+  const pinchSpeed = 800;
+  const wheelSpeed = 600;
+
+  useGesture(
+    {
+      onDrag: ({ offset }) => api.start({ x: offset[0], y: offset[1] }),
+      onPinch: ({ offset }) =>
+        updatePosition({ scale: offset[0] / pinchSpeed }),
+      onWheel: ({ offset }) =>
+        updatePosition({ scale: offset[1] / wheelSpeed }),
+    },
+    {
+      target: contentWrapperRef,
+      enabled: ready,
+      eventOptions: { passive: false },
+      wheel: {
+        bounds: { top: fitToScreenDims.scale * wheelSpeed, bottom: wheelSpeed },
+      },
+      pinch: {
+        scaleBounds: {
+          min: fitToScreenDims.scale * pinchSpeed,
+          max: pinchSpeed,
+        },
+      },
+      drag: {
+        from: () => [x.get(), y.get()],
+      },
+    },
+  );
+
+  // const jumpTo = useCallback((name: string) => {
+  const jumpTo = useCallback(() => {
+    //   const component = document.querySelector<HTMLDivElement>(
+    //     `[data-braid-component-name=${name}]`,
+    //   );
+    //   if (controller && component) {
+    //     const { scale } = controller.getTransform();
+    //     const viewportWidth = document.documentElement.clientWidth;
+    //     const viewportHeight = document.documentElement.clientHeight;
+    //     const clientRect = component.getBoundingClientRect();
+    //     const actualWidth = clientRect.width / scale + jumpToEdgeThreshold * 2;
+    //     const actualHeight =
+    //       clientRect.height / scale + jumpToEdgeThreshold * 2;
+    //     const targetScale = Math.min(
+    //       viewportWidth / actualWidth,
+    //       viewportHeight / actualHeight,
+    //     );
+    //     const scaled = (n: number) => n * targetScale;
+    //     const targetX =
+    //       scaled(-component.offsetLeft + jumpToEdgeThreshold) +
+    //       (viewportWidth - scaled(actualWidth)) / 2;
+    //     const targetY =
+    //       scaled(-component.offsetTop + jumpToEdgeThreshold) +
+    //       (viewportHeight - scaled(actualHeight)) / 2;
+    //     controller.zoomAbs(targetX, targetY, targetScale);
+    //     controller.moveTo(targetX, targetY);
+    //   }
+  }, []);
 
   return (
     <>
@@ -634,13 +608,28 @@ const GalleryInternal = () => {
         outline="none"
         transition="fast"
         opacity={ready ? undefined : 0}
-        className={styles.moveCursor}
+        className={styles.gragCursor}
+        ref={contentWrapperRef}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        position="fixed"
+        userSelect="none"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
       >
-        <Box
+        <a.div
           ref={contentRef}
-          display="flex"
-          userSelect="none"
-          className={styles.contentWrapper}
+          style={{
+            display: 'flex',
+            userSelect: 'none',
+            transform: 'perspective(600px)',
+            x,
+            y,
+            scale: to([scale], (s) => s),
+          }}
         >
           <Box component="section">
             <Stage setName="components" title="Components" jumpTo={jumpTo} />
@@ -648,7 +637,7 @@ const GalleryInternal = () => {
           <Box component="section" style={{ paddingLeft: 800 }}>
             <Stage setName="icons" title="Icons" jumpTo={jumpTo} />
           </Box>
-        </Box>
+        </a.div>
       </Box>
     </>
   );

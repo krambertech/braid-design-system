@@ -15,8 +15,8 @@ export const divider = style({
   height: vars.textSize.standard.mobile.lineHeight,
 });
 
-export const moveCursor = style({
-  cursor: 'move',
+export const gragCursor = style({
+  cursor: 'grab',
 });
 
 export const delayPanels = style({
