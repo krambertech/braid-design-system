@@ -385,43 +385,45 @@ const GalleryInternal = () => {
   );
   const setZoom = useSetRecoilState(zoomState);
 
-  const [{ x, y, scale }, api] = useSpring(() => ({
-    ...fitToScreenDims,
-    config: { mass: 1, tension: 350, friction: 40 },
-  }));
+  const [{ x: springX, y: springY, scale: springScale }, spring] = useSpring(
+    () => ({
+      ...fitToScreenDims,
+      config: { mass: 1, tension: 350, friction: 40 },
+    }),
+  );
 
   const updatePosition = useCallback(
     (newPosition: Partial<Position>) => {
-      api.start(newPosition);
+      spring.start(newPosition);
 
       if (typeof newPosition.scale !== 'undefined') {
         setZoom(newPosition.scale);
       }
     },
-    [api, setZoom],
+    [spring, setZoom],
   );
 
   useEffect(() => {
     if (contentRef.current) {
       const dimensions = calculateFitToScreenDimensions(contentRef.current);
       setFitToScreenDimensions(dimensions);
-      api.set({ scale: dimensions.scale });
+      spring.set({ scale: dimensions.scale });
     }
-  }, [api, setFitToScreenDimensions]);
+  }, [spring, setFitToScreenDimensions]);
 
   const zoomIn = useCallback(() => {
-    if (scale.get() < 1) {
-      updatePosition({ scale: Math.min(scale.get() * 1.5, 1) });
+    if (springScale.get() < 1) {
+      updatePosition({ scale: Math.min(springScale.get() * 1.5, 1) });
     }
-  }, [scale, updatePosition]);
+  }, [springScale, updatePosition]);
 
   const zoomOut = useCallback(() => {
-    if (scale.get() > fitToScreenDims.scale) {
+    if (springScale.get() > fitToScreenDims.scale) {
       updatePosition({
-        scale: Math.max(fitToScreenDims.scale, scale.get() / 1.5),
+        scale: Math.max(fitToScreenDims.scale, springScale.get() / 1.5),
       });
     }
-  }, [scale, fitToScreenDims, updatePosition]);
+  }, [springScale, fitToScreenDims, updatePosition]);
 
   const fitToScreen = useCallback(() => {
     updatePosition({ x: 0, y: 0, scale: fitToScreenDims.scale });
@@ -482,27 +484,37 @@ const GalleryInternal = () => {
 
   useGesture(
     {
-      onDrag: ({ offset }) => api.start({ x: offset[0], y: offset[1] }),
-      onPinch: ({ offset }) =>
-        updatePosition({ scale: offset[0] / pinchSpeed }),
-      onWheel: ({ offset }) =>
-        updatePosition({ scale: offset[1] / wheelSpeed }),
+      onDrag: ({ offset, event }) => {
+        event.preventDefault();
+        updatePosition({ x: offset[0], y: offset[1] });
+      },
+      onPinch: ({ offset }) => {
+        updatePosition({ scale: offset[0] / pinchSpeed });
+      },
+      onWheel: ({ offset, event }) => {
+        event.preventDefault();
+        updatePosition({ scale: offset[1] / wheelSpeed });
+      },
     },
     {
       target: contentWrapperRef,
       enabled: ready,
       eventOptions: { passive: false },
       wheel: {
-        bounds: { top: fitToScreenDims.scale * wheelSpeed, bottom: wheelSpeed },
+        bounds: {
+          top: wheelSpeed * fitToScreenDims.scale,
+          bottom: wheelSpeed * 2,
+        },
       },
       pinch: {
         scaleBounds: {
-          min: fitToScreenDims.scale * pinchSpeed,
-          max: pinchSpeed,
+          min: pinchSpeed * fitToScreenDims.scale,
+          max: pinchSpeed * 2,
         },
       },
       drag: {
-        from: () => [x.get(), y.get()],
+        pointer: { touch: true },
+        from: () => [springX.get(), springY.get()],
       },
     },
   );
@@ -626,9 +638,9 @@ const GalleryInternal = () => {
             display: 'flex',
             userSelect: 'none',
             transform: 'perspective(600px)',
-            x,
-            y,
-            scale: to([scale], (s) => s),
+            x: springX,
+            y: springY,
+            scale: to([springScale], (s) => s),
           }}
         >
           <Box component="section">
