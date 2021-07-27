@@ -407,7 +407,7 @@ const GalleryInternal = () => {
     if (contentRef.current) {
       const dimensions = calculateFitToScreenDimensions(contentRef.current);
       setFitToScreenDimensions(dimensions);
-      spring.set({ scale: dimensions.scale });
+      spring.set(dimensions);
     }
   }, [spring, setFitToScreenDimensions]);
 
@@ -419,18 +419,30 @@ const GalleryInternal = () => {
 
   const zoomOut = useCallback(() => {
     if (springScale.get() > fitToScreenDims.scale) {
-      updatePosition({
-        scale: Math.max(fitToScreenDims.scale, springScale.get() / 1.5),
-      });
+      const nextScale = springScale.get() / 1.5;
+
+      updatePosition(
+        fitToScreenDims.scale > nextScale
+          ? fitToScreenDims
+          : {
+              x: jumpToEdgeThreshold,
+              y: jumpToEdgeThreshold,
+              scale: nextScale,
+            },
+      );
     }
   }, [springScale, fitToScreenDims, updatePosition]);
 
   const fitToScreen = useCallback(() => {
-    updatePosition({ x: 0, y: 0, scale: fitToScreenDims.scale });
+    updatePosition(fitToScreenDims);
   }, [updatePosition, fitToScreenDims]);
 
   const actualSize = useCallback(() => {
-    updatePosition({ x: 0, y: 0, scale: 1 });
+    updatePosition({
+      x: jumpToEdgeThreshold,
+      y: jumpToEdgeThreshold,
+      scale: 1,
+    });
   }, [updatePosition]);
 
   useEffect(() => {
@@ -464,18 +476,18 @@ const GalleryInternal = () => {
       }
     };
 
+    const preventDefault = (e: Event) => e.preventDefault();
+
+    document.addEventListener('gesturestart', preventDefault);
+    document.addEventListener('gesturechange', preventDefault);
     window.addEventListener('keydown', keyboardZoomHandler);
     window.addEventListener('resize', resizeHandler);
 
-    const preventDefault = (e: Event) => e.preventDefault();
-    document.addEventListener('gesturestart', preventDefault);
-    document.addEventListener('gesturechange', preventDefault);
-
     return () => {
-      window.removeEventListener('keydown', keyboardZoomHandler);
-      window.removeEventListener('resize', resizeHandler);
       document.removeEventListener('gesturestart', preventDefault);
       document.removeEventListener('gesturechange', preventDefault);
+      window.removeEventListener('keydown', keyboardZoomHandler);
+      window.removeEventListener('resize', resizeHandler);
     };
   }, [setFitToScreenDimensions, zoomIn, zoomOut]);
 
@@ -519,34 +531,37 @@ const GalleryInternal = () => {
     },
   );
 
-  // const jumpTo = useCallback((name: string) => {
-  const jumpTo = useCallback(() => {
-    //   const component = document.querySelector<HTMLDivElement>(
-    //     `[data-braid-component-name=${name}]`,
-    //   );
-    //   if (controller && component) {
-    //     const { scale } = controller.getTransform();
-    //     const viewportWidth = document.documentElement.clientWidth;
-    //     const viewportHeight = document.documentElement.clientHeight;
-    //     const clientRect = component.getBoundingClientRect();
-    //     const actualWidth = clientRect.width / scale + jumpToEdgeThreshold * 2;
-    //     const actualHeight =
-    //       clientRect.height / scale + jumpToEdgeThreshold * 2;
-    //     const targetScale = Math.min(
-    //       viewportWidth / actualWidth,
-    //       viewportHeight / actualHeight,
-    //     );
-    //     const scaled = (n: number) => n * targetScale;
-    //     const targetX =
-    //       scaled(-component.offsetLeft + jumpToEdgeThreshold) +
-    //       (viewportWidth - scaled(actualWidth)) / 2;
-    //     const targetY =
-    //       scaled(-component.offsetTop + jumpToEdgeThreshold) +
-    //       (viewportHeight - scaled(actualHeight)) / 2;
-    //     controller.zoomAbs(targetX, targetY, targetScale);
-    //     controller.moveTo(targetX, targetY);
-    //   }
-  }, []);
+  const jumpTo = useCallback(
+    (name: string) => {
+      const component = document.querySelector<HTMLDivElement>(
+        `[data-braid-component-name=${name}]`,
+      );
+      if (component && contentRef.current) {
+        const scale = springScale.get();
+        const viewportWidth = document.documentElement.clientWidth;
+        const viewportHeight = document.documentElement.clientHeight;
+        const clientRect = component.getBoundingClientRect();
+        const actualWidth = clientRect.width / scale + jumpToEdgeThreshold * 2;
+        const actualHeight =
+          clientRect.height / scale + jumpToEdgeThreshold * 2;
+
+        const targetScale = Math.min(
+          viewportWidth / actualWidth,
+          viewportHeight / actualHeight,
+        );
+        const scaled = (n: number) => n * targetScale;
+        const targetX =
+          scaled(-component.offsetLeft + jumpToEdgeThreshold) +
+          (viewportWidth - scaled(actualWidth)) / 2;
+        const targetY =
+          scaled(-component.offsetTop + jumpToEdgeThreshold) +
+          (viewportHeight - scaled(actualHeight)) / 2;
+
+        updatePosition({ x: targetX, y: targetY, scale: targetScale });
+      }
+    },
+    [springScale, updatePosition],
+  );
 
   return (
     <>
@@ -622,9 +637,6 @@ const GalleryInternal = () => {
         opacity={ready ? undefined : 0}
         className={styles.gragCursor}
         ref={contentWrapperRef}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
         position="fixed"
         userSelect="none"
         top={0}
@@ -637,7 +649,7 @@ const GalleryInternal = () => {
           style={{
             display: 'flex',
             userSelect: 'none',
-            transform: 'perspective(600px)',
+            transformOrigin: '0 0',
             x: springX,
             y: springY,
             scale: to([springScale], (s) => s),
