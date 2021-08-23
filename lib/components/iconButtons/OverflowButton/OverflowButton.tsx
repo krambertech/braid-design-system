@@ -9,7 +9,6 @@ export type OverflowButtonProps = Pick<
   | 'onKeyUp'
   | 'onKeyDown'
   | 'label'
-  | 'keyboardAccessible'
   | 'active'
   | 'aria-haspopup'
   | 'aria-expanded'
@@ -26,7 +25,6 @@ export const OverflowButton = forwardRef<
       onKeyUp,
       onKeyDown,
       onMouseDown,
-      keyboardAccessible,
       active,
       'aria-haspopup': ariaHasPopUp,
       'aria-expanded': ariaExpanded,
@@ -39,7 +37,6 @@ export const OverflowButton = forwardRef<
       onKeyUp={onKeyUp}
       onKeyDown={onKeyDown}
       onMouseDown={onMouseDown}
-      keyboardAccessible={keyboardAccessible}
       active={active}
       aria-haspopup={ariaHasPopUp}
       aria-expanded={ariaExpanded}
