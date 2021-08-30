@@ -44,9 +44,9 @@ export const renderBackgroundProvider = (
 
   if (background.darkMode) {
     returnEl = (
-      <LightBackgroundProvider value={background.darkMode}>
+      <DarkBackgroundProvider value={background.darkMode}>
         {returnEl}
-      </LightBackgroundProvider>
+      </DarkBackgroundProvider>
     );
   }
 

@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css';
+import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
 
 export const button = style({
   ':hover': {
@@ -20,17 +21,25 @@ export const hoverOverlay = style({
     [`${button}:hover &, ${button}:focus &`]: {
       opacity: 1,
     },
-    [`${button}:hover &${darkBackgroundLightMode}, ${button}:focus &${darkBackgroundLightMode}`]:
-      {
-        opacity: 0.2,
-      },
+    [`
+      html:not(.${braidDarkModeClass}) ${button}:hover &${darkBackgroundLightMode},
+      html:not(.${braidDarkModeClass}) ${button}:focus &${darkBackgroundLightMode},
+      html.${braidDarkModeClass} ${button}:hover &${darkBackgroundDarkMode},
+      html.${braidDarkModeClass} ${button}:focus &${darkBackgroundDarkMode}
+    `]: {
+      opacity: 0.2,
+    },
     [`${button}:active &, ${forceActive}&`]: {
       opacity: 0.8,
     },
-    [`${button}:active &${darkBackgroundLightMode}, ${forceActive}&${darkBackgroundLightMode}`]:
-      {
-        opacity: 0.075,
-      },
+    [`
+      html:not(.${braidDarkModeClass}) ${button}:active &${darkBackgroundLightMode},
+      html:not(.${braidDarkModeClass}) ${forceActive}&${darkBackgroundLightMode},
+      html.${braidDarkModeClass} ${button}:active &${darkBackgroundDarkMode},
+      html.${braidDarkModeClass} ${forceActive}&${darkBackgroundDarkMode}
+    `]: {
+      opacity: 0.075,
+    },
   },
 });
 

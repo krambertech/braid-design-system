@@ -18,6 +18,34 @@ import {
 } from '../Box/BackgroundContext';
 import * as styles from './IconButton.css';
 
+const useHoverBackground = (
+  colorMode: 'lightMode' | 'darkMode',
+  background: any, // TODO: Don't
+) => {
+  const backgroundLightness = useBackgroundLightness();
+
+  if (
+    background === 'body' ||
+    background === 'card' ||
+    background === 'input'
+  ) {
+    return 'neutralLight';
+  }
+
+  if (background) {
+    return backgroundLightness[colorMode] === 'light'
+      ? 'surface'
+      : 'surfaceDark1';
+  }
+
+  return (
+    {
+      lightMode: 'neutralLight',
+      darkMode: 'surfaceDark1',
+    } as const
+  )[colorMode];
+};
+
 type NativeButtonProps = AllHTMLAttributes<HTMLButtonElement>;
 export interface IconButtonProps {
   label: string;
@@ -80,6 +108,15 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       [onClick, onMouseDown],
     );
 
+    const lightModeHoverBackground = useHoverBackground(
+      'lightMode',
+      background.lightMode,
+    );
+    const darkModeHoverBackground = useHoverBackground(
+      'darkMode',
+      background.darkMode,
+    );
+
     return (
       <Box
         component="button"
@@ -112,18 +149,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         >
           <Overlay
             background={{
-              lightMode:
-                background.lightMode === 'body' ||
-                background.lightMode === 'card' ||
-                background.lightMode === 'input'
-                  ? 'neutralLight'
-                  : 'surface',
-              darkMode:
-                background.darkMode === 'body' ||
-                background.darkMode === 'card' ||
-                background.darkMode === 'input'
-                  ? 'neutralLight'
-                  : 'surfaceDark1',
+              lightMode: lightModeHoverBackground,
+              darkMode: darkModeHoverBackground,
             }}
             transition="fast"
             borderRadius="full"

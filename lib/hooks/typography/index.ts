@@ -157,6 +157,7 @@ const darkToneMap: Record<
   neutralInverted: 'neutral',
   secondary: 'secondaryInverted',
   secondaryInverted: 'secondary',
+  link: 'link',
 };
 
 export function useTextTone({
