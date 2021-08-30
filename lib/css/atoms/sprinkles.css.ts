@@ -12,6 +12,7 @@ import {
   responsiveProperties,
   unresponsiveProperties,
   pseudoProperties,
+  colorProperties,
 } from './atomicProperties';
 
 const unresponsiveAtomicStyles = createAtomicStyles({
@@ -26,6 +27,17 @@ const pseudoAtomicStyles = createAtomicStyles({
     },
   },
   properties: pseudoProperties,
+});
+
+export const braidDarkModeClass = 'braid-dark-mode';
+
+const colorAtomicStyles = createAtomicStyles({
+  defaultCondition: 'lightMode',
+  conditions: {
+    lightMode: {},
+    darkMode: { selector: `.${braidDarkModeClass} &` },
+  },
+  properties: colorProperties,
 });
 
 const responsiveAtomicStyles = createAtomicStyles({
@@ -58,6 +70,7 @@ export const sprinkles = createAtomsFn(
   unresponsiveAtomicStyles,
   responsiveAtomicStyles,
   pseudoAtomicStyles,
+  colorAtomicStyles,
 );
 
 export type OptionalResponsiveValue<Value extends string | number> =

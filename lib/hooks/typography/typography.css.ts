@@ -92,19 +92,6 @@ export const heading = {
 };
 
 export const tone = {
-  ...styleVariants(
-    {
-      brandAccent: vars.foregroundColor.brandAccent,
-      caution: vars.foregroundColor.caution,
-      critical: vars.foregroundColor.critical,
-      formAccent: vars.foregroundColor.formAccent,
-      info: vars.foregroundColor.info,
-      positive: vars.foregroundColor.positive,
-      promote: vars.foregroundColor.promote,
-      secondary: vars.foregroundColor.secondary,
-    },
-    mapToProperty('color'),
-  ),
   link: style({
     color: vars.foregroundColor.link,
     ...(vars.foregroundColor.link !== vars.foregroundColor.linkHover
@@ -113,25 +100,6 @@ export const tone = {
           ':focus': { color: vars.foregroundColor.linkHover },
         }
       : {}),
-  }),
-};
-
-export const invertableTone = {
-  neutral: styleVariants({
-    light: {
-      color: vars.foregroundColor.neutral,
-    },
-    dark: {
-      color: vars.foregroundColor.neutralInverted,
-    },
-  }),
-  secondary: styleVariants({
-    light: {
-      color: vars.foregroundColor.secondary,
-    },
-    dark: {
-      color: vars.foregroundColor.secondaryInverted,
-    },
   }),
 };
 

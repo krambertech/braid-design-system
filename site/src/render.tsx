@@ -12,6 +12,7 @@ import * as themes from '../../lib/themes';
 import { braidVersionToDate } from './getVersionDetails';
 import { initUpdates } from './App/Updates';
 import packageJson from '../../package.json';
+import colourMode from '../../colour-mode';
 
 const { version } = packageJson;
 
@@ -86,6 +87,7 @@ const skuRender: Render<RenderContext> = {
       <!doctype html>
       <html lang="en">
         <head>
+          ${colourMode}
           ${
             // @ts-expect-error
             // renderToString claims it doesn't support arrays, I beg to differ

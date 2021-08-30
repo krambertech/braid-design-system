@@ -99,7 +99,7 @@ export const Alert = ({
           ) : null}
         </Columns>
       </Box>
-      {parentBackground !== 'card' && (
+      {parentBackground.lightMode !== 'card' && (
         <Overlay
           borderRadius={borderRadius}
           boxShadow={borderForTone[tone]}

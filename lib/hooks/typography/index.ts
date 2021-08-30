@@ -7,21 +7,31 @@ import {
   useBackground,
   useBackgroundLightness,
 } from '../../components/Box/BackgroundContext';
-import { BoxProps } from '../../components/Box/Box';
 import { useDefaultTextProps } from '../../components/private/defaultTextProps';
 import TextLinkRendererContext from '../../components/TextLinkRenderer/TextLinkRendererContext';
 import { vars } from '../../themes/vars.css';
 import { responsiveStyle } from '../../css/responsiveStyle';
+import { atoms } from '../../css/atoms/atoms';
 import * as styles from './typography.css';
 
-type TextTone = keyof typeof styles.tone | 'neutral';
+type TextTone =
+  | 'brandAccent'
+  | 'caution'
+  | 'critical'
+  | 'formAccent'
+  | 'info'
+  | 'positive'
+  | 'promote'
+  | 'secondary'
+  | 'neutral'
+  | 'link';
 
 export interface UseTextProps {
   weight?: keyof typeof styles.fontWeight;
   size?: keyof typeof styles.text;
   tone?: TextTone;
   baseline: boolean;
-  backgroundContext?: BoxProps['background'];
+  backgroundContext?: ReturnType<typeof useBackground>;
 }
 
 export const globalTextStyle = ({
@@ -67,7 +77,7 @@ interface UseHeadingProps {
   weight?: HeadingWeight;
   level: HeadingLevel;
   baseline: boolean;
-  backgroundContext?: BoxProps['background'];
+  backgroundContext?: ReturnType<typeof useBackground>;
 }
 
 export const globalHeadingStyle = ({
@@ -116,7 +126,7 @@ export function useWeight(weight: keyof typeof styles.fontWeight) {
 }
 
 const neutralToneOverrideForBackground: Partial<
-  Record<NonNullable<BoxProps['background']>, keyof typeof styles.tone>
+  Record<keyof typeof vars.backgroundColor, TextTone>
 > = {
   formAccentSoft: 'formAccent',
   formAccentSoftActive: 'formAccent',
@@ -132,12 +142,29 @@ const neutralToneOverrideForBackground: Partial<
   promoteLight: 'promote',
 };
 
+const darkToneMap: Record<
+  TextTone | 'neutralInverted' | 'secondaryInverted',
+  keyof typeof vars.foregroundColor
+> = {
+  critical: 'criticalLight',
+  caution: 'cautionLight',
+  info: 'infoLight',
+  promote: 'promoteLight',
+  positive: 'positiveLight',
+  brandAccent: 'brandAccent',
+  formAccent: 'formAccent',
+  neutral: 'neutralInverted',
+  neutralInverted: 'neutral',
+  secondary: 'secondaryInverted',
+  secondaryInverted: 'secondary',
+};
+
 export function useTextTone({
   tone: toneProp,
   backgroundContext: backgroundContextOverride,
 }: {
   tone: TextTone;
-  backgroundContext?: BoxProps['background'];
+  backgroundContext?: ReturnType<typeof useBackground>;
 }) {
   const textLinkContext = useContext(TextLinkRendererContext);
   const backgroundContext = useBackground();
@@ -145,30 +172,51 @@ export function useTextTone({
   const backgroundLightness = useBackgroundLightness(background);
   const { tone } = useDefaultTextProps({ tone: toneProp });
 
-  if (tone === 'neutral' && background in neutralToneOverrideForBackground) {
-    const toneOverride =
+  if (
+    tone === 'neutral' &&
+    (background.lightMode in neutralToneOverrideForBackground ||
+      background.darkMode in neutralToneOverrideForBackground)
+  ) {
+    const lightToneOverride =
       neutralToneOverrideForBackground[
-        background as keyof typeof neutralToneOverrideForBackground
+        background.lightMode as keyof typeof neutralToneOverrideForBackground
       ];
 
-    assert(toneOverride, `Tone override not found for tone: ${tone}`);
+    const darkToneOverride =
+      neutralToneOverrideForBackground[
+        background.darkMode as keyof typeof neutralToneOverrideForBackground
+      ];
 
-    return styles.tone[toneOverride];
+    assert(
+      lightToneOverride,
+      `Tone override not found for tone: ${lightToneOverride}`,
+    );
+    // assert(
+    //   darkToneOverride,
+    //   `Tone override not found for tone: ${darkToneOverride}`,
+    // );
+
+    return atoms({
+      color: {
+        lightMode: lightToneOverride,
+        darkMode: darkToneOverride,
+      },
+    });
   }
 
-  if (tone !== 'neutral') {
-    return tone in styles.invertableTone
-      ? styles.invertableTone[tone as keyof typeof styles.invertableTone][
-          backgroundLightness
-        ]
-      : styles.tone[tone];
-  }
-
-  if (textLinkContext && textLinkContext !== 'weak') {
+  if (tone === 'neutral' && textLinkContext && textLinkContext !== 'weak') {
     return styles.tone.link;
+    // return atoms({ color: 'link' });
   }
 
-  return styles.invertableTone.neutral[backgroundLightness];
+  return atoms({
+    color: {
+      lightMode:
+        backgroundLightness.lightMode === 'light' ? tone : darkToneMap[tone],
+      darkMode:
+        backgroundLightness.darkMode === 'light' ? tone : darkToneMap[tone],
+    },
+  });
 }
 
 export const touchableText = styles.touchable;

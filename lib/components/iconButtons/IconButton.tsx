@@ -111,19 +111,29 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
           pointerEvents="none"
         >
           <Overlay
-            background={
-              background === 'body' ||
-              background === 'card' ||
-              background === 'input'
-                ? 'neutralLight'
-                : 'card'
-            }
+            background={{
+              lightMode:
+                background.lightMode === 'body' ||
+                background.lightMode === 'card' ||
+                background.lightMode === 'input'
+                  ? 'neutralLight'
+                  : 'surface',
+              darkMode:
+                background.darkMode === 'body' ||
+                background.darkMode === 'card' ||
+                background.darkMode === 'input'
+                  ? 'neutralLight'
+                  : 'surfaceDark1',
+            }}
             transition="fast"
             borderRadius="full"
             className={[
               styles.hoverOverlay,
               active && styles.forceActive,
-              backgroundLightness === 'dark' && styles.darkBackground,
+              backgroundLightness.lightMode === 'dark' &&
+                styles.darkBackgroundLightMode,
+              backgroundLightness.darkMode === 'dark' &&
+                styles.darkBackgroundDarkMode,
             ]}
           />
           {keyboardAccessible ? (

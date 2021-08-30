@@ -41,7 +41,6 @@ export const pseudoProperties = {
 export type PseudoProperties = keyof typeof pseudoProperties;
 
 export const unresponsiveProperties = {
-  background: vars.backgroundColor,
   overflow: ['hidden', 'scroll', 'visible', 'auto'],
   userSelect: ['none'],
   outline: ['none'],
@@ -57,7 +56,6 @@ export const unresponsiveProperties = {
     modal: 300,
     notification: 400,
   },
-  boxShadow,
   cursor: ['default', 'pointer'],
   pointerEvents: ['none'],
   top: [0],
@@ -74,6 +72,14 @@ export const unresponsiveProperties = {
 } as const;
 
 export type UnresponsiveProperties = keyof typeof unresponsiveProperties;
+
+export const colorProperties = {
+  background: vars.backgroundColor,
+  color: vars.foregroundColor,
+  boxShadow,
+} as const;
+
+export type ColorProperties = keyof typeof colorProperties;
 
 export const responsiveProperties = {
   display: {

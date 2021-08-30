@@ -16,7 +16,10 @@ import TextLinkRendererContext from '../TextLinkRenderer/TextLinkRendererContext
 
 export interface BoxProps
   extends Omit<Atoms, 'reset'>,
-    Omit<AllHTMLAttributes<HTMLElement>, 'width' | 'height' | 'className'> {
+    Omit<
+      AllHTMLAttributes<HTMLElement>,
+      'width' | 'height' | 'className' | 'color'
+    > {
   component?: ElementType;
   className?: ClassValue;
 }

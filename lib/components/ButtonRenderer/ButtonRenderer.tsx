@@ -12,7 +12,7 @@ import React, {
 } from 'react';
 import { Atoms, atoms } from '../../css/atoms/atoms';
 import {
-  BackgroundProvider,
+  LightBackgroundProvider,
   BackgroundVariant,
   useBackgroundLightness,
 } from '../Box/BackgroundContext';
@@ -433,7 +433,9 @@ export const PrivateButtonRenderer = ({
   );
 
   return backgroundContext ? (
-    <BackgroundProvider value={backgroundContext}>{button}</BackgroundProvider>
+    <LightBackgroundProvider value={backgroundContext}>
+      {button}
+    </LightBackgroundProvider>
   ) : (
     button
   );

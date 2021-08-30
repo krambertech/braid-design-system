@@ -10,7 +10,7 @@ import isMobile from 'is-mobile';
 import assert from 'assert';
 import { BraidPortal } from '../BraidPortal/BraidPortal';
 import { ReactNodeNoStrings } from '../private/ReactNodeNoStrings';
-import { BackgroundProvider } from '../Box/BackgroundContext';
+import { LightBackgroundProvider } from '../Box/BackgroundContext';
 import { atoms } from '../../css/atoms/atoms';
 import { DefaultTextPropsProvider } from '../private/defaultTextProps';
 import { useSpace } from '../useSpace/useSpace';
@@ -86,7 +86,7 @@ export const TooltipContent = ({
         styles.padding,
       ]}
     >
-      <BackgroundProvider value="UNKNOWN_DARK">
+      <LightBackgroundProvider value="UNKNOWN_DARK">
         <TooltipTextDefaultsProvider>
           <Box position="relative" zIndex={1}>
             {children}
@@ -97,7 +97,7 @@ export const TooltipContent = ({
             className={[styles.arrow, styles.background]}
           />
         </TooltipTextDefaultsProvider>
-      </BackgroundProvider>
+      </LightBackgroundProvider>
     </Box>
   </Box>
 );

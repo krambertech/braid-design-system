@@ -7,6 +7,7 @@ import { Text, TextProps } from '../Text/Text';
 import { IconStarSvg as IconStarEmptySvg } from '../icons/IconStar/IconStarSvg';
 import { IconStarHalfSvg } from '../icons/IconStar/IconStarHalfSvg';
 import { IconStarActiveSvg as IconStarFullSvg } from '../icons/IconStar/IconStarActiveSvg';
+import { atoms } from '../../css/atoms/atoms';
 import * as styles from './Rating.css';
 
 const getPercent = (rating: number, position: number) =>
@@ -35,7 +36,18 @@ const RatingStar = ({ percent, ...restProps }: RatingStar) => {
       {...iconProps}
       className={[
         className,
-        { [styles.starColor]: currentBg === 'body' || currentBg === 'card' },
+        atoms({
+          color: {
+            lightMode:
+              currentBg.lightMode === 'body' || currentBg.lightMode === 'card'
+                ? 'rating'
+                : 'neutral',
+            darkMode:
+              currentBg.darkMode === 'body' || currentBg.darkMode === 'card'
+                ? 'rating'
+                : 'neutral',
+          },
+        }),
       ]}
     />
   );
