@@ -4,6 +4,7 @@ import {
   style,
   styleVariants,
 } from '@vanilla-extract/css';
+import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
 import { responsiveStyle } from '../../css/responsiveStyle';
 import { vars } from '../../themes/vars.css';
 
@@ -29,10 +30,39 @@ export const size = styleVariants(vars.textSize, ({ mobile, tablet }) =>
   }),
 );
 
-export const color = {
-  dark: style({ fill: vars.backgroundColor.card }),
-  light: style({ fill: vars.backgroundColor.neutral }),
-};
+export const lightMode = styleVariants({
+  light: {
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &`]: {
+        fill: vars.foregroundColor.neutral,
+      },
+    },
+  },
+  dark: {
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &`]: {
+        fill: vars.foregroundColor.neutralInverted,
+      },
+    },
+  },
+});
+
+export const darkMode = styleVariants({
+  light: {
+    selectors: {
+      [`html.${braidDarkModeClass} &`]: {
+        fill: vars.foregroundColor.neutral,
+      },
+    },
+  },
+  dark: {
+    selectors: {
+      [`html.${braidDarkModeClass} &`]: {
+        fill: vars.foregroundColor.neutralInverted,
+      },
+    },
+  },
+});
 
 const bounce = keyframes({
   '33%': {
