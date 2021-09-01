@@ -10,15 +10,21 @@ import React, {
 import dedent from 'dedent';
 import { base as baseReset } from '../../css/reset/reset.css';
 import { atoms, Atoms } from '../../css/atoms/atoms';
-import { sprinkles } from '../../css/atoms/sprinkles.css';
+import { ColourModeValue, sprinkles } from '../../css/atoms/sprinkles.css';
 import { ColouredBox } from './ColouredBox';
 import TextLinkRendererContext from '../TextLinkRenderer/TextLinkRendererContext';
+import { vars } from '../../themes/vars.css';
+
+type Background = ColourModeValue<
+  keyof typeof vars.backgroundColor | 'customDark' | 'customLight'
+>;
 
 export interface BoxProps
-  extends Omit<Atoms, 'reset'>,
+  extends Omit<Atoms, 'reset' | 'background'>,
     Omit<AllHTMLAttributes<HTMLElement>, 'width' | 'height' | 'className'> {
   component?: ElementType;
   className?: ClassValue;
+  background?: Background;
 }
 
 export const Box = forwardRef<HTMLElement, BoxProps>(

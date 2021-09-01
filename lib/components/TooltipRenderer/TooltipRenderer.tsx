@@ -10,7 +10,6 @@ import isMobile from 'is-mobile';
 import assert from 'assert';
 import { BraidPortal } from '../BraidPortal/BraidPortal';
 import { ReactNodeNoStrings } from '../private/ReactNodeNoStrings';
-import { LightBackgroundProvider } from '../Box/BackgroundContext';
 import { atoms } from '../../css/atoms/atoms';
 import { DefaultTextPropsProvider } from '../private/defaultTextProps';
 import { useSpace } from '../useSpace/useSpace';
@@ -79,6 +78,7 @@ export const TooltipContent = ({
     <Box
       boxShadow="large"
       borderRadius={borderRadius}
+      background="customDark"
       className={[
         styles.background,
         styles.maxWidth,
@@ -86,18 +86,16 @@ export const TooltipContent = ({
         styles.padding,
       ]}
     >
-      <LightBackgroundProvider value="UNKNOWN_DARK">
-        <TooltipTextDefaultsProvider>
-          <Box position="relative" zIndex={1}>
-            {children}
-          </Box>
-          <Box
-            {...arrowProps}
-            borderRadius={borderRadius}
-            className={[styles.arrow, styles.background]}
-          />
-        </TooltipTextDefaultsProvider>
-      </LightBackgroundProvider>
+      <TooltipTextDefaultsProvider>
+        <Box position="relative" zIndex={1}>
+          {children}
+        </Box>
+        <Box
+          {...arrowProps}
+          borderRadius={borderRadius}
+          className={[styles.arrow, styles.background]}
+        />
+      </TooltipTextDefaultsProvider>
     </Box>
   </Box>
 );

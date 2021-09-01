@@ -5,8 +5,8 @@ import { vars } from '../../themes/vars.css';
 
 export type BackgroundVariant =
   | keyof typeof vars.backgroundColor
-  | 'UNKNOWN_DARK'
-  | 'UNKNOWN_LIGHT';
+  | 'customDark'
+  | 'customLight';
 
 const lightModeBackgroundContext = createContext<BackgroundVariant>('body');
 const darkModeBackgroundContext = createContext<BackgroundVariant>('bodyDark');
@@ -64,14 +64,9 @@ export const useBackgroundLightness = (
   const backgroundFromContext = useBackground();
   const background = backgroundOverride || backgroundFromContext;
   const { backgroundLightness } = useBraidTheme();
-  const backgroundsWithUnknowns: Record<BackgroundVariant, 'dark' | 'light'> = {
-    ...backgroundLightness,
-    UNKNOWN_DARK: 'dark',
-    UNKNOWN_LIGHT: 'light',
-  };
 
   return {
-    lightMode: backgroundsWithUnknowns[background.lightMode],
-    darkMode: backgroundsWithUnknowns[background.darkMode],
+    lightMode: backgroundLightness[background.lightMode],
+    darkMode: backgroundLightness[background.darkMode],
   };
 };

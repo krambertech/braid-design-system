@@ -117,9 +117,10 @@ const makeRuntimeTokens = (tokens: TreatTheme) => ({
     space: tokens.space,
   },
   color: tokens.color,
-  backgroundLightness: mapValues(
-    tokens.color.background,
-    (background, name) => {
+  backgroundLightness: {
+    customDark: 'dark',
+    customLight: 'light',
+    ...mapValues(tokens.color.background, (background, name) => {
       // Manual override to ensure we use inverted neutral text
       // on JobsDB 'brandAccent' background and its variants.
       if (
@@ -158,8 +159,8 @@ const makeRuntimeTokens = (tokens: TreatTheme) => ({
       return isLight(referenceColor, tokens.color.foreground.neutral)
         ? 'light'
         : 'dark';
-    },
-  ),
+    }),
+  },
 });
 
 export function makeBraidTheme(braidTokens: BraidTokens) {

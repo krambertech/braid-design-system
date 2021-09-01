@@ -12,9 +12,9 @@ import React, {
 } from 'react';
 import { Atoms, atoms } from '../../css/atoms/atoms';
 import {
-  LightBackgroundProvider,
   BackgroundVariant,
   useBackgroundLightness,
+  renderBackgroundProvider,
 } from '../Box/BackgroundContext';
 import { Box, BoxProps } from '../Box/Box';
 import { Text, TextProps } from '../Text/Text';
@@ -432,13 +432,9 @@ export const PrivateButtonRenderer = ({
     </ButtonChildrenContext.Provider>
   );
 
-  return backgroundContext ? (
-    <LightBackgroundProvider value={backgroundContext}>
-      {button}
-    </LightBackgroundProvider>
-  ) : (
-    button
-  );
+  return backgroundContext
+    ? renderBackgroundProvider(backgroundContext, button)
+    : button;
 };
 
 /** @deprecated `ButtonRenderer` has been deprecated. Use [Button](https://seek-oss.github.io/braid-design-system/components/Button) or [ButtonLink](https://seek-oss.github.io/braid-design-system/components/ButtonLink) instead. If your usage of `ButtonRenderer` is not covered by either of these, please let us know. */
