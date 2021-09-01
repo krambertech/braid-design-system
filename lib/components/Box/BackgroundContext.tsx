@@ -58,33 +58,20 @@ export const useBackground = () => ({
   darkMode: useContext(darkModeBackgroundContext),
 });
 
-const useLightness = (
-  color: BackgroundVariant,
-  defaultColor: keyof typeof vars.backgroundColor,
-) => {
-  const { backgroundLightness } = useBraidTheme();
-
-  if (color === 'UNKNOWN_DARK') {
-    return 'dark';
-  }
-
-  if (color === 'UNKNOWN_LIGHT') {
-    return 'light';
-  }
-
-  return color
-    ? backgroundLightness[color] || backgroundLightness[defaultColor]
-    : backgroundLightness[defaultColor];
-};
-
 export const useBackgroundLightness = (
   backgroundOverride?: ReturnType<typeof useBackground>,
 ) => {
   const backgroundFromContext = useBackground();
   const background = backgroundOverride || backgroundFromContext;
+  const { backgroundLightness } = useBraidTheme();
+  const backgroundsWithUnknowns: Record<BackgroundVariant, 'dark' | 'light'> = {
+    ...backgroundLightness,
+    UNKNOWN_DARK: 'dark',
+    UNKNOWN_LIGHT: 'light',
+  };
 
   return {
-    lightMode: useLightness(background.lightMode, 'body'),
-    darkMode: useLightness(background.darkMode, 'bodyDark'),
+    lightMode: backgroundsWithUnknowns[background.lightMode],
+    darkMode: backgroundsWithUnknowns[background.darkMode],
   };
 };

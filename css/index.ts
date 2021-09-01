@@ -29,17 +29,11 @@ const vars = {
   borderWidth,
 };
 
-function atoms(props: Omit<Atoms, 'background' | 'color'>) {
+function atoms(props: Omit<Atoms, 'background'>) {
   if (process.env.NODE_ENV !== 'production') {
     if ('background' in props) {
       throw new Error(
         `'background' is not available via 'atoms'. This is because Braid uses React context to dynamically apply matching tones to child elements. Please use \`<Box background="...">\` instead.`,
-      );
-    }
-
-    if ('color' in props) {
-      throw new Error(
-        `'color' is not available via 'atoms'. This is because Braid uses React context to dynamically apply matching tones to child elements. Please use \`<Box color="...">\` instead.`,
       );
     }
   }

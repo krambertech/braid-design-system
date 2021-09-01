@@ -1,4 +1,9 @@
-import { style, styleVariants } from '@vanilla-extract/css';
+import {
+  assignVars,
+  createThemeContract,
+  style,
+  styleVariants,
+} from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 import { createTextStyle } from '@capsizecss/vanilla-extract';
 
@@ -6,6 +11,7 @@ import { vars } from '../../themes/vars.css';
 import { breakpointQuery, responsiveStyle } from '../../css/responsiveStyle';
 
 import { mapToProperty } from '../../utils';
+import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
 
 type Vars = typeof vars;
 type TextDefinition = Vars['textSize'];
@@ -91,17 +97,137 @@ export const heading = {
   '4': makeTypographyRules(vars.headingLevel['4'], 'heading4'),
 };
 
-export const tone = {
-  link: style({
-    color: vars.foregroundColor.link,
-    ...(vars.foregroundColor.link !== vars.foregroundColor.linkHover
-      ? {
-          ':hover': { color: vars.foregroundColor.linkHover },
-          ':focus': { color: vars.foregroundColor.linkHover },
-        }
-      : {}),
-  }),
+const textToneVars = createThemeContract({
+  critical: null,
+  caution: null,
+  info: null,
+  promote: null,
+  positive: null,
+  brandAccent: null,
+  formAccent: null,
+  neutral: null,
+  secondary: null,
+  link: null,
+});
+
+const lightContextVars = assignVars(textToneVars, {
+  critical: vars.foregroundColor.critical,
+  caution: vars.foregroundColor.caution,
+  info: vars.foregroundColor.info,
+  promote: vars.foregroundColor.promote,
+  positive: vars.foregroundColor.positive,
+  brandAccent: vars.foregroundColor.brandAccent,
+  formAccent: vars.foregroundColor.formAccent,
+  neutral: vars.foregroundColor.neutral,
+  secondary: vars.foregroundColor.secondary,
+  link: vars.foregroundColor.link,
+});
+
+const darkContextVars = assignVars(textToneVars, {
+  critical: vars.foregroundColor.criticalLight,
+  caution: vars.foregroundColor.cautionLight,
+  info: vars.foregroundColor.infoLight,
+  promote: vars.foregroundColor.promoteLight,
+  positive: vars.foregroundColor.positiveLight,
+  brandAccent: vars.foregroundColor.brandAccent,
+  formAccent: vars.foregroundColor.formAccent,
+  neutral: vars.foregroundColor.neutralInverted,
+  secondary: vars.foregroundColor.secondaryInverted,
+  link: vars.foregroundColor.link,
+});
+
+export const lightMode = styleVariants({
+  light: {
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &`]: {
+        vars: lightContextVars,
+      },
+    },
+  },
+  dark: {
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &`]: {
+        vars: darkContextVars,
+      },
+    },
+  },
+});
+
+export const darkMode = styleVariants({
+  light: {
+    selectors: {
+      [`html.${braidDarkModeClass} &`]: {
+        vars: lightContextVars,
+      },
+    },
+  },
+  dark: {
+    selectors: {
+      [`html.${braidDarkModeClass} &`]: {
+        vars: darkContextVars,
+      },
+    },
+  },
+});
+
+const neutralOverrideForBackground: Partial<
+  Record<keyof typeof vars.backgroundColor, keyof typeof vars.foregroundColor>
+> = {
+  formAccentSoft: 'formAccent',
+  formAccentSoftActive: 'formAccent',
+  formAccentSoftHover: 'formAccent',
+  criticalLight: 'critical',
+  criticalSoft: 'critical',
+  criticalSoftActive: 'critical',
+  criticalSoftHover: 'critical',
+  caution: 'caution',
+  cautionLight: 'caution',
+  positiveLight: 'positive',
+  infoLight: 'info',
+  promoteLight: 'promote',
 };
+
+export const lightModeNeutralOverride = styleVariants(
+  neutralOverrideForBackground,
+  (textTone) => ({
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &`]: {
+        vars: {
+          [textToneVars.neutral]:
+            vars.foregroundColor[textTone as keyof typeof vars.foregroundColor],
+        },
+      },
+    },
+  }),
+);
+
+export const darkModeNeutralOverride = styleVariants(
+  neutralOverrideForBackground,
+  (textTone) => ({
+    selectors: {
+      [`html.${braidDarkModeClass} &`]: {
+        vars: {
+          [textToneVars.neutral]:
+            vars.foregroundColor[textTone as keyof typeof vars.foregroundColor],
+        },
+      },
+    },
+  }),
+);
+
+export const tone = styleVariants(textToneVars, (toneVar) => ({
+  color: toneVar,
+}));
+
+export const link = style({
+  color: vars.foregroundColor.link,
+  ...(vars.foregroundColor.link !== vars.foregroundColor.linkHover
+    ? {
+        ':hover': { color: vars.foregroundColor.linkHover },
+        ':focus': { color: vars.foregroundColor.linkHover },
+      }
+    : {}),
+});
 
 const makeTouchableSpacing = (touchableHeight: string, textHeight: string) => {
   const space = calc(touchableHeight).subtract(textHeight).divide(2).toString();
