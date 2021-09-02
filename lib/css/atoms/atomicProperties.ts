@@ -32,6 +32,7 @@ const boxShadow = {
   borderFormAccentLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.formAccent}`,
   borderBrandAccentLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.brandAccent}`,
   borderStandardInvertedLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.standardInverted}`,
+  none: 'none',
 };
 
 export type BoxShadow = keyof typeof boxShadow;

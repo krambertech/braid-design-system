@@ -121,8 +121,7 @@ export const Field = ({
       ? `${id}-description`
       : undefined;
   const fieldBackground = disabled ? 'inputDisabled' : 'input';
-  const showFieldBorder =
-    useBackgroundLightness() === 'light' && (tone !== 'critical' || disabled);
+  const backgroundLightness = useBackgroundLightness();
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;
   const hasVisualLabel = 'label' in restProps;
@@ -130,8 +129,30 @@ export const Field = ({
   const overlays = (
     <Fragment>
       <FieldOverlay
-        variant={disabled ? 'disabled' : 'default'}
-        visible={showFieldBorder}
+        variant={
+          disabled
+            ? {
+                lightMode:
+                  backgroundLightness.lightMode === 'light'
+                    ? 'disabled'
+                    : undefined,
+                darkMode:
+                  backgroundLightness.darkMode === 'light'
+                    ? 'disabled'
+                    : 'transparent',
+              }
+            : {
+                lightMode:
+                  backgroundLightness.lightMode === 'light'
+                    ? 'default'
+                    : undefined,
+                darkMode:
+                  backgroundLightness.darkMode === 'light'
+                    ? 'default'
+                    : 'transparent',
+              }
+        }
+        visible={tone !== 'critical' || disabled}
       />
       <FieldOverlay
         variant="critical"

@@ -102,9 +102,7 @@ export const Toggle = ({
                 ? 'borderField'
                 : undefined,
             darkMode:
-              backgroundLightness.darkMode === 'light'
-                ? 'borderField'
-                : undefined,
+              backgroundLightness.darkMode === 'light' ? 'borderField' : 'none',
           }}
           transition="fast"
           display="flex"

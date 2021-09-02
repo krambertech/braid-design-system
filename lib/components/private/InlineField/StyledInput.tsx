@@ -145,9 +145,7 @@ export const StyledInput = forwardRef<
     const isCheckbox = type === 'checkbox';
     const fieldBorderRadius = isCheckbox ? 'standard' : 'full';
     const accentBackground = disabled ? 'formAccentDisabled' : 'formAccent';
-    const showFieldBorder =
-      useBackgroundLightness() === 'light' && (tone !== 'critical' || disabled);
-
+    const backgroundLightness = useBackgroundLightness();
     const isMixed = isCheckbox && checked === 'mixed';
 
     useEffect(() => {
@@ -209,9 +207,31 @@ export const StyledInput = forwardRef<
           borderRadius={fieldBorderRadius}
         >
           <FieldOverlay
-            variant={disabled ? 'disabled' : 'default'}
+            variant={
+              disabled
+                ? {
+                    lightMode:
+                      backgroundLightness.lightMode === 'light'
+                        ? 'disabled'
+                        : undefined,
+                    darkMode:
+                      backgroundLightness.darkMode === 'light'
+                        ? 'disabled'
+                        : 'transparent',
+                  }
+                : {
+                    lightMode:
+                      backgroundLightness.lightMode === 'light'
+                        ? 'default'
+                        : undefined,
+                    darkMode:
+                      backgroundLightness.darkMode === 'light'
+                        ? 'default'
+                        : 'transparent',
+                  }
+            }
             borderRadius={fieldBorderRadius}
-            visible={showFieldBorder}
+            visible={tone !== 'critical' || disabled}
           />
           <FieldOverlay
             variant="critical"
