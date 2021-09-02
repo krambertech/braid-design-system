@@ -14,7 +14,6 @@ import {
 } from '../';
 import source from '../../utils/source.macro';
 import Code from '../../../site/src/App/Code/Code';
-import { BoxProps } from './Box';
 import {
   responsiveProperties,
   unresponsiveProperties,
@@ -22,16 +21,16 @@ import {
   UnresponsiveProperties,
   ResponsiveProperties,
   PseudoProperties,
+  BoxShadow,
 } from '../../css/atoms/atomicProperties';
+import { vars } from '../../themes/vars.css';
 
 type BackgroundDocs = Required<
-  Record<NonNullable<BoxProps['background']>, string>
+  Record<keyof typeof vars.backgroundColor, string>
 >;
 const validateBackgrounds = (backgrounds: BackgroundDocs) => backgrounds;
 
-type BoxShadowDocs = Required<
-  Record<NonNullable<BoxProps['boxShadow']>, string>
->;
+type BoxShadowDocs = Required<Record<BoxShadow, string>>;
 const validateBoxShadows = (boxShadows: BoxShadowDocs) => boxShadows;
 
 interface AtomicPropertyProps {
@@ -445,6 +444,12 @@ const docs: ComponentDocs = {
                 promoteLight: 'Used for light “promote” elements.',
                 neutral: 'Used for heavier “neutral” elements.',
                 neutralLight: 'Used for light “neutral” elements.',
+
+                // New colours
+                bodyDark: 'TODO',
+                surface: 'TODO',
+                surfaceDark1: 'TODO',
+                surfaceDark2: 'TODO',
               }),
             ).map(([background, description]) => (
               <Columns key={background} space="medium" alignY="center">

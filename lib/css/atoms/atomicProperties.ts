@@ -34,6 +34,8 @@ const boxShadow = {
   borderStandardInvertedLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.standardInverted}`,
 };
 
+export type BoxShadow = keyof typeof boxShadow;
+
 export const pseudoProperties = {
   transform: vars.transform,
 } as const;

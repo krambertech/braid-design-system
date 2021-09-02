@@ -7,8 +7,9 @@ import {
   PseudoProperties,
   unresponsiveProperties,
   UnresponsiveProperties,
+  BoxShadow,
 } from '../lib/css/atoms/atomicProperties';
-import { Atoms, atoms } from '../lib/css/atoms/atoms';
+import { atoms } from '../lib/css/atoms/atoms';
 import {
   Box,
   Stack,
@@ -27,7 +28,7 @@ import { ThemedExample } from '../site/src/App/ThemeSetting';
 import { CssDoc } from '../site/src/types';
 import { VanillaMigrationBanner } from './VanillaMigrationBanner';
 
-type BoxShadowDocs = Required<Record<NonNullable<Atoms['boxShadow']>, string>>;
+type BoxShadowDocs = Required<Record<BoxShadow, string>>;
 const validateBoxShadows = (boxShadows: BoxShadowDocs) => boxShadows;
 
 interface AtomicPropertyProps {
