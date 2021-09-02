@@ -73,7 +73,7 @@ export const Card = ({
     <Box
       component={component}
       position="relative"
-      background="card"
+      background={{ lightMode: 'card', darkMode: 'surfaceDark1' }}
       padding="gutter"
       borderRadius={resolvedRounding}
       {...(data ? buildDataAttributes(data) : undefined)}
