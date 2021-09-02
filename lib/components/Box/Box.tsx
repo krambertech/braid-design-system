@@ -10,12 +10,12 @@ import React, {
 import dedent from 'dedent';
 import { base as baseReset } from '../../css/reset/reset.css';
 import { atoms, Atoms } from '../../css/atoms/atoms';
-import { ColourModeValue, sprinkles } from '../../css/atoms/sprinkles.css';
-import { ColouredBox } from './ColouredBox';
+import { sprinkles, ColorModeValue } from '../../css/atoms/sprinkles.css';
+import { ColoredBox } from './ColoredBox';
 import TextLinkRendererContext from '../TextLinkRenderer/TextLinkRendererContext';
 import { vars } from '../../themes/vars.css';
 
-type Background = ColourModeValue<
+type Background = ColorModeValue<
   keyof typeof vars.backgroundColor | 'customDark' | 'customLight'
 >;
 
@@ -73,7 +73,7 @@ export const Box = forwardRef<HTMLElement, BoxProps>(
     }`;
 
     return props.background ? (
-      <ColouredBox
+      <ColoredBox
         component={component}
         background={props.background}
         className={combinedClasses}
@@ -81,7 +81,7 @@ export const Box = forwardRef<HTMLElement, BoxProps>(
         {...nativeProps}
       >
         {children}
-      </ColouredBox>
+      </ColoredBox>
     ) : (
       createElement(component, {
         className: combinedClasses,

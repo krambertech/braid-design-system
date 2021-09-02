@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import clsx, { ClassValue } from 'clsx';
 import { renderBackgroundProvider } from './BackgroundContext';
 import { atoms, Atoms } from '../../css/atoms/atoms';
-import { useColouredBoxClasses } from './ColouredBox';
+import { useColoredBoxClasses } from './ColoredBox';
 
 export interface BoxRendererProps extends Omit<Atoms, 'reset'> {
   component?: Atoms['reset'];
@@ -10,7 +10,7 @@ export interface BoxRendererProps extends Omit<Atoms, 'reset'> {
   children: (className: string) => ReactElement | null;
 }
 
-const ColouredBoxRenderer = ({
+const ColoredBoxRenderer = ({
   background,
   children,
   className,
@@ -19,8 +19,8 @@ const ColouredBoxRenderer = ({
   children: BoxRendererProps['children'];
   className: string;
 }) => {
-  const colourClasses = useColouredBoxClasses(background);
-  const element = children(clsx(className, colourClasses));
+  const colorClasses = useColoredBoxClasses(background);
+  const element = children(clsx(className, colorClasses));
 
   return renderBackgroundProvider(background, element);
 };
@@ -35,12 +35,12 @@ export const BoxRenderer = ({
   const atomicClasses = atoms({ reset: component, ...props });
 
   return background ? (
-    <ColouredBoxRenderer
+    <ColoredBoxRenderer
       background={background}
       className={clsx(className, atomicClasses)}
     >
       {children}
-    </ColouredBoxRenderer>
+    </ColoredBoxRenderer>
   ) : (
     children(clsx(className, atomicClasses))
   );

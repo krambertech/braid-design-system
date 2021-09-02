@@ -18,7 +18,7 @@ const entries = Boolean(process.env.DEBUG_IE)
 module.exports = {
   srcPaths: [
     'lib',
-    'colour-mode',
+    'color-mode',
     'css',
     'themes',
     'site/src',

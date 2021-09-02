@@ -9,13 +9,13 @@ import {
   normalizeColorModeValue,
 } from '../../css/atoms/sprinkles.css';
 
-export interface ColouredBoxProps extends BoxProps {
+export interface ColoredBoxProps extends BoxProps {
   component: NonNullable<BoxProps['component']>;
   background: NonNullable<BoxProps['background']>;
 }
 
-export const useColouredBoxClasses = (
-  background: ColouredBoxProps['background'],
+export const useColoredBoxClasses = (
+  background: ColoredBoxProps['background'],
 ) => {
   const { lightMode: lightModeBg, darkMode: darkModeBg } =
     normalizeColorModeValue(background);
@@ -58,12 +58,12 @@ export const useColouredBoxClasses = (
   ].join(' ');
 };
 
-export const ColouredBox = forwardRef<HTMLElement, ColouredBoxProps>(
+export const ColoredBox = forwardRef<HTMLElement, ColoredBoxProps>(
   ({ component, background, className, ...props }, ref) => {
-    const colourClasses = useColouredBoxClasses(background);
+    const colorClasses = useColoredBoxClasses(background);
 
     const element = createElement(component, {
-      className: `${className} ${colourClasses}`,
+      className: `${className} ${colorClasses}`,
       ...props,
       ref,
     });
@@ -72,4 +72,4 @@ export const ColouredBox = forwardRef<HTMLElement, ColouredBoxProps>(
   },
 );
 
-ColouredBox.displayName = 'ColouredBox';
+ColoredBox.displayName = 'ColoredBox';

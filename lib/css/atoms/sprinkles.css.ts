@@ -88,7 +88,7 @@ export const normalizeResponsiveValue = createNormalizeValueFn(
 );
 export const mapResponsiveValue = createMapValueFn(responsiveAtomicStyles);
 
-export type ColourModeValue<Value extends string | number> = ConditionalValue<
+export type ColorModeValue<Value extends string | number> = ConditionalValue<
   typeof colorAtomicStyles,
   Value
 >;
