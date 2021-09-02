@@ -47,7 +47,6 @@ export const useColoredBoxClasses = (
   return [
     atoms({
       background: mapColorModeValue(background, (value) =>
-        // @ts-expect-error - mapping conditional values should support returning undefined
         value === 'customDark' || value === 'customLight' ? undefined : value,
       ),
     }),
