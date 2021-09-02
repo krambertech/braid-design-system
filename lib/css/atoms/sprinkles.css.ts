@@ -83,12 +83,15 @@ export type RequiredResponsiveObject<Value> = Partial<
 > &
   Record<typeof breakpointNames[0], Value>;
 
-export type ColourModeValue<Value extends string | number> = ConditionalValue<
-  typeof colorAtomicStyles,
-  Value
->;
-
 export const normalizeResponsiveValue = createNormalizeValueFn(
   responsiveAtomicStyles,
 );
 export const mapResponsiveValue = createMapValueFn(responsiveAtomicStyles);
+
+export type ColourModeValue<Value extends string | number> = ConditionalValue<
+  typeof colorAtomicStyles,
+  Value
+>;
+export const normalizeColorModeValue =
+  createNormalizeValueFn(colorAtomicStyles);
+export const mapColorModeValue = createMapValueFn(colorAtomicStyles);

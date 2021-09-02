@@ -65,6 +65,7 @@ export const Box = forwardRef<HTMLElement, BoxProps>(
     const atomicClasses = atoms({
       reset: typeof component === 'string' ? component : 'div',
       ...atomProps,
+      background: undefined,
     });
 
     const combinedClasses = `${atomicClasses}${

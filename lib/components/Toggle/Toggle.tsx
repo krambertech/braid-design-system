@@ -39,7 +39,7 @@ export const Toggle = ({
   size = 'standard',
   data,
 }: ToggleProps) => {
-  const showBorder = useBackgroundLightness() === 'light';
+  const backgroundLightness = useBackgroundLightness();
 
   return (
     <Box
@@ -96,7 +96,16 @@ export const Toggle = ({
         <Box
           position="absolute"
           background="input"
-          boxShadow={showBorder ? 'borderField' : undefined}
+          boxShadow={{
+            lightMode:
+              backgroundLightness.lightMode === 'light'
+                ? 'borderField'
+                : undefined,
+            darkMode:
+              backgroundLightness.darkMode === 'light'
+                ? 'borderField'
+                : undefined,
+          }}
           transition="fast"
           display="flex"
           alignItems="center"

@@ -29,13 +29,14 @@ export const BoxRenderer = ({
   children,
   component = 'div',
   className,
+  background,
   ...props
 }: BoxRendererProps) => {
   const atomicClasses = atoms({ reset: component, ...props });
 
-  return props.background ? (
+  return background ? (
     <ColouredBoxRenderer
-      background={props.background}
+      background={background}
       className={clsx(className, atomicClasses)}
     >
       {children}
