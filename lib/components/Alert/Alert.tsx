@@ -17,6 +17,7 @@ import { textAlignedToIcon } from '../../css/textAlignedToIcon.css';
 import buildDataAttributes, {
   DataAttributeMap,
 } from '../private/buildDataAttributes';
+import { DefaultTextPropsProvider } from '../private/defaultTextProps';
 
 type Tone = 'promote' | 'info' | 'positive' | 'caution' | 'critical';
 
@@ -86,7 +87,11 @@ export const Alert = ({
             <Icon tone={tone} />
           </Column>
           <Column>
-            <Box className={textAlignedToIcon.standard}>{children}</Box>
+            <Box className={textAlignedToIcon.standard}>
+              <DefaultTextPropsProvider tone={tone}>
+                {children}
+              </DefaultTextPropsProvider>
+            </Box>
           </Column>
           {onClose ? (
             <Column width="content">
@@ -99,7 +104,7 @@ export const Alert = ({
           ) : null}
         </Columns>
       </Box>
-      {parentBackground.lightMode !== 'card' && (
+      {parentBackground.lightMode !== 'surface' && (
         <Overlay
           borderRadius={borderRadius}
           boxShadow={borderForTone[tone]}

@@ -120,7 +120,15 @@ export const Field = ({
     'description' in restProps && restProps.description
       ? `${id}-description`
       : undefined;
-  const fieldBackground = disabled ? 'inputDisabled' : 'input';
+  const fieldBackground = disabled
+    ? ({
+        lightMode: 'inputDisabled',
+        darkMode: 'neutral',
+      } as BoxProps['background'])
+    : ({
+        lightMode: 'input',
+        darkMode: 'surfaceDark',
+      } as BoxProps['background']);
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;
   const hasVisualLabel = 'label' in restProps;
@@ -132,7 +140,7 @@ export const Field = ({
       <FieldOverlay
         variant={colorContrast({
           light: disabled ? 'disabled' : 'default',
-          dark: 'transparent',
+          dark: disabled ? 'transparent' : 'default',
         })}
         visible={tone !== 'critical' || disabled}
       />

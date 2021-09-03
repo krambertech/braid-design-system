@@ -173,7 +173,8 @@ const buttonVariantStyles: Record<
 };
 
 const useButtonVariant = (variant: ButtonVariant, tone?: ButtonTone) => {
-  if (useBackgroundLightness() === 'dark' && !tone && variant !== 'solid') {
+  // if (useBackgroundLightness() === 'dark' && !tone && variant !== 'solid') {
+  if (!tone && variant !== 'solid') {
     return {
       textTone: undefined,
       backgroundClassName:
