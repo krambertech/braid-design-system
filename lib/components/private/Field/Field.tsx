@@ -2,7 +2,7 @@ import assert from 'assert';
 import React, { Fragment, ReactNode, AllHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { Box, BoxProps } from '../../Box/Box';
-import { useBackgroundLightness } from '../../Box/BackgroundContext';
+import { useColorContrast } from '../../Box/BackgroundContext';
 import { FieldLabel, FieldLabelProps } from '../../FieldLabel/FieldLabel';
 import {
   FieldMessage,
@@ -121,37 +121,22 @@ export const Field = ({
       ? `${id}-description`
       : undefined;
   const fieldBackground = disabled ? 'inputDisabled' : 'input';
-  const backgroundLightness = useBackgroundLightness();
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;
   const hasVisualLabel = 'label' in restProps;
 
+  const colorContrast = useColorContrast();
+
   const overlays = (
     <Fragment>
       <FieldOverlay
-        variant={
-          disabled
-            ? {
-                lightMode:
-                  backgroundLightness.lightMode === 'light'
-                    ? 'disabled'
-                    : undefined,
-                darkMode:
-                  backgroundLightness.darkMode === 'light'
-                    ? 'disabled'
-                    : 'transparent',
-              }
-            : {
-                lightMode:
-                  backgroundLightness.lightMode === 'light'
-                    ? 'default'
-                    : undefined,
-                darkMode:
-                  backgroundLightness.darkMode === 'light'
-                    ? 'default'
-                    : 'transparent',
-              }
-        }
+        variant={colorContrast((context) => {
+          if (context === 'dark') {
+            return 'transparent';
+          }
+
+          return disabled ? 'disabled' : 'default';
+        })}
         visible={tone !== 'critical' || disabled}
       />
       <FieldOverlay
