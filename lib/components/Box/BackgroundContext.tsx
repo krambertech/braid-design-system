@@ -1,6 +1,7 @@
 import React, { createContext, useContext, ReactElement } from 'react';
 import { BoxProps } from './Box';
 import { useBraidTheme } from '../BraidProvider/BraidThemeContext';
+import { mapColorModeValue } from '../../css/atoms/sprinkles.css';
 import { vars } from '../../themes/vars.css';
 
 export type BackgroundVariant =
@@ -69,4 +70,19 @@ export const useBackgroundLightness = (
     lightMode: backgroundLightness[background.lightMode],
     darkMode: backgroundLightness[background.darkMode],
   };
+};
+
+export const useColorContrast = () => {
+  const background = useBackground();
+  const backgroundLightness = useBackgroundLightness();
+
+  return <MappedValue extends string>(
+    mapFn: (
+      contrast: 'light' | 'dark',
+      background: BackgroundVariant,
+    ) => MappedValue,
+  ) =>
+    mapColorModeValue(backgroundLightness, (lightness, mode) =>
+      mapFn(lightness, background[mode]),
+    );
 };
