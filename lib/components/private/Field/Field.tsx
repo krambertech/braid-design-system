@@ -130,12 +130,9 @@ export const Field = ({
   const overlays = (
     <Fragment>
       <FieldOverlay
-        variant={colorContrast((context) => {
-          if (context === 'dark') {
-            return 'transparent';
-          }
-
-          return disabled ? 'disabled' : 'default';
+        variant={colorContrast({
+          light: disabled ? 'disabled' : 'default',
+          dark: 'transparent',
         })}
         visible={tone !== 'critical' || disabled}
       />
