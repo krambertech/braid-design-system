@@ -20,6 +20,8 @@ export const useColoredBoxClasses = (
   const { lightMode: lightModeBg, darkMode: darkModeBg } =
     normalizeColorModeValue(background);
 
+  const resolvedDarkModeBg = darkModeBg || lightModeBg;
+
   const { backgroundLightness } = useBraidTheme();
 
   const lightContext =
@@ -34,13 +36,13 @@ export const useColoredBoxClasses = (
       : undefined;
 
   const darkContext =
-    typographyStyles.darkMode[backgroundLightness[darkModeBg!]];
+    typographyStyles.darkMode[backgroundLightness[resolvedDarkModeBg!]];
 
   const darkNeutralOverride =
-    typeof darkModeBg === 'string' &&
-    darkModeBg in typographyStyles.darkModeNeutralOverride
+    typeof resolvedDarkModeBg === 'string' &&
+    resolvedDarkModeBg in typographyStyles.darkModeNeutralOverride
       ? typographyStyles.darkModeNeutralOverride[
-          darkModeBg as keyof typeof typographyStyles.darkModeNeutralOverride
+          resolvedDarkModeBg as keyof typeof typographyStyles.darkModeNeutralOverride
         ]
       : undefined;
 
