@@ -28,7 +28,7 @@ import { ThemedExample } from '../site/src/App/ThemeSetting';
 import { CssDoc } from '../site/src/types';
 import { VanillaMigrationBanner } from './VanillaMigrationBanner';
 
-type BoxShadowDocs = Required<Record<BoxShadow, string>>;
+type BoxShadowDocs = Required<Record<Exclude<BoxShadow, 'none'>, string>>;
 const validateBoxShadows = (boxShadows: BoxShadowDocs) => boxShadows;
 
 interface AtomicPropertyProps {

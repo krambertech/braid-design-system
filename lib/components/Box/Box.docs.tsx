@@ -30,7 +30,7 @@ type BackgroundDocs = Required<
 >;
 const validateBackgrounds = (backgrounds: BackgroundDocs) => backgrounds;
 
-type BoxShadowDocs = Required<Record<BoxShadow, string>>;
+type BoxShadowDocs = Required<Record<Exclude<BoxShadow, 'none'>, string>>;
 const validateBoxShadows = (boxShadows: BoxShadowDocs) => boxShadows;
 
 interface AtomicPropertyProps {
