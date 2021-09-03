@@ -252,8 +252,7 @@ export const makeTokens = ({
       background: {
         body: bodyBackground,
         bodyDark: 'black',
-        surfaceDark1: '#747474',
-        surfaceDark2: '#404040',
+        surfaceDark: '#747474',
         surface: 'white',
         brand,
         brandAccent,

@@ -35,13 +35,13 @@ const useHoverBackground = (
   if (background) {
     return backgroundLightness[colorMode] === 'light'
       ? 'surface'
-      : 'surfaceDark1';
+      : 'surfaceDark';
   }
 
   return (
     {
       lightMode: 'neutralLight',
-      darkMode: 'surfaceDark1',
+      darkMode: 'surfaceDark',
     } as const
   )[colorMode];
 };

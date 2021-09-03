@@ -448,8 +448,7 @@ const docs: ComponentDocs = {
                 // New colours
                 bodyDark: 'TODO',
                 surface: 'TODO',
-                surfaceDark1: 'TODO',
-                surfaceDark2: 'TODO',
+                surfaceDark: 'TODO',
               }),
             ).map(([background, description]) => (
               <Columns key={background} space="medium" alignY="center">

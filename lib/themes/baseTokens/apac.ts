@@ -241,9 +241,8 @@ export const makeTokens = ({
       },
       background: {
         bodyDark: palette.grey['900'],
-        surfaceDark1: palette.grey['800'],
-        surfaceDark2: palette.grey['700'],
         body: palette.grey['50'],
+        surfaceDark: palette.grey['800'],
         surface: white,
         brand,
         brandAccent,

@@ -32,11 +32,11 @@ export type AlertProps = {
 } & CloseProps;
 
 const backgroundForTone: Record<Tone, BoxProps['background']> = {
-  promote: 'promoteLight',
-  info: 'infoLight',
-  positive: 'positiveLight',
-  caution: 'cautionLight',
-  critical: 'criticalLight',
+  promote: { lightMode: 'promoteLight', darkMode: 'neutral' },
+  info: { lightMode: 'infoLight', darkMode: 'neutral' },
+  positive: { lightMode: 'positiveLight', darkMode: 'neutral' },
+  caution: { lightMode: 'cautionLight', darkMode: 'neutral' },
+  critical: { lightMode: 'criticalLight', darkMode: 'neutral' },
 };
 
 const borderForTone: Record<Tone, BoxProps['boxShadow']> = {

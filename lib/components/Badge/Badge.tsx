@@ -46,7 +46,7 @@ const backgroundForTone = (tone: Tone, weight: BadgeWeight) => {
 
   return {
     lightMode: lightModeBackgroundForTone[tone],
-    darkMode: 'surfaceDark2',
+    darkMode: 'neutral',
   } as const;
 };
 

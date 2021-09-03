@@ -223,8 +223,7 @@ const tokens: BraidTokens = {
     background: {
       body: 'whitesmoke',
       bodyDark: 'black',
-      surfaceDark1: '#333',
-      surfaceDark2: '#444',
+      surfaceDark: '#333',
       surface: 'white',
       brand: black,
       brandAccent,

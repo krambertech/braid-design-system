@@ -161,8 +161,7 @@ export interface BraidTokens {
       promoteLight: string;
       selection: string;
       surface: string;
-      surfaceDark1: string;
-      surfaceDark2: string;
+      surfaceDark: string;
     };
   };
 }
