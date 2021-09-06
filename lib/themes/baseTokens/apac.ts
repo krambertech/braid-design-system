@@ -183,7 +183,7 @@ export const makeTokens = ({
         caution: palette.yellow['500'],
         cautionLight: palette.yellow['200'],
         critical,
-        criticalLight: palette.red['200'],
+        criticalLight: palette.red['300'],
         field: palette.grey['400'],
         focus,
         formAccent,

@@ -2,7 +2,6 @@ import assert from 'assert';
 import React, { Fragment, ReactNode, AllHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { Box, BoxProps } from '../../Box/Box';
-import { useColorContrast } from '../../Box/BackgroundContext';
 import { FieldLabel, FieldLabelProps } from '../../FieldLabel/FieldLabel';
 import {
   FieldMessage,
@@ -131,17 +130,12 @@ export const Field = ({
       } as BoxProps['background']);
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;
-  const hasVisualLabel = 'label' in restProps;
-
-  const colorContrast = useColorContrast();
+  const hasVisualLabel = 'label' in restProps; // const colorContrast = useColorContrast();
 
   const overlays = (
     <Fragment>
       <FieldOverlay
-        variant={colorContrast({
-          light: disabled ? 'disabled' : 'default',
-          dark: disabled ? 'transparent' : 'default',
-        })}
+        variant={disabled ? 'disabled' : 'default'}
         visible={tone !== 'critical' || disabled}
       />
       <FieldOverlay

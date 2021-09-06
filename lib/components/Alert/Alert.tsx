@@ -18,6 +18,7 @@ import buildDataAttributes, {
   DataAttributeMap,
 } from '../private/buildDataAttributes';
 import { DefaultTextPropsProvider } from '../private/defaultTextProps';
+import { BoxShadow } from '../../css/atoms/atomicProperties';
 
 type Tone = 'promote' | 'info' | 'positive' | 'caution' | 'critical';
 
@@ -40,7 +41,7 @@ const backgroundForTone: Record<Tone, BoxProps['background']> = {
   critical: { lightMode: 'criticalLight', darkMode: 'neutral' },
 };
 
-const borderForTone: Record<Tone, BoxProps['boxShadow']> = {
+const borderForTone: Record<Tone, BoxShadow> = {
   promote: 'borderPromoteLight',
   info: 'borderInfoLight',
   positive: 'borderPositiveLight',
@@ -107,7 +108,7 @@ export const Alert = ({
       {parentBackground.lightMode !== 'surface' && (
         <Overlay
           borderRadius={borderRadius}
-          boxShadow={borderForTone[tone]}
+          boxShadow={{ lightMode: borderForTone[tone], darkMode: 'none' }}
           visible
         />
       )}

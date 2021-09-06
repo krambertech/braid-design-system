@@ -6,7 +6,6 @@ import React, {
   AllHTMLAttributes,
 } from 'react';
 
-import { useBackgroundLightness } from '../../Box/BackgroundContext';
 import { FieldOverlay } from '../FieldOverlay/FieldOverlay';
 import { IconMinus, IconTick } from '../../icons';
 import buildDataAttributes, { DataAttributeMap } from '../buildDataAttributes';
@@ -145,7 +144,6 @@ export const StyledInput = forwardRef<
     const isCheckbox = type === 'checkbox';
     const fieldBorderRadius = isCheckbox ? 'standard' : 'full';
     const accentBackground = disabled ? 'formAccentDisabled' : 'formAccent';
-    const backgroundLightness = useBackgroundLightness();
     const isMixed = isCheckbox && checked === 'mixed';
 
     useEffect(() => {
@@ -203,33 +201,21 @@ export const StyledInput = forwardRef<
           flexShrink={0}
           position="relative"
           className={[styles.fakeField, styles.fakeFieldSize[size]]}
-          background={disabled ? 'inputDisabled' : 'input'}
+          background={
+            disabled
+              ? {
+                  lightMode: 'inputDisabled',
+                  darkMode: 'neutral',
+                }
+              : {
+                  lightMode: 'input',
+                  darkMode: 'surfaceDark',
+                }
+          }
           borderRadius={fieldBorderRadius}
         >
           <FieldOverlay
-            variant={
-              disabled
-                ? {
-                    lightMode:
-                      backgroundLightness.lightMode === 'light'
-                        ? 'disabled'
-                        : undefined,
-                    darkMode:
-                      backgroundLightness.darkMode === 'light'
-                        ? 'disabled'
-                        : 'transparent',
-                  }
-                : {
-                    lightMode:
-                      backgroundLightness.lightMode === 'light'
-                        ? 'default'
-                        : undefined,
-                    darkMode:
-                      backgroundLightness.darkMode === 'light'
-                        ? 'default'
-                        : 'transparent',
-                  }
-            }
+            variant={disabled ? 'disabled' : 'default'}
             borderRadius={fieldBorderRadius}
             visible={tone !== 'critical' || disabled}
           />

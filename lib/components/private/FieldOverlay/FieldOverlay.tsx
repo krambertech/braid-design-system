@@ -1,9 +1,5 @@
 import React from 'react';
-import { BoxShadow } from '../../../css/atoms/atomicProperties';
-import {
-  ColorModeValue,
-  normalizeColorModeValue,
-} from '../../../css/atoms/sprinkles.css';
+import { BoxProps } from '../../Box/Box';
 import { Overlay, OverlayProps } from '../Overlay/Overlay';
 
 type FieldOverlayVariant =
@@ -23,30 +19,24 @@ export interface FieldOverlayProps
     | 'borderRadius'
     | 'className'
   > {
-  variant?: ColorModeValue<FieldOverlayVariant>;
+  variant?: FieldOverlayVariant;
 }
 
-const boxShadowForVariant: Record<FieldOverlayVariant, BoxShadow> = {
-  transparent: 'none',
-  default: 'borderField',
-  disabled: 'borderStandard',
-  focus: 'outlineFocus',
-  hover: 'borderFormHover',
-  critical: 'borderCritical',
-};
+const boxShadowForVariant: Record<FieldOverlayVariant, BoxProps['boxShadow']> =
+  {
+    transparent: 'none',
+    default: 'borderField',
+    disabled: { lightMode: 'borderStandard', darkMode: 'none' },
+    focus: 'outlineFocus',
+    hover: 'borderFormHover',
+    critical: { lightMode: 'borderCritical', darkMode: 'borderCriticalLight' },
+  };
 
-export const FieldOverlay = ({ variant, ...restProps }: FieldOverlayProps) => {
-  const normalisedVariant = variant ? normalizeColorModeValue(variant) : {};
-
-  return (
-    <Overlay
-      borderRadius="standard"
-      boxShadow={{
-        lightMode: boxShadowForVariant[normalisedVariant.lightMode!],
-        darkMode: boxShadowForVariant[normalisedVariant.darkMode!],
-      }}
-      transition="fast"
-      {...restProps}
-    />
-  );
-};
+export const FieldOverlay = ({ variant, ...restProps }: FieldOverlayProps) => (
+  <Overlay
+    borderRadius="standard"
+    boxShadow={boxShadowForVariant[variant!]}
+    transition="fast"
+    {...restProps}
+  />
+);
