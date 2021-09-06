@@ -92,7 +92,7 @@ export const BraidProvider = ({
   );
 
   const defaultTextTones = !alreadyInBraidProvider
-    ? `${typographyStyles.lightMode.light} ${typographyStyles.darkMode.dark}`
+    ? `${typographyStyles.lightModeTone.light} ${typographyStyles.darkModeTone.dark}`
     : '';
 
   return (

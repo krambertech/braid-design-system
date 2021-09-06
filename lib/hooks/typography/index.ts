@@ -1,9 +1,6 @@
-import { useContext } from 'react';
 import clsx from 'clsx';
 import type { StyleRule } from '@vanilla-extract/css';
 
-import { useDefaultTextProps } from '../../components/private/defaultTextProps';
-import TextLinkRendererContext from '../../components/TextLinkRenderer/TextLinkRendererContext';
 import { vars } from '../../themes/vars.css';
 import { responsiveStyle } from '../../css/responsiveStyle';
 import * as styles from './typography.css';
@@ -100,20 +97,15 @@ export function textSize(size: keyof typeof styles.text) {
 }
 
 export function useWeight(weight: keyof typeof styles.fontWeight) {
-  const inTextLinkRenderer = useContext(TextLinkRendererContext);
-
-  return inTextLinkRenderer ? undefined : styles.fontWeight[weight];
+  return styles.fontWeight[weight];
 }
 
-export function useTextTone({ tone: toneProp }: { tone: TextTone }) {
-  const textLinkContext = useContext(TextLinkRendererContext);
-  const { tone } = useDefaultTextProps({ tone: toneProp });
+export function useTextTone({ tone }: { tone: TextTone }) {
+  const inheritLinkColor = tone !== 'neutral' && tone !== 'secondary';
 
-  if (tone === 'neutral' && textLinkContext && textLinkContext !== 'weak') {
-    return styles.link;
-  }
-
-  return styles.tone[tone];
+  return `${styles.tone[tone]}${
+    inheritLinkColor ? ` ${styles.inheritLinkColor}` : ''
+  }`;
 }
 
 export const touchableText = styles.touchable;
