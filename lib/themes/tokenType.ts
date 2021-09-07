@@ -91,6 +91,7 @@ export interface BraidTokens {
       positiveLight: string;
       promote: string;
       promoteLight: string;
+      neutral: string;
       standard: string;
       standardInverted: string;
     };
@@ -130,6 +131,7 @@ export interface BraidTokens {
       body: string;
       bodyDark: string;
       brand: string;
+      brandDark: string;
       brandAccent: string;
       brandAccentActive: string;
       brandAccentHover: string;
@@ -158,7 +160,12 @@ export interface BraidTokens {
       input: string;
       inputDisabled: string;
       neutral: string;
+      neutralActive: string;
+      neutralHover: string;
       neutralLight: string;
+      neutralSoft: string;
+      neutralSoftActive: string;
+      neutralSoftHover: string;
       positive: string;
       positiveLight: string;
       promote: string;

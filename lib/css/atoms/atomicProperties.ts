@@ -16,6 +16,7 @@ const boxShadow = {
   borderField: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.field}`,
   borderStandard: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.standard}`,
   borderStandardInverted: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.standardInverted}`,
+  borderStandardInvertedLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.standardInverted}`,
   borderCritical: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.critical}`,
   borderCriticalLight: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.criticalLight}`,
   borderCriticalLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.critical}`,
@@ -34,7 +35,7 @@ const boxShadow = {
   borderFormAccentLightLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.formAccentLight}`,
   borderBrandAccentLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.brandAccent}`,
   borderBrandAccentLightLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.brandAccentLight}`,
-  borderStandardInvertedLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.standardInverted}`,
+  borderNeutralLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.neutral}`,
   none: 'none',
 };
 

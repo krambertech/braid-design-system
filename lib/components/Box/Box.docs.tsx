@@ -449,6 +449,12 @@ const docs: ComponentDocs = {
                 bodyDark: 'TODO',
                 surface: 'TODO',
                 surfaceDark: 'TODO',
+                brandDark: 'TODO',
+                neutralActive: 'TODO',
+                neutralSoft: 'TODO',
+                neutralHover: 'TODO',
+                neutralSoftActive: 'TODO',
+                neutralSoftHover: 'TODO',
               }),
             ).map(([background, description]) => (
               <Columns key={background} space="medium" alignY="center">
@@ -562,6 +568,7 @@ const docs: ComponentDocs = {
                 borderPromote: 'Used for borders around “promote” elements.',
                 borderPromoteLight:
                   'Used for borders around “promoteLight” elements.',
+                borderNeutralLarge: 'TODO',
               }),
             ).map(([boxShadow, description]) => (
               <Columns key={boxShadow} space="medium" alignY="center">

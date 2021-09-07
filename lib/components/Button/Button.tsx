@@ -30,7 +30,7 @@ export const buttonVariants = [
 ] as const;
 
 type ButtonSize = 'standard' | 'small';
-type ButtonTone = 'brandAccent' | 'critical';
+type ButtonTone = 'brandAccent' | 'critical' | 'neutral';
 type ButtonVariant = typeof buttonVariants[number];
 export interface ButtonStyleProps {
   size?: ButtonSize;
@@ -70,6 +70,18 @@ type ButtonStyles = {
   boxShadow: ColorContrastValue<BoxShadow> | BoxShadow | undefined;
 };
 
+const neutralOverrideOnBrand =
+  (lightBackground: BackgroundVariant): ColorContrastValue<BackgroundVariant> =>
+  (contrast, background) => {
+    if (contrast === 'light') {
+      return lightBackground;
+    }
+
+    return background === 'brand' || background === 'brandDark'
+      ? 'brandDark'
+      : 'neutral';
+  };
+
 const variants: Record<
   ButtonVariant,
   Record<'default' | ButtonTone, ButtonStyles>
@@ -80,6 +92,13 @@ const variants: Record<
       background: 'formAccent',
       backgroundHover: 'formAccentHover',
       backgroundActive: 'formAccentActive',
+      boxShadow: undefined,
+    },
+    neutral: {
+      textTone: undefined,
+      background: { light: 'neutral', dark: 'neutralLight' },
+      backgroundHover: { light: 'neutralSoftHover', dark: 'neutralHover' },
+      backgroundActive: { light: 'neutralSoftActive', dark: 'neutralActive' },
       boxShadow: undefined,
     },
     brandAccent: {
@@ -100,38 +119,30 @@ const variants: Record<
   soft: {
     default: {
       textTone: 'formAccent',
-      background: { light: 'formAccentSoft', dark: 'neutral' },
-      backgroundHover: {
-        light: 'formAccentSoftHover',
-        dark: 'neutral',
-      },
-      backgroundActive: {
-        light: 'formAccentSoftActive',
-        dark: 'neutral',
-      },
+      background: neutralOverrideOnBrand('formAccentSoft'),
+      backgroundHover: neutralOverrideOnBrand('formAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('formAccentSoftActive'),
+      boxShadow: undefined,
+    },
+    neutral: {
+      textTone: undefined,
+      background: neutralOverrideOnBrand('neutralSoft'),
+      backgroundHover: neutralOverrideOnBrand('neutralSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('neutralSoftActive'),
       boxShadow: undefined,
     },
     brandAccent: {
       textTone: 'brandAccent',
-      background: { light: 'brandAccentSoft', dark: 'neutral' },
-      backgroundHover: {
-        light: 'brandAccentSoftHover',
-        dark: 'neutral',
-      },
-      backgroundActive: {
-        light: 'brandAccentSoftActive',
-        dark: 'neutral',
-      },
+      background: neutralOverrideOnBrand('brandAccentSoft'),
+      backgroundHover: neutralOverrideOnBrand('brandAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('brandAccentSoftActive'),
       boxShadow: undefined,
     },
     critical: {
       textTone: 'critical',
-      background: { light: 'criticalSoft', dark: 'neutral' },
-      backgroundHover: { light: 'criticalSoftHover', dark: 'neutral' },
-      backgroundActive: {
-        light: 'criticalSoftActive',
-        dark: 'neutral',
-      },
+      background: neutralOverrideOnBrand('criticalSoft'),
+      backgroundHover: neutralOverrideOnBrand('criticalSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('criticalSoftActive'),
       boxShadow: undefined,
     },
   },
@@ -139,37 +150,29 @@ const variants: Record<
     default: {
       textTone: 'formAccent',
       background: undefined,
-      backgroundHover: {
-        light: 'formAccentSoftHover',
-        dark: 'neutral',
-      },
-      backgroundActive: {
-        light: 'formAccentSoftActive',
-        dark: 'neutral',
-      },
+      backgroundHover: neutralOverrideOnBrand('formAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('formAccentSoftActive'),
+      boxShadow: undefined,
+    },
+    neutral: {
+      textTone: undefined,
+      background: undefined,
+      backgroundHover: neutralOverrideOnBrand('neutralSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('neutralSoftActive'),
       boxShadow: undefined,
     },
     brandAccent: {
       textTone: 'brandAccent',
       background: undefined,
-      backgroundHover: {
-        light: 'brandAccentSoftHover',
-        dark: 'neutral',
-      },
-      backgroundActive: {
-        light: 'brandAccentSoftActive',
-        dark: 'neutral',
-      },
+      backgroundHover: neutralOverrideOnBrand('brandAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('brandAccentSoftActive'),
       boxShadow: undefined,
     },
     critical: {
       textTone: 'critical',
       background: undefined,
-      backgroundHover: { light: 'criticalSoftHover', dark: 'neutral' },
-      backgroundActive: {
-        light: 'criticalSoftActive',
-        dark: 'neutral',
-      },
+      backgroundHover: neutralOverrideOnBrand('criticalSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('criticalSoftActive'),
       boxShadow: undefined,
     },
   },
@@ -177,30 +180,28 @@ const variants: Record<
     default: {
       textTone: 'formAccent',
       background: undefined,
-      backgroundHover: {
-        light: 'formAccentSoftHover',
-        dark: 'neutral',
-      },
-      backgroundActive: {
-        light: 'formAccentSoftActive',
-        dark: 'neutral',
-      },
+      backgroundHover: neutralOverrideOnBrand('formAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('formAccentSoftActive'),
       boxShadow: {
         light: 'borderFormAccentLarge',
         dark: 'borderFormAccentLightLarge',
       },
     },
+    neutral: {
+      textTone: undefined,
+      background: undefined,
+      backgroundHover: neutralOverrideOnBrand('neutralSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('neutralSoftActive'),
+      boxShadow: {
+        light: 'borderNeutralLarge',
+        dark: 'borderStandardInvertedLarge',
+      },
+    },
     brandAccent: {
       textTone: 'brandAccent',
       background: undefined,
-      backgroundHover: {
-        light: 'brandAccentSoftHover',
-        dark: 'neutral',
-      },
-      backgroundActive: {
-        light: 'brandAccentSoftActive',
-        dark: 'neutral',
-      },
+      backgroundHover: neutralOverrideOnBrand('brandAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('brandAccentSoftActive'),
       boxShadow: {
         light: 'borderBrandAccentLarge',
         dark: 'borderBrandAccentLightLarge',
@@ -209,11 +210,8 @@ const variants: Record<
     critical: {
       textTone: 'critical',
       background: undefined,
-      backgroundHover: { light: 'criticalSoftHover', dark: 'neutral' },
-      backgroundActive: {
-        light: 'criticalSoftActive',
-        dark: 'neutral',
-      },
+      backgroundHover: neutralOverrideOnBrand('brandAccentSoftHover'),
+      backgroundActive: neutralOverrideOnBrand('brandAccentSoftActive'),
       boxShadow: {
         light: 'borderCriticalLarge',
         dark: 'borderCriticalLightLarge',

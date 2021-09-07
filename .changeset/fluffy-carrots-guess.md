@@ -2,4 +2,4 @@
 'braid-design-system': major
 ---
 
-Remove inverted buttons
+Migrate inverted buttons to neutral tone

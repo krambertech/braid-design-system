@@ -1,4 +1,4 @@
-import { darken, rgba } from 'polished';
+import { darken, lighten, rgba } from 'polished';
 import { palette } from '../../color/palette';
 import { BraidTokens } from '../tokenType';
 
@@ -174,6 +174,7 @@ const tokens: BraidTokens = {
       positiveLight: palette.mint['300'],
       promote: palette.purple['600'],
       promoteLight: palette.purple['300'],
+      neutral: black,
       standard: palette.grey['200'],
       standardInverted: white,
     },
@@ -215,6 +216,7 @@ const tokens: BraidTokens = {
     background: {
       body: white,
       brand: palette.grey['900'],
+      brandDark: black,
       bodyDark: palette.grey['900'],
       surfaceDark: palette.grey['800'],
       surface: white,
@@ -246,7 +248,12 @@ const tokens: BraidTokens = {
       input: white,
       inputDisabled: palette.grey['200'],
       neutral: palette.grey['200'],
+      neutralActive: darken(0.05, palette.grey['700']),
+      neutralHover: lighten(0.05, palette.grey['700']),
       neutralLight: palette.grey['100'],
+      neutralSoft: palette.grey['50'],
+      neutralSoftActive: darken(0.05, palette.grey['50']),
+      neutralSoftHover: darken(0.025, palette.grey['50']),
       positive: palette.mint['600'],
       positiveLight: palette.mint['100'],
       promote: palette.purple['600'],
