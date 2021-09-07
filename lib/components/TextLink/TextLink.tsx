@@ -28,11 +28,19 @@ export interface TextLinkProps
   data?: DataAttributeMap;
 }
 
-const isPlainBackground = (backgroundContext: BackgroundVariant) =>
-  backgroundContext === 'body' ||
-  backgroundContext === 'surface' ||
-  backgroundContext === 'card' ||
-  backgroundContext === 'neutralLight';
+const isPlainBackground = (
+  backgroundContext: BackgroundVariant,
+  contrast: 'dark' | 'light',
+) =>
+  (contrast === 'light' &&
+    (backgroundContext === 'body' ||
+      backgroundContext === 'surface' ||
+      backgroundContext === 'card' ||
+      backgroundContext === 'neutralLight')) ||
+  (contrast === 'dark' &&
+    (backgroundContext === 'bodyDark' ||
+      backgroundContext === 'surfaceDark' ||
+      backgroundContext === 'neutral'));
 
 export const useLinkStyles = ({
   reset = 'a',
@@ -49,10 +57,10 @@ export const useLinkStyles = ({
     weight === 'weak'
       ? typographyStyles.weakLink
       : [
-          isPlainBackground(backgroundContext.lightMode)
+          isPlainBackground(backgroundContext.lightMode, 'light')
             ? typographyStyles.lightModeTextLink[backgroundLightness.lightMode]
             : typographyStyles.weakLink,
-          isPlainBackground(backgroundContext.darkMode)
+          isPlainBackground(backgroundContext.darkMode, 'dark')
             ? typographyStyles.darkModeTextLink[backgroundLightness.darkMode]
             : typographyStyles.weakLink,
         ];

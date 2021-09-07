@@ -114,6 +114,7 @@ export interface BraidTokens {
       formAccent: string;
       infoLight: string;
       info: string;
+      linkLight: string;
       link: string;
       linkHover: string;
       linkVisited: string;

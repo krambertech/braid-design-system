@@ -214,6 +214,7 @@ const tokens: BraidTokens = {
       formAccent,
       infoLight: info,
       info: getAccessibleVariant(info),
+      linkLight: link,
       link,
       linkHover: link,
       linkVisited,

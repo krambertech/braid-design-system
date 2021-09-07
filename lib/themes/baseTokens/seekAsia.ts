@@ -241,6 +241,7 @@ export const makeTokens = ({
         formAccent,
         infoLight: info,
         info: getAccessibleVariant(info),
+        linkLight: link,
         link,
         linkHover,
         linkVisited,

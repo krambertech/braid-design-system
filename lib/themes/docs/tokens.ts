@@ -200,6 +200,7 @@ const tokens: BraidTokens = {
       formAccent,
       infoLight: palette.blue['300'],
       info: palette.blue['700'],
+      linkLight: palette.indigo['300'],
       link,
       linkHover: link,
       linkVisited,

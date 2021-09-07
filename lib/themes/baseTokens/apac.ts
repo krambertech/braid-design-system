@@ -233,6 +233,7 @@ export const makeTokens = ({
         formAccent,
         infoLight: palette.blue['300'],
         info: palette.blue['700'],
+        linkLight: palette.indigo['300'],
         link: formAccent,
         linkHover: formAccent,
         linkVisited: palette.purple['700'],

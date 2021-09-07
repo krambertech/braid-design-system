@@ -105,9 +105,17 @@ const textLinkVars = createThemeContract({
   textDecorationHover: null,
 });
 
-const regularLinkVars = assignVars(textLinkVars, {
+const lightModeRegularLinkVars = assignVars(textLinkVars, {
   color: vars.foregroundColor.link,
   colorHover: vars.foregroundColor.linkHover,
+  fontWeight: vars.textWeight.medium,
+  textDecoration: 'none',
+  textDecorationHover: 'underline',
+});
+
+const darkModeRegularLinkVars = assignVars(textLinkVars, {
+  color: vars.foregroundColor.linkLight,
+  colorHover: vars.foregroundColor.linkLight,
   fontWeight: vars.textWeight.medium,
   textDecoration: 'none',
   textDecorationHover: 'underline',
@@ -150,7 +158,7 @@ export const lightModeTextLink = styleVariants({
   light: {
     selectors: {
       [`html:not(.${braidDarkModeClass}) &`]: {
-        vars: regularLinkVars,
+        vars: lightModeRegularLinkVars,
       },
       [`html:not(.${braidDarkModeClass}) ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
@@ -160,6 +168,9 @@ export const lightModeTextLink = styleVariants({
   dark: {
     selectors: {
       [`html:not(.${braidDarkModeClass}) &`]: {
+        vars: darkModeRegularLinkVars,
+      },
+      [`html:not(.${braidDarkModeClass}) ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
       },
     },
@@ -170,7 +181,7 @@ export const darkModeTextLink = styleVariants({
   light: {
     selectors: {
       [`html.${braidDarkModeClass} &`]: {
-        vars: regularLinkVars,
+        vars: lightModeRegularLinkVars,
       },
       [`html.${braidDarkModeClass} ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
@@ -180,6 +191,9 @@ export const darkModeTextLink = styleVariants({
   dark: {
     selectors: {
       [`html.${braidDarkModeClass} &`]: {
+        vars: darkModeRegularLinkVars,
+      },
+      [`html.${braidDarkModeClass} ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
       },
     },
@@ -222,7 +236,7 @@ const darkContextToneVars = assignVars(textToneVars, {
   formAccent: vars.foregroundColor.formAccentLight,
   neutral: vars.foregroundColor.neutralInverted,
   secondary: vars.foregroundColor.secondaryInverted,
-  link: vars.foregroundColor.link,
+  link: vars.foregroundColor.linkLight,
 });
 
 export const lightModeTone = styleVariants({
@@ -307,16 +321,6 @@ export const darkModeNeutralOverride = styleVariants(
 export const tone = styleVariants(textToneVars, (toneVar) => ({
   color: toneVar,
 }));
-
-// export const link = style({
-//   color: vars.foregroundColor.link,
-//   ...(vars.foregroundColor.link !== vars.foregroundColor.linkHover
-//     ? {
-//         ':hover': { color: vars.foregroundColor.linkHover },
-//         ':focus': { color: vars.foregroundColor.linkHover },
-//       }
-//     : {}),
-// });
 
 const makeTouchableSpacing = (touchableHeight: string, textHeight: string) => {
   const space = calc(touchableHeight).subtract(textHeight).divide(2).toString();
