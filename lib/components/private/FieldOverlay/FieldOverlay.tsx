@@ -34,6 +34,7 @@ const boxShadowForVariant: Record<FieldOverlayVariant, BoxProps['boxShadow']> =
 
 export const FieldOverlay = ({ variant, ...restProps }: FieldOverlayProps) => (
   <Overlay
+    component="span"
     borderRadius="standard"
     boxShadow={boxShadowForVariant[variant!]}
     transition="fast"

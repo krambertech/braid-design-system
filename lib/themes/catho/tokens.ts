@@ -170,6 +170,7 @@ const tokens: BraidTokens = {
       large: 2,
     },
     color: {
+      brandAccentLight: brandAccent,
       brandAccent,
       caution,
       cautionLight: mix(0.6, caution, getLightVariant(caution)),
@@ -177,6 +178,7 @@ const tokens: BraidTokens = {
       criticalLight: mix(0.3, critical, criticalLight),
       field: '#999999',
       focus,
+      formAccentLight: formAccent,
       formAccent,
       formHover: formAccent,
       info,
@@ -200,11 +202,13 @@ const tokens: BraidTokens = {
   },
   color: {
     foreground: {
+      brandAccentLight: brandAccent,
       brandAccent,
       cautionLight: caution,
       caution: getAccessibleVariant(caution, caution),
       criticalLight: critical,
       critical: getAccessibleVariant(critical),
+      formAccentLight: formAccent,
       formAccent,
       infoLight: info,
       info: getAccessibleVariant(info),

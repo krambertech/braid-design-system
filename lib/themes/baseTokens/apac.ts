@@ -9,6 +9,7 @@ interface MakeTokensOptions {
   displayName: string;
   brand: string;
   brandAccent: string;
+  brandAccentLight: string;
   brandAccentActive: string;
   brandAccentHover: string;
   brandAccentSoft: string;
@@ -21,6 +22,7 @@ export const makeTokens = ({
   displayName,
   brand,
   brandAccent,
+  brandAccentLight,
   brandAccentActive,
   brandAccentHover,
   brandAccentSoft,
@@ -179,6 +181,7 @@ export const makeTokens = ({
         large: 2,
       },
       color: {
+        brandAccentLight,
         brandAccent,
         caution: palette.yellow['500'],
         cautionLight: palette.yellow['200'],
@@ -186,6 +189,7 @@ export const makeTokens = ({
         criticalLight: palette.red['300'],
         field: palette.grey['400'],
         focus,
+        formAccentLight: palette.indigo['300'],
         formAccent,
         formHover: palette.indigo['500'],
         info: palette.blue['700'],
@@ -218,11 +222,13 @@ export const makeTokens = ({
     },
     color: {
       foreground: {
+        brandAccentLight,
         brandAccent,
         cautionLight: palette.yellow['300'],
         caution: palette.yellow['900'],
         criticalLight: palette.red['300'],
         critical,
+        formAccentLight: palette.indigo['300'],
         formAccent,
         infoLight: palette.blue['300'],
         info: palette.blue['700'],

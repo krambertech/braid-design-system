@@ -157,6 +157,7 @@ const tokens: BraidTokens = {
       large: 2,
     },
     color: {
+      brandAccentLight: palette.grey['200'],
       brandAccent,
       caution: palette.yellow['600'],
       cautionLight: palette.yellow['300'],
@@ -164,6 +165,7 @@ const tokens: BraidTokens = {
       criticalLight: palette.red['300'],
       field: palette.grey['400'],
       focus,
+      formAccentLight: palette.indigo['300'],
       formAccent,
       formHover: formAccent,
       info: palette.blue['600'],
@@ -187,11 +189,13 @@ const tokens: BraidTokens = {
   },
   color: {
     foreground: {
+      brandAccentLight: palette.grey['200'],
       brandAccent,
       cautionLight: palette.yellow['300'],
       caution: palette.yellow['900'],
       criticalLight: palette.red['300'],
       critical: palette.red['700'],
+      formAccentLight: palette.indigo['300'],
       formAccent,
       infoLight: palette.blue['300'],
       info: palette.blue['700'],

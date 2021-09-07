@@ -72,15 +72,14 @@ export const useBackgroundLightness = (
   };
 };
 
+export type ColorContrastValue<Value> =
+  | { light: Value; dark: Value }
+  | ((contrast: 'light' | 'dark', background: BackgroundVariant) => Value);
 export const useColorContrast = () => {
   const background = useBackground();
   const backgroundLightness = useBackgroundLightness();
 
-  return <Value extends string>(
-    map:
-      | { light: Value; dark: Value }
-      | ((contrast: 'light' | 'dark', background: BackgroundVariant) => Value),
-  ) =>
+  return <Value extends string>(map: ColorContrastValue<Value>) =>
     mapColorModeValue(backgroundLightness, (lightness, mode) =>
       typeof map === 'function'
         ? map(lightness, background[mode])
