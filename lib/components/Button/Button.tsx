@@ -4,9 +4,8 @@ import React, {
   ReactNode,
   AllHTMLAttributes,
 } from 'react';
-import { Box } from '..';
 import { touchableText, useText } from '../../hooks/typography';
-import { BoxProps } from '../Box/Box';
+import { Box, BoxProps } from '../Box/Box';
 import buildDataAttributes, {
   DataAttributeMap,
 } from '../private/buildDataAttributes';

@@ -247,7 +247,7 @@ const tokens: BraidTokens = {
       infoLight: palette.blue['100'],
       input: white,
       inputDisabled: palette.grey['200'],
-      neutral: palette.grey['200'],
+      neutral: palette.grey['700'],
       neutralActive: darken(0.05, palette.grey['700']),
       neutralHover: lighten(0.05, palette.grey['700']),
       neutralLight: palette.grey['100'],
