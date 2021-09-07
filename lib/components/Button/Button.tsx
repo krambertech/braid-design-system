@@ -4,7 +4,7 @@ import React, {
   ReactNode,
   AllHTMLAttributes,
 } from 'react';
-import { touchableText, useText } from '../../hooks/typography';
+import { touchableText } from '../../hooks/typography';
 import { Box, BoxProps } from '../Box/Box';
 import buildDataAttributes, {
   DataAttributeMap,
@@ -16,7 +16,7 @@ import {
   ColorContrastValue,
   useColorContrast,
 } from '../Box/BackgroundContext';
-import { TextProps } from '../Text/Text';
+import { Text, TextProps } from '../Text/Text';
 import { BoxShadow } from '../../css/atoms/atomicProperties';
 import ActionsContext from '../Actions/ActionsContext';
 import * as styles from './Button.css';
@@ -304,8 +304,16 @@ export const ButtonOverlays = ({
         }
         className={size === 'standard' ? touchableText.standard : undefined}
       >
-        {children}
-        {loading ? <ButtonLoader /> : null}
+        <Text
+          component="span"
+          tone={stylesForVariant.textTone}
+          weight="medium"
+          size={size}
+          baseline={false}
+        >
+          {children}
+          {loading ? <ButtonLoader /> : null}
+        </Text>
       </Box>
     </>
   );
@@ -341,12 +349,6 @@ export const useButtonStyles = ({
         : stylesForVariant.background,
     className: [
       styles.root,
-      useText({
-        tone: stylesForVariant.textTone,
-        weight: 'medium',
-        size,
-        baseline: false,
-      }),
       size === 'small' ? virtualTouchable({ xAxis: false }) : null,
       size === 'standard' ? styles.standard : styles.small,
       bleedY ? styles.bleedY : null,
