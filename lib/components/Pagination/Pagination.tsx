@@ -52,7 +52,7 @@ const PageNav = ({
     >
       <Overlay
         component="span"
-        background="selection"
+        background={{ lightMode: 'selection', darkMode: 'neutral' }} // TODO
         borderRadius={borderRadius}
         transition="fast"
         className={styles.background}
@@ -93,7 +93,11 @@ const Page = ({ number, current }: { number: number; current: boolean }) => {
     >
       <Overlay
         component="span"
-        background={current ? 'formAccent' : 'selection'}
+        background={
+          current
+            ? 'formAccent'
+            : { lightMode: 'selection', darkMode: 'neutral' }
+        }
         transition={current ? undefined : 'fast'}
         borderRadius={borderRadius}
         className={[styles.background, current ? styles.current : undefined]}

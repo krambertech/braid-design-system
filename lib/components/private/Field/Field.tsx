@@ -126,11 +126,11 @@ export const Field = ({
       } as BoxProps['background'])
     : ({
         lightMode: 'input',
-        darkMode: 'surfaceDark',
+        darkMode: 'surfaceDark', // TODO transparent or light mode scoped?
       } as BoxProps['background']);
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;
-  const hasVisualLabel = 'label' in restProps; // const colorContrast = useColorContrast();
+  const hasVisualLabel = 'label' in restProps;
 
   const overlays = (
     <Fragment>

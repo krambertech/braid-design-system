@@ -7,7 +7,7 @@ import React, {
   ReactNode,
   MouseEvent,
 } from 'react';
-import { Box } from '../Box/Box';
+import { Box, BoxProps } from '../Box/Box';
 import { Text } from '../Text/Text';
 import { touchableText } from '../../hooks/typography';
 import { normalizeKey } from '../private/normalizeKey';
@@ -120,7 +120,10 @@ export function useMenuItem<MenuItemElement extends HTMLElement>({
     }
   };
 
-  const hoverBackground = tone === 'critical' ? 'criticalLight' : 'selection';
+  const hoverBackground = {
+    lightMode: tone === 'critical' ? 'criticalLight' : 'selection',
+    darkMode: 'neutral',
+  };
 
   return {
     MenuItemChildren,
@@ -140,6 +143,7 @@ export function useMenuItem<MenuItemElement extends HTMLElement>({
           onClick();
         }
       },
+      background: isHighlighted ? hoverBackground : undefined,
       className: [
         styles.menuItem,
         touchableText[menuItemChildrenSize],
@@ -148,14 +152,13 @@ export function useMenuItem<MenuItemElement extends HTMLElement>({
           alignItems: 'center',
           width: 'full',
           paddingX: 'small',
-          background: isHighlighted ? hoverBackground : undefined,
           cursor: 'pointer',
           textAlign: 'left',
           outline: 'none',
         }),
       ],
       ...buildDataAttributes(data),
-    } as const,
+    } as BoxProps,
   } as const;
 }
 

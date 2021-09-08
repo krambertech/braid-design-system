@@ -26,6 +26,7 @@ const useHoverBackground = (
 
   if (
     background === 'body' ||
+    background === 'surface' ||
     background === 'card' ||
     background === 'input'
   ) {

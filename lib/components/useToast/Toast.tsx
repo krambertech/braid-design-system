@@ -119,9 +119,9 @@ const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
           <Box boxShadow="large" borderRadius={borderRadius}>
             <ContentBlock width="xsmall">
               <Box
-                background="card"
+                background={{ lightMode: 'surface', darkMode: 'surfaceDark' }}
                 position="relative"
-                boxShadow="borderStandard"
+                boxShadow={{ lightMode: 'borderStandard', darkMode: 'none' }}
                 borderRadius={borderRadius}
                 paddingY="medium"
                 paddingLeft="medium"

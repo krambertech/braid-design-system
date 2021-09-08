@@ -262,7 +262,7 @@ export const Tab = ({ children, data, badge, item }: TabProps) => {
           ]}
         />
         <Box
-          background="formAccent"
+          background="formAccent" // TODO formAccentLight in dark mode??
           position="absolute"
           zIndex={2}
           transition="fast"
