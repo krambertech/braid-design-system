@@ -140,7 +140,7 @@ const docs: ComponentDocs = {
           <Strong>disabled</Strong> prop.
         </Text>
       ),
-      background: 'card',
+      background: { lightMode: 'surface', darkMode: 'surfaceDark' },
       Example: ({ id, getState, setState }) =>
         source(
           <Textarea

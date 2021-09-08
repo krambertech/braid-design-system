@@ -238,9 +238,7 @@ const Code = ({
   return (
     <Box position="relative">
       <Stack space="xsmall">
-        {typeof children !== 'string' && (
-          <ThemedExample background="body">{value}</ThemedExample>
-        )}
+        {typeof children !== 'string' && <ThemedExample>{value}</ThemedExample>}
         {hideCode ? null : <CodeBlock>{code}</CodeBlock>}
         <Inline space="xxsmall" align="right">
           {collapsedByDefault ? (

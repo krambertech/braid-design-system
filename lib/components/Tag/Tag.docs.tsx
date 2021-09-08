@@ -8,7 +8,7 @@ const docs: ComponentDocs = {
   migrationGuide: true,
   Example: () =>
     source(
-      <Card>
+      <Card rounded>
         <Inline space="small">
           <Tag>One</Tag>
           <Tag>Two</Tag>
@@ -27,7 +27,7 @@ const docs: ComponentDocs = {
           will do.
         </Text>
       ),
-      background: 'card',
+      background: { lightMode: 'surface', darkMode: 'surfaceDark' },
       Example: ({ getState, setState, toggleState }) =>
         source(
           <Inline space="small" alignY="center">

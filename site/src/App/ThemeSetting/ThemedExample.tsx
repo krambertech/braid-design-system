@@ -15,27 +15,16 @@ export function ThemedExample({ background, children }: ThemedExampleProps) {
   return (
     <Box opacity={!ready ? 0 : undefined} transition="fast">
       <BraidProvider styleBody={false} theme={theme}>
-        {background ? (
-          <Box
-            background={theme.name === 'docs' ? 'neutralLight' : 'body'}
-            padding="xsmall"
-            className={styles.unthemedBorderRadius}
-          >
-            <Box
-              background={
-                theme.name === 'docs' && background === 'body'
-                  ? 'neutralLight'
-                  : background
-              }
-              padding={['small', 'medium', 'large']}
-              className={styles.unthemedBorderRadius}
-            >
-              {children}
-            </Box>
-          </Box>
-        ) : (
-          children
-        )}
+        <Box
+          boxShadow={{
+            darkMode: 'borderNeutralLarge',
+          }}
+          background={background || { lightMode: 'body', darkMode: 'bodyDark' }}
+          padding={['small', 'medium', 'large']}
+          className={styles.unthemedBorderRadius}
+        >
+          {children}
+        </Box>
       </BraidProvider>
     </Box>
   );
