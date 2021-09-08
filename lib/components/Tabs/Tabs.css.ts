@@ -77,6 +77,5 @@ export const tabPanelFocusRing = style({
 });
 
 export const divider = style({
-  background: vars.borderColor.standard,
   height: vars.borderWidth.standard,
 });

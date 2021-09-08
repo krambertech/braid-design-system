@@ -21,10 +21,10 @@ const lightContextVars = assignVars(vars, {
 });
 
 const darkContextVars = assignVars(vars, {
-  background: 'hsla(0, 0%, 100%, 0.35)',
-  borderColor: 'hsla(0, 0%, 100%, 0.8)',
-  labelColor: 'hsla(0, 0%, 100%, 0.8)',
-  lineColor: 'hsla(0, 0%, 100%, 0.4)',
+  background: 'hsla(0, 0%, 100%, 0.05)',
+  borderColor: 'hsla(0, 0%, 100%, 0.4)',
+  labelColor: 'hsla(0, 0%, 100%, 0.6)',
+  lineColor: 'hsla(0, 0%, 100%, 0.2)',
 });
 
 export const lightTheme = styleVariants({
