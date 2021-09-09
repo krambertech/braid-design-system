@@ -132,7 +132,8 @@ export const BraidProvider = ({
         {styleBody ? (
           <style type="text/css">{`
             body{margin:0;padding:0;background:${theme.background.lightMode}}
-            .${braidDarkModeClass} body{margin:0;padding:0;background:${theme.background.darkMode}}
+            html.${braidDarkModeClass}{color-scheme:dark}
+            html.${braidDarkModeClass} body{background:${theme.background.darkMode}}
             }}
           `}</style>
         ) : null}

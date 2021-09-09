@@ -1,22 +1,37 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { createVar, globalStyle, style } from '@vanilla-extract/css';
+import { braidDarkModeClass } from '../../../../../lib/css/atoms/sprinkles.css';
 import { vars } from '../../../../../lib/themes/vars.css';
 
 export const loader = style({
-  color: '#f2f2f2',
+  opacity: 0.3,
   height: 300,
   width: 300,
   maxHeight: 'min(50vw, 50vh)',
   maxWidth: 'min(50vw, 50vh)',
 });
 
+const borderColor = createVar();
+
 export const divider = style({
-  borderRight: `${vars.borderWidth.standard} solid ${vars.borderColor.standard}`,
+  borderRight: `${vars.borderWidth.standard} solid ${borderColor}`,
   width: 1,
   height: vars.textSize.standard.mobile.lineHeight,
+  selectors: {
+    [`html:not(.${braidDarkModeClass}) &`]: {
+      vars: {
+        [borderColor]: vars.borderColor.standard,
+      },
+    },
+    [`html.${braidDarkModeClass} &`]: {
+      vars: {
+        [borderColor]: vars.borderColor.neutral,
+      },
+    },
+  },
 });
 
-export const moveCursor = style({
-  cursor: 'move',
+export const grabCursor = style({
+  cursor: 'grab',
 });
 
 export const delayPanels = style({

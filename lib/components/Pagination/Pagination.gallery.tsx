@@ -6,7 +6,7 @@ import source from '../../utils/source.macro';
 export const galleryItems: ComponentExample[] = [
   {
     label: 'Standard',
-    background: 'card',
+    background: { lightMode: 'surface', darkMode: 'surfaceDark' },
     Example: () => source(<Pagination />),
   },
 ];

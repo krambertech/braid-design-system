@@ -130,7 +130,7 @@ interface RenderExampleProps {
   example: ComponentExample;
 }
 const RenderExample = ({ id, example }: RenderExampleProps) => {
-  const { label, Container = DefaultContainer, background = 'body' } = example;
+  const { label, Container = DefaultContainer, background } = example;
   const { code, value } = useSourceFromExample(id, example);
 
   return (
@@ -198,8 +198,8 @@ const GalleryItem = ({
   return (
     <Box
       component="article"
-      background="card"
-      borderRadius="standard"
+      background={{ lightMode: 'surface', darkMode: 'surfaceDark' }}
+      borderRadius="xlarge"
       padding={isAnIcon ? 'large' : 'xxlarge'}
       margin={isAnIcon ? 'small' : 'xxlarge'}
       data-braid-component-name={item.name}
@@ -634,7 +634,7 @@ const GalleryInternal = () => {
         outline="none"
         transition="fast"
         opacity={ready ? undefined : 0}
-        className={styles.moveCursor}
+        className={styles.grabCursor}
       >
         <Box
           ref={contentRef}
