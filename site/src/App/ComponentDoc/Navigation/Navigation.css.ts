@@ -33,7 +33,7 @@ export const activeUnderlineColor = styleVariants({
     selectors: {
       [`html.${braidDarkModeClass} &`]: {
         vars: {
-          [activeUnderlineVar]: vars.borderColor.standard,
+          [activeUnderlineVar]: vars.borderColor.neutralLight,
         },
       },
     },

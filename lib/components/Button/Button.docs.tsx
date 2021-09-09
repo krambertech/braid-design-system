@@ -265,11 +265,13 @@ const docs: ComponentDocs = {
                 Standard size
               </Text>
               <Box
-                background="neutralLight"
+                background={{ lightMode: 'neutralLight', darkMode: 'neutral' }}
                 borderRadius="standard"
                 padding="gutter"
               >
-                <Box background="card">
+                <Box
+                  background={{ lightMode: 'surface', darkMode: 'surfaceDark' }}
+                >
                   <Inline space="xsmall" alignY="center">
                     <Heading level="2">Heading</Heading>
                     <Button bleedY>Button</Button>
@@ -282,11 +284,13 @@ const docs: ComponentDocs = {
                 Small size
               </Text>
               <Box
-                background="neutralLight"
+                background={{ lightMode: 'neutralLight', darkMode: 'neutral' }}
                 borderRadius="standard"
                 padding="gutter"
               >
-                <Box background="card">
+                <Box
+                  background={{ lightMode: 'surface', darkMode: 'surfaceDark' }}
+                >
                   <Inline space="xsmall" alignY="center">
                     <Heading level="2">Heading</Heading>
                     <Button bleedY size="small">

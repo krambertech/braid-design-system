@@ -37,11 +37,11 @@ const RatingStar = ({ percent, ...restProps }: RatingStar) => {
         className,
         {
           [styles.lightModeStarColor]:
-            currentBg.lightMode === 'body' || currentBg.lightMode === 'card',
+            currentBg.lightMode === 'body' || currentBg.lightMode === 'surface',
         },
         {
           [styles.darkModeStarColor]:
-            currentBg.darkMode === 'body' || currentBg.darkMode === 'card',
+            currentBg.darkMode === 'body' || currentBg.darkMode === 'surface',
         },
       ]}
     />

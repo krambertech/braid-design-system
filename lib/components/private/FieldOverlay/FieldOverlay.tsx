@@ -26,7 +26,7 @@ const boxShadowForVariant: Record<FieldOverlayVariant, BoxProps['boxShadow']> =
   {
     transparent: 'none',
     default: 'borderField',
-    disabled: { lightMode: 'borderStandard', darkMode: 'none' },
+    disabled: { lightMode: 'borderNeutralLight', darkMode: 'none' },
     focus: 'outlineFocus',
     hover: 'borderFormHover',
     critical: { lightMode: 'borderCritical', darkMode: 'borderCriticalLight' },

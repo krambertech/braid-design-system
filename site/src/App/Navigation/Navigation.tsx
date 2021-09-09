@@ -125,7 +125,7 @@ export const Navigation = ({ children }: NavigationProps) => {
       </RemoveScroll>
 
       <Box
-        background={{ lightMode: 'body', darkMode: 'bodyDark' }}
+        background={{ lightMode: 'surface', darkMode: 'bodyDark' }}
         position="relative"
         overflow="hidden" // Fix stack space intercepting nav bar clicks
         paddingX={{

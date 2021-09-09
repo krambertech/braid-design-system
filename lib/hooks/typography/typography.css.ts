@@ -146,9 +146,37 @@ export const weakLink = style({
   vars: weakLinkVars,
 });
 
-export const textLinkVisited = style({
-  ':visited': {
-    color: vars.foregroundColor.linkVisited,
+export const textLinkVisitedLinkMode = styleVariants({
+  light: {
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &:visited`]: {
+        color: vars.foregroundColor.linkVisited,
+      },
+    },
+  },
+  dark: {
+    selectors: {
+      [`html:not(.${braidDarkModeClass}) &:visited`]: {
+        color: vars.foregroundColor.linkLightVisited,
+      },
+    },
+  },
+});
+
+export const textLinkVisitedDarkMode = styleVariants({
+  light: {
+    selectors: {
+      [`html.${braidDarkModeClass} &:visited`]: {
+        color: vars.foregroundColor.linkVisited,
+      },
+    },
+  },
+  dark: {
+    selectors: {
+      [`html.${braidDarkModeClass} &:visited`]: {
+        color: vars.foregroundColor.linkLightVisited,
+      },
+    },
   },
 });
 

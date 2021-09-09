@@ -19,7 +19,7 @@ export const divider = style({
   selectors: {
     [`html:not(.${braidDarkModeClass}) &`]: {
       vars: {
-        [borderColor]: vars.borderColor.standard,
+        [borderColor]: vars.borderColor.neutralLight,
       },
     },
     [`html.${braidDarkModeClass} &`]: {

@@ -380,10 +380,10 @@ const docs: CssDoc = {
                   small: 'Used for small shadows.',
                   medium: 'Used for medium shadows.',
                   large: 'Used for large shadows.',
-                  borderStandard: 'Used for neutral element borders.',
-                  borderStandardInverted:
+                  borderNeutral: 'Used for neutral element borders.',
+                  borderNeutralInverted:
                     'Used for standard borders on dark backgrounds.',
-                  borderStandardInvertedLarge:
+                  borderNeutralInvertedLarge:
                     'Used for large standard borders on dark backgrounds.',
                   borderField: 'Used for borders around form fields.',
                   borderFormHover:
@@ -422,13 +422,14 @@ const docs: CssDoc = {
                   borderPromoteLight:
                     'Used for borders around “promoteLight” elements.',
                   borderNeutralLarge: 'TODO',
+                  borderNeutralLight: 'TODO',
                 }),
               ).map(([boxShadow, description]) => (
                 <Columns key={boxShadow} space="medium" alignY="center">
                   <Column width="content">
                     <Box
                       background={
-                        boxShadow.includes('Inverted') ? 'brand' : 'card'
+                        boxShadow.includes('Inverted') ? 'brand' : 'surface'
                       }
                       borderRadius="standard"
                       padding="gutter"

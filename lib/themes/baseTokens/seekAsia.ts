@@ -31,12 +31,10 @@ export const makeTokens = ({
   const white = '#fff';
   const blue2 = '#298EB9';
   const blue3 = '#94C9E0';
-  const blue5 = '#EEF8FC';
   const alert = '#eb0000';
   const grey1 = '#333';
   const grey2 = '#666';
   const grey4 = '#ccc';
-  const grey5 = '#eee';
   const candidate = '#0c4b85'; // SEEK Asia name for this color
   const info = candidate;
   const promote = '#923f92';
@@ -48,7 +46,6 @@ export const makeTokens = ({
   const link = blue2;
   const linkHover = blue2;
   const linkVisited = '#3f11a3';
-  const selection = blue5;
   const secondary = grey2;
   const neutral = grey2;
 
@@ -198,26 +195,26 @@ export const makeTokens = ({
         large: 2,
       },
       color: {
-        brandAccentLight: brandAccent,
         brandAccent,
+        brandAccentLight: brandAccent,
         caution,
         cautionLight: mix(0.6, caution, getLightVariant(caution)),
         critical,
         criticalLight: mix(0.3, critical, criticalLight),
         field: grey4,
         focus,
-        formAccentLight: formAccent,
         formAccent,
+        formAccentLight: formAccent,
         formHover: formAccent,
         info,
         infoLight: mix(0.3, info, getLightVariant(info)),
+        neutral: grey1,
+        neutralInverted: white,
+        neutralLight: grey4,
         positive,
         positiveLight: mix(0.3, positive, getLightVariant(positive)),
         promote,
         promoteLight: mix(0.3, promote, getLightVariant(promote)),
-        neutral: grey1,
-        standard: grey4,
-        standardInverted: white,
       },
     },
     focusRingSize: 2,
@@ -231,26 +228,27 @@ export const makeTokens = ({
     },
     color: {
       foreground: {
-        brandAccentLight: brandAccent,
         brandAccent,
-        cautionLight: caution,
+        brandAccentLight: brandAccent,
         caution: getAccessibleVariant(caution, caution),
-        criticalLight: critical,
+        cautionLight: caution,
         critical: getAccessibleVariant(critical),
-        formAccentLight: formAccent,
+        criticalLight: critical,
         formAccent,
-        infoLight: info,
+        formAccentLight: formAccent,
         info: getAccessibleVariant(info),
-        linkLight: link,
+        infoLight: info,
         link,
         linkHover,
+        linkLight: link,
         linkVisited,
+        linkLightVisited: linkVisited,
         neutral: grey1,
         neutralInverted: white,
-        positiveLight: positive,
         positive: getAccessibleVariant(positive),
-        promoteLight: promote,
+        positiveLight: positive,
         promote: getAccessibleVariant(promote),
+        promoteLight: promote,
         rating: '#ff9000',
         secondary,
         secondaryInverted: 'hsla(0, 0%, 100%, 0.65)',
@@ -268,7 +266,6 @@ export const makeTokens = ({
         brandAccentSoft: tint(0.925, brandAccent),
         brandAccentSoftActive: tint(0.85, brandAccent),
         brandAccentSoftHover: tint(0.9, brandAccent),
-        card: white,
         caution,
         cautionLight: getLightVariant(caution),
         critical,
@@ -280,19 +277,16 @@ export const makeTokens = ({
         criticalSoftHover: tint(0.9, critical),
         formAccent,
         formAccentActive: getActiveColor(formAccent),
-        formAccentDisabled: grey4,
         formAccentHover: getHoverColor(formAccent),
         formAccentSoft: tint(0.925, formAccent),
         formAccentSoftActive: tint(0.85, formAccent),
         formAccentSoftHover: tint(0.9, formAccent),
         info,
         infoLight: getLightVariant(info),
-        input: white,
-        inputDisabled: grey5,
         neutral,
         neutralActive: neutral,
         neutralHover: neutral,
-        neutralLight: getLightVariant(neutral),
+        neutralLight: grey4,
         neutralSoft: neutral,
         neutralSoftActive: neutral,
         neutralSoftHover: neutral,
@@ -300,7 +294,6 @@ export const makeTokens = ({
         positiveLight: getLightVariant(positive),
         promote,
         promoteLight: getLightVariant(promote),
-        selection,
       },
     },
   };

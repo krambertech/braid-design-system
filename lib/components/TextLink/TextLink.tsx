@@ -35,7 +35,6 @@ const isPlainBackground = (
   (contrast === 'light' &&
     (backgroundContext === 'body' ||
       backgroundContext === 'surface' ||
-      backgroundContext === 'card' ||
       backgroundContext === 'neutralLight')) ||
   (contrast === 'dark' &&
     (backgroundContext === 'bodyDark' ||
@@ -68,7 +67,16 @@ export const useLinkStyles = ({
   return clsx(
     typographyStyles.textLink,
     linkStyles,
-    showVisited ? typographyStyles.textLinkVisited : '',
+    showVisited
+      ? [
+          typographyStyles.textLinkVisitedLinkMode[
+            backgroundLightness.lightMode
+          ],
+          typographyStyles.textLinkVisitedDarkMode[
+            backgroundLightness.darkMode
+          ],
+        ]
+      : '',
     reset !== false
       ? atoms({
           reset: typeof reset === 'string' ? reset : 'a',

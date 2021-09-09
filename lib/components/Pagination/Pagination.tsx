@@ -52,7 +52,7 @@ const PageNav = ({
     >
       <Overlay
         component="span"
-        background={{ lightMode: 'selection', darkMode: 'neutral' }} // TODO
+        background={{ lightMode: 'formAccentSoft', darkMode: 'neutral' }}
         borderRadius={borderRadius}
         transition="fast"
         className={styles.background}
@@ -96,7 +96,7 @@ const Page = ({ number, current }: { number: number; current: boolean }) => {
         background={
           current
             ? 'formAccent'
-            : { lightMode: 'selection', darkMode: 'neutral' }
+            : { lightMode: 'formAccentSoft', darkMode: 'neutral' }
         }
         transition={current ? undefined : 'fast'}
         borderRadius={borderRadius}
@@ -108,9 +108,9 @@ const Page = ({ number, current }: { number: number; current: boolean }) => {
         boxShadow="borderFormAccent"
         className={{
           [styles.lightModeCurrentKeyline]:
-            parentBackground.lightMode !== 'card' && current,
+            parentBackground.lightMode !== 'surface' && current,
           [styles.darkModeCurrentKeyline]:
-            parentBackground.darkMode !== 'card' && current,
+            parentBackground.darkMode !== 'surface' && current,
         }}
       />
       <Box component="span" zIndex={1} userSelect="none">

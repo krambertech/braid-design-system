@@ -119,15 +119,10 @@ export const Field = ({
     'description' in restProps && restProps.description
       ? `${id}-description`
       : undefined;
-  const fieldBackground = disabled
-    ? ({
-        lightMode: 'inputDisabled',
-        darkMode: 'neutral',
-      } as BoxProps['background'])
-    : ({
-        lightMode: 'input',
-        darkMode: 'surfaceDark', // TODO transparent or light mode scoped?
-      } as BoxProps['background']);
+  const fieldBackground = {
+    lightMode: disabled ? 'neutralLight' : 'surface',
+    darkMode: disabled ? 'neutral' : 'surfaceDark', // TODO use transparent
+  } as BoxProps['background'];
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;
   const hasVisualLabel = 'label' in restProps;

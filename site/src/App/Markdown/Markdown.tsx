@@ -91,7 +91,7 @@ const renderers = {
     <Box
       paddingX="gutter"
       paddingY="small"
-      background="selection" // Should be 'neutralLight' once it can be explicitly defined in the theme tokens
+      background="neutralLight" // TODO Should be 'neutralLight' once it can be explicitly defined in the theme tokens
     >
       <Box paddingTop="small">
         <DefaultTextPropsProvider tone="secondary">

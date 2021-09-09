@@ -265,7 +265,7 @@ export const Tab = ({ children, data, badge, item }: TabProps) => {
           ]}
         />
         <Box
-          background="formAccent" // TODO formAccentLight in dark mode??
+          background="formAccent"
           position="absolute"
           zIndex={2}
           transition="fast"
@@ -274,6 +274,7 @@ export const Tab = ({ children, data, badge, item }: TabProps) => {
           bottom={0}
           className={[
             styles.tabUnderline,
+            styles.tabUnderlineActiveDarkMode,
             !isSelected ? styles.tabUnderlineAnimation : undefined,
             tabListItemIndex > 0 ? styles.hairlineMarginLeft : null,
           ]}

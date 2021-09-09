@@ -193,7 +193,7 @@ const variants: Record<
       backgroundActive: neutralOverrideOnBrand('neutralSoftActive'),
       boxShadow: {
         light: 'borderNeutralLarge',
-        dark: 'borderStandardInvertedLarge',
+        dark: 'borderNeutralInvertedLarge',
       },
     },
     brandAccent: {

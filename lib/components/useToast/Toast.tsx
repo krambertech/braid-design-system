@@ -121,7 +121,10 @@ const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
               <Box
                 background={{ lightMode: 'surface', darkMode: 'surfaceDark' }}
                 position="relative"
-                boxShadow={{ lightMode: 'borderStandard', darkMode: 'none' }}
+                boxShadow={{
+                  lightMode: 'borderNeutralLight',
+                  darkMode: 'none',
+                }}
                 borderRadius={borderRadius}
                 paddingY="medium"
                 paddingLeft="medium"

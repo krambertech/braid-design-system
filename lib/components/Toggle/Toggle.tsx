@@ -82,7 +82,7 @@ export const Toggle = ({
           width="full"
           overflow="hidden"
           borderRadius="full"
-          background={{ lightMode: 'neutralLight', darkMode: 'surfaceDark' }} // TODO follow field?
+          background={{ lightMode: 'neutralLight', darkMode: 'surfaceDark' }} // TODO transparent
           className={[styles.slideTrack[size], styles.slideTrackMask]}
         >
           <Box
@@ -96,7 +96,7 @@ export const Toggle = ({
         </Box>
         <Box
           position="absolute"
-          background={{ lightMode: 'input', darkMode: 'neutral' }}
+          background={{ lightMode: 'surface', darkMode: 'neutral' }}
           boxShadow={{
             lightMode:
               backgroundLightness.lightMode === 'light'

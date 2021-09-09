@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css';
+import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
 import { vars } from '../../themes/vars.css';
 
 export const tab = style({
@@ -52,6 +53,14 @@ export const tabFocusRing = style({
 
 export const tabUnderline = style({
   height: 2,
+});
+
+export const tabUnderlineActiveDarkMode = style({
+  selectors: {
+    [`html.${braidDarkModeClass} &`]: {
+      background: vars.borderColor.formAccentLight,
+    },
+  },
 });
 
 export const tabUnderlineHover = style({

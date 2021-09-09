@@ -24,7 +24,7 @@ export const weight = styleVariants({
     selectors: {
       [`html:not(.${braidDarkModeClass}) &`]: {
         vars: assignVars(weightVars, {
-          regular: vars.borderColor.standard,
+          regular: vars.borderColor.neutralLight,
           strong: vars.borderColor.neutral,
         }),
       },
@@ -35,7 +35,7 @@ export const weight = styleVariants({
       [`html.${braidDarkModeClass} &`]: {
         vars: assignVars(weightVars, {
           regular: vars.borderColor.neutral,
-          strong: vars.borderColor.standard,
+          strong: vars.borderColor.neutralLight,
         }),
       },
     },

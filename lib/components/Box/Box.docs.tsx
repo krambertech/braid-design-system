@@ -419,13 +419,6 @@ const docs: ComponentDocs = {
                   'Active colour for “formAccentSoft” elements.',
                 formAccentSoftHover:
                   'Hover colour for formAccentSoft” elements.',
-                formAccentDisabled:
-                  'Disabled colour for “formAccent” elements.',
-                input: 'Used for input fields.',
-                inputDisabled: 'Used for input fields when disabled.',
-                card: 'Used for card surfaces.',
-                selection:
-                  'Used for user selections, e.g. selected item in an Autosuggest.',
                 positive: 'Used for heavier “positive” elements.',
                 positiveLight: 'Used for light “positive” elements.',
                 critical: 'Used for heavier “critical” elements.',
@@ -459,12 +452,16 @@ const docs: ComponentDocs = {
             ).map(([background, description]) => (
               <Columns key={background} space="medium" alignY="center">
                 <Column width="content">
-                  <Box background="card" borderRadius="large" padding="gutter">
+                  <Box
+                    background="surface"
+                    borderRadius="large"
+                    padding="gutter"
+                  >
                     <Box
                       background={background as keyof BackgroundDocs}
                       boxShadow={
-                        ['card', 'input'].includes(background)
-                          ? 'borderStandard'
+                        background === 'surface'
+                          ? 'borderNeutralLight'
                           : undefined
                       }
                       borderRadius="large"
@@ -530,11 +527,11 @@ const docs: ComponentDocs = {
                 small: 'Used for small shadows.',
                 medium: 'Used for medium shadows.',
                 large: 'Used for large shadows.',
-                borderStandard: 'Used for neutral element borders.',
-                borderStandardInverted:
-                  'Used for standard borders on dark backgrounds.',
-                borderStandardInvertedLarge:
-                  'Used for large standard borders on dark backgrounds.',
+                borderNeutral: 'Used for neutral element borders.',
+                borderNeutralInverted:
+                  'Used for neutral borders on dark backgrounds.',
+                borderNeutralInvertedLarge:
+                  'Used for large neutral borders on dark backgrounds.',
                 borderField: 'Used for borders around form fields.',
                 borderFormHover:
                   'Used for borders around form fields on hover.',
@@ -569,13 +566,14 @@ const docs: ComponentDocs = {
                 borderPromoteLight:
                   'Used for borders around “promoteLight” elements.',
                 borderNeutralLarge: 'TODO',
+                borderNeutralLight: 'TODO',
               }),
             ).map(([boxShadow, description]) => (
               <Columns key={boxShadow} space="medium" alignY="center">
                 <Column width="content">
                   <Box
                     background={
-                      boxShadow.includes('Inverted') ? 'brand' : 'card'
+                      boxShadow.includes('Inverted') ? 'brand' : 'surface'
                     }
                     borderRadius="large"
                     padding="gutter"
