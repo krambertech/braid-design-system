@@ -88,7 +88,7 @@ export default (
     display: isInline ? 'inlineBlock' : 'block',
     position: isInline ? 'relative' : undefined,
     className: [
-      resolvedTone,
+      !(textContext && textContext.tone) ? resolvedTone : undefined,
       isInline
         ? [
             styles.size,

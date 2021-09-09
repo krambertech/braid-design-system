@@ -135,7 +135,10 @@ export const CodeButton = ({
         variant="focus"
         className={[styles.focusOverlay, hideFocusRingsClassName]}
       />
-      <FieldOverlay background="neutralLight" className={styles.hoverOverlay} />
+      <FieldOverlay
+        background={{ lightMode: 'neutralSoftHover', darkMode: 'surfaceDark' }}
+        className={styles.hoverOverlay}
+      />
       <FieldOverlay className={styles.activeOverlay} />
       <Box
         component="span"
