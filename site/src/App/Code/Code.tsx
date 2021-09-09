@@ -162,6 +162,7 @@ export const CodeBlock = ({
     position="relative"
     padding="xxsmall"
     borderRadius="large"
+    background="surfaceDark"
     className={styles.code}
   >
     <Box padding={['medium', 'medium', 'large']}>
