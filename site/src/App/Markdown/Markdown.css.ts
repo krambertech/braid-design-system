@@ -19,7 +19,7 @@ export const standardText = style([
   {
     fontFamily: vars.fontFamily,
     fontWeight: vars.textWeight.regular,
-    color: vars.foregroundColor.neutral,
+    color: 'inherit',
   },
   createTextStyle(toCapsizeValues(vars.textSize.standard.mobile), {
     '@media': {
