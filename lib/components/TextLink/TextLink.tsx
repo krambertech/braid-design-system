@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import React, { forwardRef } from 'react';
 import { atoms, Atoms } from '../../css/atoms/atoms';
 import {
-  BackgroundVariant,
   useBackgroundLightness,
   useBackground,
+  BackgroundContextValue,
 } from '../Box/BackgroundContext';
 import {
   useLinkComponent,
@@ -29,7 +29,7 @@ export interface TextLinkProps
 }
 
 const isPlainBackground = (
-  backgroundContext: BackgroundVariant,
+  backgroundContext: BackgroundContextValue,
   contrast: 'dark' | 'light',
 ) =>
   (contrast === 'light' &&

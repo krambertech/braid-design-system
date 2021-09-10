@@ -81,10 +81,17 @@ export const unresponsiveProperties = {
 
 export type UnresponsiveProperties = keyof typeof unresponsiveProperties;
 
+const background = {
+  ...vars.backgroundColor,
+  transparent: 'transparent',
+} as const;
+
 export const colorProperties = {
-  background: vars.backgroundColor,
+  background,
   boxShadow,
 } as const;
+
+export type Background = keyof typeof background;
 
 export type ColorProperties = keyof typeof colorProperties;
 

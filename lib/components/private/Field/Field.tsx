@@ -121,7 +121,7 @@ export const Field = ({
       : undefined;
   const fieldBackground = {
     lightMode: disabled ? 'neutralLight' : 'surface',
-    darkMode: disabled ? 'neutral' : 'surfaceDark', // TODO use transparent
+    darkMode: disabled ? 'neutral' : 'transparent',
   } as BoxProps['background'];
 
   const hasValue = typeof value === 'string' ? value.length > 0 : value != null;

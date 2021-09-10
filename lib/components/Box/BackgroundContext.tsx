@@ -1,16 +1,17 @@
 import React, { createContext, useContext, ReactElement } from 'react';
-import { BoxProps } from './Box';
+import { BoxBackgroundVariant, BoxProps } from './Box';
 import { useBraidTheme } from '../BraidProvider/BraidThemeContext';
 import { mapColorModeValue } from '../../css/atoms/sprinkles.css';
-import { vars } from '../../themes/vars.css';
 
-export type BackgroundVariant =
-  | keyof typeof vars.backgroundColor
-  | 'customDark'
-  | 'customLight';
+export type BackgroundContextValue = Exclude<
+  BoxBackgroundVariant,
+  'transparent'
+>;
 
-const lightModeBackgroundContext = createContext<BackgroundVariant>('body');
-const darkModeBackgroundContext = createContext<BackgroundVariant>('bodyDark');
+const lightModeBackgroundContext =
+  createContext<BackgroundContextValue>('body');
+const darkModeBackgroundContext =
+  createContext<BackgroundContextValue>('bodyDark');
 
 export const LightBackgroundProvider = lightModeBackgroundContext.Provider;
 export const DarkBackgroundProvider = darkModeBackgroundContext.Provider;
@@ -19,7 +20,7 @@ export const renderBackgroundProvider = (
   background: BoxProps['background'],
   element: ReactElement | null,
 ) => {
-  if (!background) {
+  if (!background || background === 'transparent') {
     return element;
   }
 
@@ -35,7 +36,7 @@ export const renderBackgroundProvider = (
 
   let returnEl = element;
 
-  if (background.lightMode) {
+  if (background.lightMode && background.lightMode !== 'transparent') {
     returnEl = (
       <LightBackgroundProvider value={background.lightMode}>
         {returnEl}
@@ -43,7 +44,7 @@ export const renderBackgroundProvider = (
     );
   }
 
-  if (background.darkMode) {
+  if (background.darkMode && background.darkMode !== 'transparent') {
     returnEl = (
       <DarkBackgroundProvider value={background.darkMode}>
         {returnEl}
@@ -74,7 +75,7 @@ export const useBackgroundLightness = (
 
 export type ColorContrastValue<Value> =
   | { light: Value; dark: Value }
-  | ((contrast: 'light' | 'dark', background: BackgroundVariant) => Value);
+  | ((contrast: 'light' | 'dark', background: BackgroundContextValue) => Value);
 export const useColorContrast = () => {
   const background = useBackground();
   const backgroundLightness = useBackgroundLightness();

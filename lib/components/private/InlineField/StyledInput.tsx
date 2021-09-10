@@ -203,7 +203,7 @@ export const StyledInput = forwardRef<
           className={[styles.fakeField, styles.fakeFieldSize[size]]}
           background={{
             lightMode: disabled ? 'neutralLight' : 'surface',
-            darkMode: disabled ? 'neutral' : 'surfaceDark', // TODO use transparent
+            darkMode: disabled ? 'neutral' : 'transparent',
           }}
           borderRadius={fieldBorderRadius}
         >
