@@ -10,6 +10,8 @@ import { FieldOverlay } from '../FieldOverlay/FieldOverlay';
 import { IconMinus, IconTick } from '../../icons';
 import buildDataAttributes, { DataAttributeMap } from '../buildDataAttributes';
 import { Box } from '../../Box/Box';
+import { useColorContrast } from '../../Box/BackgroundContext';
+import { resolveFieldBackground } from '../Field/Field';
 import * as styles from './InlineField.css';
 import type { Size } from './InlineField.css';
 
@@ -146,6 +148,11 @@ export const StyledInput = forwardRef<
     const accentBackground = disabled ? 'neutralLight' : 'formAccent';
     const isMixed = isCheckbox && checked === 'mixed';
 
+    const colorConstrast = useColorContrast();
+    const fieldBackground = colorConstrast((_, background) =>
+      resolveFieldBackground({ background, disabled }),
+    );
+
     useEffect(() => {
       if (ref && typeof ref === 'object' && ref.current && isCheckbox) {
         ref.current.indeterminate = isMixed;
@@ -201,10 +208,7 @@ export const StyledInput = forwardRef<
           flexShrink={0}
           position="relative"
           className={[styles.fakeField, styles.fakeFieldSize[size]]}
-          background={{
-            lightMode: disabled ? 'neutralLight' : 'surface',
-            darkMode: disabled ? 'neutral' : 'transparent',
-          }}
+          background={fieldBackground}
           borderRadius={fieldBorderRadius}
         >
           <FieldOverlay
