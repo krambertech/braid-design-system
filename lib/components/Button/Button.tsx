@@ -12,7 +12,7 @@ import buildDataAttributes, {
 import { FieldOverlay } from '../private/FieldOverlay/FieldOverlay';
 import { virtualTouchable } from '../private/touchable/virtualTouchable';
 import {
-  BackgroundVariant,
+  BackgroundContextValue,
   ColorContrastValue,
   useColorContrast,
 } from '../Box/BackgroundContext';
@@ -55,22 +55,24 @@ export interface ButtonProps extends ButtonStyleProps {
 type ButtonStyles = {
   textTone: TextProps['tone'];
   background:
-    | ColorContrastValue<BackgroundVariant>
-    | BackgroundVariant
+    | ColorContrastValue<BackgroundContextValue>
+    | BackgroundContextValue
     | undefined;
   backgroundHover:
-    | ColorContrastValue<BackgroundVariant>
-    | BackgroundVariant
+    | ColorContrastValue<BackgroundContextValue>
+    | BackgroundContextValue
     | undefined;
   backgroundActive:
-    | ColorContrastValue<BackgroundVariant>
-    | BackgroundVariant
+    | ColorContrastValue<BackgroundContextValue>
+    | BackgroundContextValue
     | undefined;
   boxShadow: ColorContrastValue<BoxShadow> | BoxShadow | undefined;
 };
 
 const neutralOverrideOnBrand =
-  (lightBackground: BackgroundVariant): ColorContrastValue<BackgroundVariant> =>
+  (
+    lightBackground: BackgroundContextValue,
+  ): ColorContrastValue<BackgroundContextValue> =>
   (contrast, background) => {
     if (contrast === 'light') {
       return lightBackground;
