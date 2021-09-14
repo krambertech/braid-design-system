@@ -1,11 +1,11 @@
 import { style } from '@vanilla-extract/css';
-import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
+import { darkMode } from '../../css/atoms/sprinkles.css';
 
 export const hover = style({});
 
 export const lightModeCurrentKeyline = style({
   selectors: {
-    [`html:not(.${braidDarkModeClass}) &`]: {
+    [`html:not(${darkMode}) &`]: {
       opacity: 0.3,
     },
   },
@@ -13,7 +13,7 @@ export const lightModeCurrentKeyline = style({
 
 export const darkModeCurrentKeyline = style({
   selectors: {
-    [`html.${braidDarkModeClass} &`]: {
+    [`html${darkMode} &`]: {
       opacity: 0.3,
     },
   },

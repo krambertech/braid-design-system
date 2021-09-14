@@ -18,7 +18,7 @@ import { BraidTestProviderContext } from '../BraidTestProvider/BraidTestProvider
 import { BreakpointProvider } from './BreakpointContext';
 import { BraidThemeContext } from './BraidThemeContext';
 import { BraidTheme } from '../../themes/BraidTheme';
-import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
+import { darkMode } from '../../css/atoms/sprinkles.css';
 import * as typographyStyles from '../../hooks/typography/typography.css';
 
 if (process.env.NODE_ENV === 'development') {
@@ -106,12 +106,12 @@ export const BraidProvider = ({
     const colorModeToggle = (ev: KeyboardEvent) => {
       code += ev.key;
       if (code.substr(code.length - 4) === 'dark') {
-        document.documentElement.classList.add(braidDarkModeClass);
+        document.documentElement.classList.add(darkMode);
         code = '';
       }
 
       if (code.substr(code.length - 5) === 'light') {
-        document.documentElement.classList.remove(braidDarkModeClass);
+        document.documentElement.classList.remove(darkMode);
         code = '';
       }
 
@@ -132,8 +132,8 @@ export const BraidProvider = ({
         {styleBody ? (
           <style type="text/css">{`
             body{margin:0;padding:0;background:${theme.background.lightMode}}
-            html.${braidDarkModeClass}{color-scheme:dark}
-            html.${braidDarkModeClass} body{background:${theme.background.darkMode}}
+            html.${darkMode}{color-scheme:dark}
+            html.${darkMode} body{background:${theme.background.darkMode}}
             }}
           `}</style>
         ) : null}

@@ -1,10 +1,10 @@
 import { style } from '@vanilla-extract/css';
-import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
+import { darkMode } from '../../css/atoms/sprinkles.css';
 import { vars } from '../../themes/vars.css';
 
 export const lightModeStarColor = style({
   selectors: {
-    [`html:not(.${braidDarkModeClass}) &`]: {
+    [`html:not(${darkMode}) &`]: {
       color: vars.foregroundColor.rating,
     },
   },
@@ -12,7 +12,7 @@ export const lightModeStarColor = style({
 
 export const darkModeStarColor = style({
   selectors: {
-    [`html.${braidDarkModeClass} &`]: {
+    [`html${darkMode} &`]: {
       color: vars.foregroundColor.rating,
     },
   },

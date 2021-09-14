@@ -4,7 +4,7 @@ import {
   style,
   styleVariants,
 } from '@vanilla-extract/css';
-import { braidDarkModeClass } from '../../../css/atoms/sprinkles.css';
+import { darkMode } from '../../../css/atoms/sprinkles.css';
 
 const vars = createThemeContract({
   background: null,
@@ -30,14 +30,14 @@ const darkContextVars = assignVars(vars, {
 export const lightTheme = styleVariants({
   light: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: lightContextVars,
       },
     },
   },
   dark: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: darkContextVars,
       },
     },
@@ -47,14 +47,14 @@ export const lightTheme = styleVariants({
 export const darkTheme = styleVariants({
   light: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: lightContextVars,
       },
     },
   },
   dark: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: darkContextVars,
       },
     },

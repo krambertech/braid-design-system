@@ -1,5 +1,5 @@
 import { createVar, globalStyle, style } from '@vanilla-extract/css';
-import { braidDarkModeClass } from '../../../../../lib/css/atoms/sprinkles.css';
+import { darkMode } from '../../../../../lib/css/atoms/sprinkles.css';
 import { vars } from '../../../../../lib/themes/vars.css';
 
 export const loader = style({
@@ -17,12 +17,12 @@ export const divider = style({
   width: 1,
   height: vars.textSize.standard.mobile.lineHeight,
   selectors: {
-    [`html:not(.${braidDarkModeClass}) &`]: {
+    [`html:not(${darkMode}) &`]: {
       vars: {
         [borderColor]: vars.borderColor.neutralLight,
       },
     },
-    [`html.${braidDarkModeClass} &`]: {
+    [`html${darkMode} &`]: {
       vars: {
         [borderColor]: vars.borderColor.neutral,
       },

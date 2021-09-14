@@ -11,7 +11,7 @@ import { vars } from '../../themes/vars.css';
 import { breakpointQuery, responsiveStyle } from '../../css/responsiveStyle';
 
 import { mapToProperty } from '../../utils';
-import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
+import { darkMode } from '../../css/atoms/sprinkles.css';
 
 type Vars = typeof vars;
 type TextDefinition = Vars['textSize'];
@@ -149,14 +149,14 @@ export const weakLink = style({
 export const textLinkVisitedLinkMode = styleVariants({
   light: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &:visited`]: {
+      [`html:not(${darkMode}) &:visited`]: {
         color: vars.foregroundColor.linkVisited,
       },
     },
   },
   dark: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &:visited`]: {
+      [`html:not(${darkMode}) &:visited`]: {
         color: vars.foregroundColor.linkLightVisited,
       },
     },
@@ -166,14 +166,14 @@ export const textLinkVisitedLinkMode = styleVariants({
 export const textLinkVisitedDarkMode = styleVariants({
   light: {
     selectors: {
-      [`html.${braidDarkModeClass} &:visited`]: {
+      [`html${darkMode} &:visited`]: {
         color: vars.foregroundColor.linkVisited,
       },
     },
   },
   dark: {
     selectors: {
-      [`html.${braidDarkModeClass} &:visited`]: {
+      [`html${darkMode} &:visited`]: {
         color: vars.foregroundColor.linkLightVisited,
       },
     },
@@ -185,20 +185,20 @@ export const inheritLinkColor = style({});
 export const lightModeTextLink = styleVariants({
   light: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: lightModeRegularLinkVars,
       },
-      [`html:not(.${braidDarkModeClass}) ${inheritLinkColor} > &`]: {
+      [`html:not(${darkMode}) ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
       },
     },
   },
   dark: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: darkModeRegularLinkVars,
       },
-      [`html:not(.${braidDarkModeClass}) ${inheritLinkColor} > &`]: {
+      [`html:not(${darkMode}) ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
       },
     },
@@ -208,20 +208,20 @@ export const lightModeTextLink = styleVariants({
 export const darkModeTextLink = styleVariants({
   light: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: lightModeRegularLinkVars,
       },
-      [`html.${braidDarkModeClass} ${inheritLinkColor} > &`]: {
+      [`html${darkMode} ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
       },
     },
   },
   dark: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: darkModeRegularLinkVars,
       },
-      [`html.${braidDarkModeClass} ${inheritLinkColor} > &`]: {
+      [`html${darkMode} ${inheritLinkColor} > &`]: {
         vars: weakLinkVars,
       },
     },
@@ -270,14 +270,14 @@ const darkContextToneVars = assignVars(textToneVars, {
 export const lightModeTone = styleVariants({
   light: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: lightContextToneVars,
       },
     },
   },
   dark: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: darkContextToneVars,
       },
     },
@@ -287,14 +287,14 @@ export const lightModeTone = styleVariants({
 export const darkModeTone = styleVariants({
   light: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: lightContextToneVars,
       },
     },
   },
   dark: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: darkContextToneVars,
       },
     },
@@ -322,7 +322,7 @@ export const lightModeNeutralOverride = styleVariants(
   neutralOverrideForBackground,
   (textTone) => ({
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: {
           [textToneVars.neutral]:
             vars.foregroundColor[textTone as keyof typeof vars.foregroundColor],
@@ -336,7 +336,7 @@ export const darkModeNeutralOverride = styleVariants(
   neutralOverrideForBackground,
   (textTone) => ({
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: {
           [textToneVars.neutral]:
             vars.foregroundColor[textTone as keyof typeof vars.foregroundColor],

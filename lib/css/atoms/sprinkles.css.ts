@@ -1,3 +1,4 @@
+import { style } from '@vanilla-extract/css';
 import {
   ConditionalValue,
   RequiredConditionalValue,
@@ -29,13 +30,13 @@ const pseudoAtomicStyles = createAtomicStyles({
   properties: pseudoProperties,
 });
 
-export const braidDarkModeClass = 'braid-dark-mode';
+export const darkMode = style({});
 
 const colorAtomicStyles = createAtomicStyles({
   defaultCondition: 'lightMode',
   conditions: {
     lightMode: {},
-    darkMode: { selector: `.${braidDarkModeClass} &` },
+    darkMode: { selector: `${darkMode} &` },
   },
   properties: colorProperties,
 });

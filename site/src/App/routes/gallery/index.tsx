@@ -7,7 +7,7 @@ import { Box } from '../../../../../lib/components';
 import { Logo } from '../../Logo/Logo';
 import { useThemeSettings } from '../../ThemeSetting';
 import { Gallery } from './Gallery';
-import { braidDarkModeClass } from '../../../../../lib/css/atoms/sprinkles.css';
+import { darkMode } from '../../../../../lib/css/atoms/sprinkles.css';
 import * as styles from './gallery.css';
 
 const useBackgroundColor = () => {
@@ -15,8 +15,7 @@ const useBackgroundColor = () => {
   const [bgColor, setBgColor] = useState('');
 
   useEffect(() => {
-    const isDark =
-      document.documentElement.classList.contains(braidDarkModeClass);
+    const isDark = document.documentElement.classList.contains(darkMode);
 
     if (isDark) {
       setBgColor(theme.color.background.bodyDark);

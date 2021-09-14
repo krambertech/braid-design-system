@@ -4,7 +4,7 @@ import {
   style,
   styleVariants,
 } from '@vanilla-extract/css';
-import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
+import { darkMode } from '../../css/atoms/sprinkles.css';
 import { vars } from '../../themes/vars.css';
 
 export const base = style({
@@ -22,7 +22,7 @@ export const strong = style({ background: weightVars.strong });
 export const weight = styleVariants({
   light: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         vars: assignVars(weightVars, {
           regular: vars.borderColor.neutralLight,
           strong: vars.borderColor.neutral,
@@ -32,7 +32,7 @@ export const weight = styleVariants({
   },
   dark: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         vars: assignVars(weightVars, {
           regular: vars.borderColor.neutral,
           strong: vars.borderColor.neutralLight,

@@ -4,7 +4,7 @@ import {
   style,
   styleVariants,
 } from '@vanilla-extract/css';
-import { braidDarkModeClass } from '../../css/atoms/sprinkles.css';
+import { darkMode } from '../../css/atoms/sprinkles.css';
 import { responsiveStyle } from '../../css/responsiveStyle';
 import { vars } from '../../themes/vars.css';
 
@@ -30,34 +30,34 @@ export const size = styleVariants(vars.textSize, ({ mobile, tablet }) =>
   }),
 );
 
-export const lightMode = styleVariants({
+export const lightModeColor = styleVariants({
   light: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         fill: vars.foregroundColor.neutral,
       },
     },
   },
   dark: {
     selectors: {
-      [`html:not(.${braidDarkModeClass}) &`]: {
+      [`html:not(${darkMode}) &`]: {
         fill: vars.foregroundColor.neutralInverted,
       },
     },
   },
 });
 
-export const darkMode = styleVariants({
+export const darkModeColor = styleVariants({
   light: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         fill: vars.foregroundColor.neutral,
       },
     },
   },
   dark: {
     selectors: {
-      [`html.${braidDarkModeClass} &`]: {
+      [`html${darkMode} &`]: {
         fill: vars.foregroundColor.neutralInverted,
       },
     },

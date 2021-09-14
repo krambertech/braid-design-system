@@ -8,7 +8,7 @@ import {
 } from '../components';
 import { BraidTheme } from '../themes/BraidTheme';
 import { PlayroomStateProvider } from './playroomState';
-import { braidDarkModeClass } from '../css/atoms/sprinkles.css';
+import { darkMode } from '../css/atoms/sprinkles.css';
 
 interface Props {
   theme: BraidTheme;
@@ -43,7 +43,7 @@ const ResponsiveReady = ({ children }: { children: ReactNode }) => {
 export default ({ theme, children }: Props) => {
   useEffect(() => {
     if (theme.displayName === 'apacDark') {
-      document.documentElement.classList.add(braidDarkModeClass);
+      document.documentElement.classList.add(darkMode);
     }
   }, [theme.displayName]);
 

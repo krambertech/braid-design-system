@@ -38,8 +38,8 @@ export const Loader = ({
         className={[
           atoms({ reset: 'svg' }),
           styles.size[size],
-          styles.lightMode[background.lightMode],
-          styles.darkMode[background.darkMode],
+          styles.lightModeColor[background.lightMode],
+          styles.darkModeColor[background.darkMode],
         ].join(' ')}
         viewBox="0 0 300 134"
         aria-hidden
