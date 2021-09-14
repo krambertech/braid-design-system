@@ -202,18 +202,22 @@ const docs: ComponentDocs = {
         </Text>
       ),
       background: { lightMode: 'surface', darkMode: 'surfaceDark' },
-      Example: ({ id, getState, setState }) =>
+      Example: ({ id, getState, setState, setDefaultState }) =>
         source(
-          <Dropdown
-            label="Label"
-            id={id}
-            onChange={setState('dropdown')}
-            value={getState('dropdown')}
-            disabled={true}
-          >
-            <option>Option 1</option>
-            <option>Option 2</option>
-          </Dropdown>,
+          <>
+            {setDefaultState('dropdown', 'Option 1')}
+
+            <Dropdown
+              label="Label"
+              id={id}
+              onChange={setState('dropdown')}
+              value={getState('dropdown')}
+              disabled={true}
+            >
+              <option>Option 1</option>
+              <option>Option 2</option>
+            </Dropdown>
+          </>,
         ),
     },
     {

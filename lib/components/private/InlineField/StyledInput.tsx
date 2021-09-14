@@ -99,7 +99,11 @@ const Indicator = ({
     </Box>
   ) : (
     <Box
-      background={disabled ? 'neutralLight' : 'formAccent'}
+      background={
+        disabled
+          ? { lightMode: 'neutral', darkMode: 'surfaceDark' }
+          : 'formAccent'
+      }
       transition="fast"
       width="full"
       height="full"
@@ -145,7 +149,6 @@ export const StyledInput = forwardRef<
 
     const isCheckbox = type === 'checkbox';
     const fieldBorderRadius = isCheckbox ? 'standard' : 'full';
-    const accentBackground = disabled ? 'neutralLight' : 'formAccent';
     const isMixed = isCheckbox && checked === 'mixed';
 
     const colorConstrast = useColorContrast();
@@ -223,7 +226,7 @@ export const StyledInput = forwardRef<
           />
           <FieldOverlay
             variant={tone === 'critical' && isCheckbox ? tone : undefined}
-            background={isCheckbox ? accentBackground : undefined}
+            background={isCheckbox && !disabled ? 'formAccent' : undefined}
             borderRadius={fieldBorderRadius}
             className={styles.selected}
           >

@@ -148,15 +148,24 @@ const docs: ComponentDocs = {
         </Text>
       ),
       background: { lightMode: 'surface', darkMode: 'surfaceDark' },
-      Example: ({ id, getState, toggleState }) =>
+      Example: ({ id, handler }) =>
         source(
-          <Checkbox
-            id={id}
-            disabled={true}
-            checked={getState('checked')}
-            onChange={() => toggleState('checked')}
-            label="Label"
-          />,
+          <Stack space="medium">
+            <Checkbox
+              id={id}
+              disabled={true}
+              checked={false}
+              onChange={handler}
+              label="Unchecked"
+            />
+            <Checkbox
+              id={id}
+              disabled={true}
+              checked={true}
+              onChange={handler}
+              label="Checked"
+            />
+          </Stack>,
         ),
     },
     {

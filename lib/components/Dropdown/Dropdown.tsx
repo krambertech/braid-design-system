@@ -83,8 +83,8 @@ export const Dropdown = forwardRef<HTMLSelectElement, DropdownProps>(
               top={0}
               right={0}
             >
-              <Text baseline={false}>
-                <IconChevron tone={disabled ? 'secondary' : undefined} />
+              <Text baseline={false} tone={disabled ? 'secondary' : undefined}>
+                <IconChevron />
               </Text>
             </Box>
           </Fragment>
