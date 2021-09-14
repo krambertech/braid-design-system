@@ -84,7 +84,6 @@ export interface BraidTokens {
       focus: string;
       formAccent: string;
       formAccentLight: string;
-      formHover: string;
       info: string;
       infoLight: string;
       neutral: string;

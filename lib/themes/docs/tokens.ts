@@ -167,7 +167,6 @@ const tokens: BraidTokens = {
       focus,
       formAccent,
       formAccentLight: palette.indigo['300'],
-      formHover: formAccent,
       info: palette.blue['600'],
       infoLight: palette.blue['300'],
       neutral: black,

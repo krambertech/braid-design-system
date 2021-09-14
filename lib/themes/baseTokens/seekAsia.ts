@@ -205,7 +205,6 @@ export const makeTokens = ({
         focus,
         formAccent,
         formAccentLight: formAccent,
-        formHover: formAccent,
         info,
         infoLight: mix(0.3, info, getLightVariant(info)),
         neutral: grey1,

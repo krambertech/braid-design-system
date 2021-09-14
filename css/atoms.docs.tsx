@@ -386,8 +386,6 @@ const docs: CssDoc = {
                   borderNeutralInvertedLarge:
                     'Used for large standard borders on dark backgrounds.',
                   borderField: 'Used for borders around form fields.',
-                  borderFormHover:
-                    'Used for borders around form fields on hover.',
                   outlineFocus:
                     'Used for focus states of interactive elements.',
                   borderFormAccent:

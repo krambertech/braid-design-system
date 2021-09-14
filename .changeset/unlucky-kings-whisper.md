@@ -16,6 +16,7 @@ Box/boxShadow
   borderStandard => borderNeutralLight
   borderStandardInverted => borderNeutralInverted
   borderStandardInvertedLarge => borderNeutralInvertedLarge
+  borderFormHover => borderFormAccent
 
 Atoms/Vars
   border.color.standard => border.color.neutralLight

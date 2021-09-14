@@ -191,7 +191,6 @@ export const makeTokens = ({
         focus,
         formAccent,
         formAccentLight: palette.indigo['300'],
-        formHover: palette.indigo['500'],
         info: palette.blue['700'],
         infoLight: palette.blue['300'],
         neutral: palette.grey['700'],
