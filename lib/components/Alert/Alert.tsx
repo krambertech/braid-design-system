@@ -12,13 +12,17 @@ import { ClearButton } from '../iconButtons/ClearButton/ClearButton';
 import { Columns } from '../Columns/Columns';
 import { Column } from '../Column/Column';
 import { Overlay } from '../private/Overlay/Overlay';
-import { useBackground } from '../Box/BackgroundContext';
+import {
+  useBackground,
+  useBackgroundLightness,
+} from '../Box/BackgroundContext';
 import { textAlignedToIcon } from '../../css/textAlignedToIcon.css';
 import buildDataAttributes, {
   DataAttributeMap,
 } from '../private/buildDataAttributes';
 import { DefaultTextPropsProvider } from '../private/defaultTextProps';
 import { BoxShadow } from '../../css/atoms/atomicProperties';
+import * as styles from './Alert.css';
 
 type Tone = 'promote' | 'info' | 'positive' | 'caution' | 'critical';
 
@@ -67,6 +71,7 @@ export const Alert = ({
   data,
   onClose,
 }: AlertProps) => {
+  const backgroundLightness = useBackgroundLightness();
   const parentBackground = useBackground();
   const Icon = icons[tone];
 
@@ -113,12 +118,16 @@ export const Alert = ({
         />
       )}
       <Box
-        background={tone}
         paddingLeft={highlightBarSize}
         position="absolute"
         top={0}
         bottom={0}
         left={0}
+        className={[
+          styles.tone[tone],
+          styles.lightModeKeyline[backgroundLightness.lightMode],
+          styles.darkModeKeyline[backgroundLightness.darkMode],
+        ]}
       />
     </Box>
   );
