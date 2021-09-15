@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ComponentScreenshot } from '../../../site/src/types';
-import { Badge, Checkbox, Text } from '../';
+import { Badge, Checkbox, Stack, Text } from '../';
 
 export const screenshots: ComponentScreenshot = {
   screenshotWidths: [320],
@@ -48,15 +48,23 @@ export const screenshots: ComponentScreenshot = {
     },
     {
       label: 'Disabled',
-      background: 'surface',
       Example: ({ id, handler }) => (
-        <Checkbox
-          id={id}
-          disabled={true}
-          checked={false}
-          onChange={handler}
-          label="Label"
-        />
+        <Stack space="gutter">
+          <Checkbox
+            id={id}
+            disabled={true}
+            checked={false}
+            onChange={handler}
+            label="Label"
+          />
+          <Checkbox
+            id={id}
+            disabled={true}
+            checked={true}
+            onChange={handler}
+            label="Label"
+          />
+        </Stack>
       ),
     },
     {

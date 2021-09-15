@@ -14,7 +14,7 @@ export const screenshots: ComponentScreenshot = {
       ),
     },
     {
-      label: 'Info Alert Inside Card',
+      label: 'Info Alert on a surface',
       background: 'surface',
       Example: () => (
         <Alert tone="info">
@@ -57,7 +57,7 @@ export const screenshots: ComponentScreenshot = {
       ),
     },
     {
-      label: 'Promote Alert Inside Card',
+      label: 'Promote Alert on a surface',
       background: 'surface',
       Example: () => (
         <Alert tone="promote">
@@ -74,7 +74,7 @@ export const screenshots: ComponentScreenshot = {
       ),
     },
     {
-      label: 'Caution Alert Inside Card',
+      label: 'Caution Alert on a surface',
       background: 'surface',
       Example: () => (
         <Alert tone="caution">
@@ -91,7 +91,7 @@ export const screenshots: ComponentScreenshot = {
       ),
     },
     {
-      label: 'Critical Alert Inside Card',
+      label: 'Critical Alert on a surface',
       background: 'surface',
       Example: () => (
         <Alert tone="critical">
@@ -108,7 +108,7 @@ export const screenshots: ComponentScreenshot = {
       ),
     },
     {
-      label: 'Positive Alert Inside Card',
+      label: 'Positive Alert on a surface',
       background: 'surface',
       Example: () => (
         <Alert tone="positive">
