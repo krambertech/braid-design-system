@@ -66,7 +66,7 @@ export const Dropdown = forwardRef<HTMLSelectElement, DropdownProps>(
             >
               {!value || placeholder ? (
                 <option value="" disabled={true}>
-                  {placeholder}
+                  {disabled ? '' : placeholder}
                 </option>
               ) : null}
               {children}
@@ -83,8 +83,8 @@ export const Dropdown = forwardRef<HTMLSelectElement, DropdownProps>(
               top={0}
               right={0}
             >
-              <Text baseline={false} tone={disabled ? 'secondary' : undefined}>
-                <IconChevron />
+              <Text baseline={false}>
+                <IconChevron tone={disabled ? 'secondary' : undefined} />
               </Text>
             </Box>
           </Fragment>
