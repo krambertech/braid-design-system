@@ -421,6 +421,7 @@ const docs: CssDoc = {
                     'Used for borders around “promoteLight” elements.',
                   borderNeutralLarge: 'TODO',
                   borderNeutralLight: 'TODO',
+                  borderFormAccentLight: 'TODO',
                 }),
               ).map(([boxShadow, description]) => (
                 <Columns key={boxShadow} space="medium" alignY="center">

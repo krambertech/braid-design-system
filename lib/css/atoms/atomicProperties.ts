@@ -23,6 +23,7 @@ const boxShadow = {
   borderField: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.field}`,
   borderFormAccent: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.formAccent}`,
   borderFormAccentLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.formAccent}`,
+  borderFormAccentLight: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.formAccentLight}`,
   borderFormAccentLightLarge: `inset 0 0 0 ${vars.borderWidth.large} ${vars.borderColor.formAccentLight}`,
   borderInfo: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.info}`,
   borderInfoLight: `inset 0 0 0 ${vars.borderWidth.standard} ${vars.borderColor.infoLight}`,
