@@ -9,7 +9,7 @@ import {
 } from 'react';
 import dedent from 'dedent';
 import { base as baseReset } from '../../css/reset/reset.css';
-import { atoms, Atoms } from '../../css/atoms/atoms';
+import { boxAtoms, Atoms } from '../../css/atoms/atoms';
 import { sprinkles } from '../../css/atoms/sprinkles.css';
 import { renderBackgroundProvider } from './BackgroundContext';
 import TextLinkRendererContext from '../TextLinkRenderer/TextLinkRendererContext';
@@ -56,7 +56,7 @@ export const Box = forwardRef<HTMLElement, BoxProps>(
       }, [userClasses, inTextLinkRenderer]);
     }
 
-    const atomicClasses = atoms({
+    const atomicClasses = boxAtoms({
       reset: typeof component === 'string' ? component : 'div',
       ...atomProps,
     });

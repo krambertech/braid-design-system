@@ -114,9 +114,10 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
             background={
               background === 'body' ||
               background === 'card' ||
-              background === 'input'
+              background === 'input' ||
+              background === 'surface'
                 ? 'neutralLight'
-                : 'card'
+                : 'surface'
             }
             transition="fast"
             borderRadius="full"

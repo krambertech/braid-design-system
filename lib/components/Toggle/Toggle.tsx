@@ -82,7 +82,7 @@ export const Toggle = ({
           width="full"
           overflow="hidden"
           borderRadius="full"
-          className={[styles.slideTrack[size], styles.slideTrackBackground]}
+          className={[styles.slideTrack[size], styles.slideTrackMask]}
         >
           <Box
             position="absolute"
@@ -95,7 +95,7 @@ export const Toggle = ({
         </Box>
         <Box
           position="absolute"
-          background="input"
+          background="surface"
           boxShadow={showBorder ? 'borderField' : undefined}
           transition="fast"
           display="flex"

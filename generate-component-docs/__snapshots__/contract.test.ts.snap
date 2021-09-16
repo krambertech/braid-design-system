@@ -392,11 +392,13 @@ Object {
         | "inputDisabled"
         | "neutral"
         | "neutralLight"
+        | "neutralSoft"
         | "positive"
         | "positiveLight"
         | "promote"
         | "promoteLight"
         | "selection"
+        | "surface"
     borderRadius?: 
         | "full"
         | "large"
@@ -419,6 +421,11 @@ Object {
         | "borderFormHover"
         | "borderInfo"
         | "borderInfoLight"
+        | "borderNeutral"
+        | "borderNeutralInverted"
+        | "borderNeutralInvertedLarge"
+        | "borderNeutralLarge"
+        | "borderNeutralLight"
         | "borderPositive"
         | "borderPositiveLight"
         | "borderPromote"
@@ -428,6 +435,7 @@ Object {
         | "borderStandardInvertedLarge"
         | "large"
         | "medium"
+        | "none"
         | "outlineFocus"
         | "small"
     capture?: 
@@ -1323,11 +1331,13 @@ Object {
         | "inputDisabled"
         | "neutral"
         | "neutralLight"
+        | "neutralSoft"
         | "positive"
         | "positiveLight"
         | "promote"
         | "promoteLight"
         | "selection"
+        | "surface"
     borderRadius?: 
         | "full"
         | "large"
@@ -1350,6 +1360,11 @@ Object {
         | "borderFormHover"
         | "borderInfo"
         | "borderInfoLight"
+        | "borderNeutral"
+        | "borderNeutralInverted"
+        | "borderNeutralInvertedLarge"
+        | "borderNeutralLarge"
+        | "borderNeutralLight"
         | "borderPositive"
         | "borderPositiveLight"
         | "borderPromote"
@@ -1359,6 +1374,7 @@ Object {
         | "borderStandardInvertedLarge"
         | "large"
         | "medium"
+        | "none"
         | "outlineFocus"
         | "small"
     children: (className: string) => ReactElement<any, string | JSXElementConstructor<any>> | null
@@ -1838,7 +1854,7 @@ Object {
     styleBody?: boolean
     theme: {
         background: string
-        backgroundLightness: { body: "dark" | "light"; brand: "dark" | "light"; brandAccent: "dark" | "light"; brandAccentActive: "dark" | "light"; brandAccentHover: "dark" | "light"; brandAccentSoft: "dark" | "light"; ... 29 more ...; selection: "dark" | "light"; }
+        backgroundLightness: { body: "dark" | "light"; brand: "dark" | "light"; brandAccent: "dark" | "light"; brandAccentActive: "dark" | "light"; brandAccentHover: "dark" | "light"; brandAccentSoft: "dark" | "light"; ... 31 more ...; selection: "dark" | "light"; }
         color: { foreground: { brandAccent: string; caution: string; critical: string; formAccent: string; info: string; link: string; linkHover: string; linkVisited: string; neutral: string; neutralInverted: string; ... 4 more ...; secondaryInverted: string; }; background: { ...; }; }
         displayName: string
         name: string

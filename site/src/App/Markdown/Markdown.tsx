@@ -14,6 +14,7 @@ import {
 import { DefaultTextPropsProvider } from '../../../../lib/components/private/defaultTextProps';
 import { InlineCode } from '../InlineCode/InlineCode';
 import { LinkableHeading } from '../LinkableHeading/LinkableHeading';
+import { standardText } from './Markdown.css';
 
 const Code = ({ language, value }: { language: string; value: string }) => (
   <Box paddingBottom="medium">
@@ -80,7 +81,11 @@ const renderers = {
       return <Stack space="medium">{children}</Stack>;
     }
 
-    return <Text>{children}</Text>;
+    return (
+      <Box component="span" className={standardText}>
+        {children}
+      </Box>
+    );
   },
   strong: Strong,
   emphasis: Strong,
@@ -88,11 +93,7 @@ const renderers = {
   code: Code,
   link: TextLink,
   blockquote: ({ children }: any) => (
-    <Box
-      paddingX="gutter"
-      paddingY="small"
-      background="selection" // Should be 'neutralLight' once it can be explicitly defined in the theme tokens
-    >
+    <Box paddingX="gutter" paddingY="small" background="formAccentSoft">
       <Box paddingTop="small">
         <DefaultTextPropsProvider tone="secondary">
           {children}

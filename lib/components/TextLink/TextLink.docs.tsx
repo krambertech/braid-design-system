@@ -103,7 +103,7 @@ const docs: ComponentDocs = {
           </Text>
         </>
       ),
-      background: 'card',
+      background: 'surface',
       Example: () =>
         source(
           <Stack space="large">

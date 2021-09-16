@@ -90,7 +90,9 @@ function useDefaultLinkWeight() {
   const hasPlainBackground =
     backgroundContext === 'body' ||
     backgroundContext === 'card' ||
-    backgroundContext === 'neutralLight';
+    backgroundContext === 'surface' ||
+    backgroundContext === 'neutralLight' ||
+    backgroundContext === 'neutralSoft';
 
   const inPlainText =
     !textContext ||

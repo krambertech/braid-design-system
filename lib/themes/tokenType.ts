@@ -82,14 +82,21 @@ export interface BraidTokens {
       field: string;
       focus: string;
       formAccent: string;
-      formHover: string;
       info: string;
       infoLight: string;
+      neutral: string;
+      neutralInverted: string;
+      neutralLight: string;
       positive: string;
       positiveLight: string;
       promote: string;
       promoteLight: string;
+
+      /** @deprecated Please use `"formAccent"` instead. */
+      formHover: string;
+      /** @deprecated Please use `"neutralLight"` instead. */
       standard: string;
+      /** @deprecated Please use `"neutralInverted"` instead. */
       standardInverted: string;
     };
   };
@@ -126,7 +133,6 @@ export interface BraidTokens {
       brandAccentSoft: string;
       brandAccentSoftActive: string;
       brandAccentSoftHover: string;
-      card: string;
       caution: string;
       cautionLight: string;
       critical: string;
@@ -138,21 +144,30 @@ export interface BraidTokens {
       criticalSoftHover: string;
       formAccent: string;
       formAccentActive: string;
-      formAccentDisabled: string;
       formAccentHover: string;
       formAccentSoft: string;
       formAccentSoftActive: string;
       formAccentSoftHover: string;
       info: string;
       infoLight: string;
-      input: string;
-      inputDisabled: string;
       neutral: string;
       neutralLight: string;
+      neutralSoft: string;
       positive: string;
       positiveLight: string;
       promote: string;
       promoteLight: string;
+      surface: string;
+
+      /** @deprecated Please use `"surface"` instead */
+      card: string;
+      /** @deprecated Please use `"neutralLight"` instead */
+      formAccentDisabled: string;
+      /** @deprecated Please use `"surface"` instead */
+      input: string;
+      /** @deprecated Please use `"neutralSoft"` instead */
+      inputDisabled: string;
+      /** @deprecated Please use `"formAccentSoft"` instead */
       selection: string;
     };
   };
