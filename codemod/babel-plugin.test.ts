@@ -70,72 +70,28 @@ const tests: Parameters<typeof pluginTester>[0]['tests'] = [
     };`,
   },
   {
-    title: 'Visit Braid aliased Box elements',
+    title: 'Follow variables of background props',
     code: dedent`
-    import { Box as BraidBox } from 'braid-design-system';
-    const background = 'card';
+    import { Box } from 'braid-design-system';
+    const bgColor = true ? 'card' : 'body';
     export default () => {
       return (
         <div background="card">
-          <Box background={background} boxShadow="standard" />
+          <Box background={bgColor} boxShadow="standard" />
         </div>
       );
     };`,
     output: dedent`
-    import { Box as BraidBox } from 'braid-design-system';
-    const background = 'card';
+    import { Box } from 'braid-design-system';
+    const bgColor = true ? 'surface' : 'body';
     export default () => {
       return (
         <div background="card">
-          <Box background={background} boxShadow="standard" />
+          <Box background={bgColor} boxShadow="neutralLight" />
         </div>
       );
     };`,
   },
-  // {
-  //   title: 'Single line, single prop, implicit return',
-  //   code: `() => <Box background="card" />;`,
-  //   output: `() => <Box background="surface" />;`,
-  // },
-  // {
-  //   title: 'Single line, many props, implicit return',
-  //   code: `() => <Box width="full" background="card" />;`,
-  //   output: `() => <Box width="full" background="surface" />;`,
-  // },
-  // {
-  //   title: 'Multi-line, single prop, explicit return',
-  //   code: dedent`() => {
-  //     return <Box background="card" />;
-  //   };`,
-  //   output: dedent`() => {
-  //     return <Box background="surface" />;
-  //   };`,
-  // },
-  // {
-  //   title: 'Multi-line, many props, explicit return',
-  //   code: dedent`() => {
-  //     return (
-  //       <Box
-  //         paddingLeft="small"
-  //         paddingRight="small"
-  //         height="full"
-  //         width="full"
-  //         background="card"
-  //       />
-  //     );
-  //   };`,
-  //   output: dedent`() => {
-  //     return (
-  //       <Box
-  //         paddingLeft="small"
-  //         paddingRight="small"
-  //         height="full"
-  //         width="full"
-  //         background="surface"
-  //       />
-  //     );
-  //   };`,
-  // },
 ];
 
 pluginTester({

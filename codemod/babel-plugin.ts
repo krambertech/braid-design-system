@@ -1,5 +1,6 @@
 import type { PluginObj, PluginPass, Visitor } from '@babel/core';
 import { types as t } from '@babel/core';
+import type { NodePath } from '@babel/traverse';
 
 const deprecatedPropMap = {
   background: {
@@ -10,26 +11,61 @@ const deprecatedPropMap = {
   },
 } as const;
 
+const deArray = <T>(input: T | T[]) =>
+  Array.isArray(input) ? input[0] : input;
+
 interface Context extends PluginPass {
   componentNames: Set<string>;
 }
 
-interface SubVisitorContext extends PluginPass {
+type StringLiteralPath = NodePath<t.StringLiteral>;
+const updateStringLiteral = (path: StringLiteralPath, propName: string) => {
+  if (deprecatedPropMap[propName][path.node.value]) {
+    path.node.value = deprecatedPropMap[propName][path.node.value];
+  }
+};
+
+interface SubVisitorContext {
   propName: string;
+  recurses: number;
 }
 
 const subVisitor: Visitor<SubVisitorContext> = {
   StringLiteral(path) {
-    if (deprecatedPropMap[this.propName][path.node.value]) {
-      path.node.value = deprecatedPropMap[this.propName][path.node.value];
+    if (this.recurses > 9) {
+      // eslint-disable-next-line no-console
+      console.error('Too many recurses');
+      return;
     }
+
+    updateStringLiteral(path, this.propName);
   },
   Identifier(path) {
+    if (this.recurses > 9) {
+      // eslint-disable-next-line no-console
+      console.error('Too many recurses');
+      return;
+    }
     const identifierName = path.node.name;
     const binding = path.scope.getBinding(identifierName);
 
     if (!binding) {
       return;
+    }
+
+    if (t.isVariableDeclarator(binding.path.node)) {
+      const initPath = deArray(
+        binding.path.get('init'),
+      ) as NodePath<t.Expression>;
+
+      if (t.isStringLiteral(initPath.node)) {
+        updateStringLiteral(initPath as StringLiteralPath, this.propName);
+      } else {
+        initPath.traverse(subVisitor, {
+          propName: this.propName,
+          recurses: this.recurses + 1,
+        });
+      }
     }
   },
 };
@@ -63,9 +99,13 @@ export default function (): PluginObj<Context> {
         },
       },
       JSXOpeningElement(path) {
-        const elementName = t.isJSXMemberExpression(path.node.name)
-          ? path.node.name.property.name
-          : path.node.name.name;
+        if (t.isJSXMemberExpression(path.node.name)) {
+          // Not handled yet
+          // path.node.name.property.name
+          return;
+        }
+
+        const elementName = path.node.name.name;
 
         if (
           typeof elementName === 'string' &&
@@ -79,34 +119,19 @@ export default function (): PluginObj<Context> {
               return;
             }
 
-            if (t.isJSXExpressionContainer(attr.node.value)) {
-              const attrValue = attr.get('value');
-              const expressionContainer = Array.isArray(attrValue)
-                ? attrValue[0]
-                : attrValue;
+            const attributeValue = deArray(attr.get('value'));
 
-              const rawExpression = expressionContainer.get('expression');
-              const expression = Array.isArray(rawExpression)
-                ? rawExpression[0]
-                : rawExpression;
-              if (t.isIdentifier(expression.node)) {
-                const variable = expression.node.name;
-                const binding = expression.scope.getBinding(variable);
-
-                console.log(binding);
-              }
-
-              // conditional
+            if (t.isStringLiteral(attributeValue.node)) {
+              updateStringLiteral(
+                attributeValue as StringLiteralPath,
+                attr.node.name.name,
+              );
             }
 
-            if (
-              t.isStringLiteral(attr.value) &&
-              deprecatedPropMap[attr.name.name]
-            ) {
-              attr.value.value =
-                deprecatedPropMap[attr.name.name][attr.value.value] ||
-                attr.value.value;
-            }
+            attributeValue.traverse(subVisitor, {
+              propName: attr.node.name.name,
+              recurses: 0,
+            });
           });
         }
       },
