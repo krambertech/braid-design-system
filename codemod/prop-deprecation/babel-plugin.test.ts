@@ -92,6 +92,59 @@ const tests: Parameters<typeof pluginTester>[0]['tests'] = [
       );
     };`,
   },
+  {
+    title: 'Follow multiple layers of variables of background props',
+    code: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'card';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    export default () => {
+      return (
+        <div background="card">
+          <Box background={bgColor} boxShadow={'standard'} />
+        </div>
+      );
+    };`,
+    output: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'surface';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    export default () => {
+      return (
+        <div background="card">
+          <Box background={bgColor} boxShadow={'neutralLight'} />
+        </div>
+      );
+    };`,
+  },
+  // This one will need to be a regular jest test, with expect console to have been called
+  // {
+  //   title: 'Follow imports of variables of background props',
+  //   code: dedent`
+  //   import { Box } from 'braid-design-system';
+  //   import { cardBackground, bodyBackground } from './styleTokens';
+  //   const bgColor = true ? cardBackground : bodyBackground;
+  //   export default () => {
+  //     return (
+  //       <div background="card">
+  //         <Box background={bgColor} boxShadow={'standard'} />
+  //       </div>
+  //     );
+  //   };`,
+  //   output: dedent`
+  //   import { Box } from 'braid-design-system';
+  //   import { cardBackground, bodyBackground } from './styleTokens';
+  //   const bgColor = true ? cardBackground : bodyBackground;
+  //   export default () => {
+  //     return (
+  //       <div background="card">
+  //         <Box background={bgColor} boxShadow={'neutralLight'} />
+  //       </div>
+  //     );
+  //   };`,
+  // },
 ];
 
 pluginTester({

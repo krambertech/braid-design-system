@@ -1,15 +1,8 @@
 import type { PluginObj, PluginPass, Visitor } from '@babel/core';
 import { types as t } from '@babel/core';
 import type { NodePath } from '@babel/traverse';
-
-const deprecatedPropMap = {
-  background: {
-    card: 'surface',
-  },
-  boxShadow: {
-    standard: 'neutralLight',
-  },
-} as const;
+import dedent from 'dedent';
+import { getPropReplacement, isDeprecatedProp } from './deprecatedPropMap';
 
 const deArray = <T>(input: T | T[]) =>
   Array.isArray(input) ? input[0] : input;
@@ -20,15 +13,55 @@ interface Context extends PluginPass {
 
 type StringLiteralPath = NodePath<t.StringLiteral>;
 const updateStringLiteral = (path: StringLiteralPath, propName: string) => {
-  if (deprecatedPropMap[propName][path.node.value]) {
-    path.node.value = deprecatedPropMap[propName][path.node.value];
+  if (isDeprecatedProp(propName)) {
+    path.node.value = getPropReplacement(propName, path.node.value);
   }
 };
 
-interface SubVisitorContext {
+interface SubVisitorContext extends Context {
   propName: string;
+  propLocation: t.SourceLocation;
   recurses: number;
 }
+
+const createHighlightedCodeFrame = (
+  code: string,
+  { start, end }: t.SourceLocation,
+) => {
+  const codeLines = code.split('\n');
+
+  const codeLineNumber = start.line - 1;
+  const beforeLineNumber = start.line - 2;
+  const afterLineNumber = end.line;
+
+  const codeLine = `${codeLineNumber} | ${codeLines[codeLineNumber]}`;
+
+  const beforeLine =
+    beforeLineNumber > 0
+      ? `${beforeLineNumber} | ${codeLines[beforeLineNumber]}`
+      : '';
+  const afterLine =
+    afterLineNumber < codeLines.length
+      ? `${afterLineNumber} | ${codeLines[afterLineNumber]}`
+      : '';
+
+  const longestLineNumberLength = Math.max(
+    ...[beforeLineNumber, codeLineNumber, afterLineNumber]
+      .filter(Boolean)
+      .map((lineNumber) => lineNumber.toString().length),
+  );
+
+  const propIndicatorLength = ''.padStart(end.column - start.column, '^');
+  const lineNumberPadding = ''.padStart(longestLineNumberLength, ' ');
+  const propIndicator = `
+  ${beforeLine}
+  ${codeLine}
+  ${lineNumberPadding}   ${propIndicatorLength.padStart(end.column, ' ')}
+  ${afterLine}
+  `.trim();
+
+  return dedent(propIndicator);
+};
 
 const subVisitor: Visitor<SubVisitorContext> = {
   StringLiteral(path) {
@@ -62,9 +95,34 @@ const subVisitor: Visitor<SubVisitorContext> = {
         updateStringLiteral(initPath as StringLiteralPath, this.propName);
       } else {
         initPath.traverse(subVisitor, {
-          propName: this.propName,
+          ...this,
           recurses: this.recurses + 1,
         });
+      }
+    }
+
+    if (t.isImportSpecifier(binding.path.node)) {
+      const bindingPath = binding.path as NodePath<t.ImportSpecifier>;
+      const variableName = bindingPath.node.local.name;
+      const variableLocation = bindingPath.node.loc;
+      if (t.isImportDeclaration(bindingPath.parent)) {
+        const importSource = bindingPath.parent.source.value;
+
+        // eslint-disable-next-line no-console
+        console.warn(`
+Untraceable import: ${this.filename}
+
+Variable \`${variableName}\` is assigned to the ${
+          this.propName
+        } prop of Box, but is imported from '${importSource}'.
+You should check that there are no usages of deprecated values in that file.
+
+Imported at
+${createHighlightedCodeFrame(this.file.code, variableLocation)}
+
+Used at
+${createHighlightedCodeFrame(this.file.code, this.propLocation)}
+        `);
       }
     }
   },
@@ -129,7 +187,9 @@ export default function (): PluginObj<Context> {
             }
 
             attributeValue.traverse(subVisitor, {
+              ...this,
               propName: attr.node.name.name,
+              propLocation: attr.node.loc,
               recurses: 0,
             });
           });
