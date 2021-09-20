@@ -12,7 +12,7 @@ const deArray = <T>(input: T | T[]) =>
   Array.isArray(input) ? input[0] : input;
 
 interface Context extends PluginPass {
-  componentNames: Set<string>;
+  componentNames: Map<string, string>;
   namespace: string | null;
 }
 
@@ -149,7 +149,7 @@ ${createHighlightedCodeFrame(this.file.code, this.propLocation)}
 export default function (): PluginObj<Context> {
   return {
     pre() {
-      this.componentNames = new Set<string>();
+      this.componentNames = new Map<string, string>();
       this.namespace = null;
     },
     visitor: {
@@ -170,7 +170,10 @@ export default function (): PluginObj<Context> {
                     specifier.imported.name,
                   )
                 ) {
-                  this.componentNames.add(specifier.local.name);
+                  this.componentNames.set(
+                    specifier.local.name,
+                    specifier.imported.name,
+                  );
                 } else if (t.isImportNamespaceSpecifier(specifier)) {
                   this.namespace = specifier.local.name;
                 }
@@ -192,7 +195,7 @@ export default function (): PluginObj<Context> {
           typeof path.node.name.name === 'string' &&
           this.componentNames.has(path.node.name.name)
         ) {
-          elementName = path.node.name.name;
+          elementName = this.componentNames.get(path.node.name.name);
         }
 
         if (elementName) {
