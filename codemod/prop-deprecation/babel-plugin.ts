@@ -2,23 +2,37 @@ import type { PluginObj, PluginPass, Visitor } from '@babel/core';
 import { types as t } from '@babel/core';
 import type { NodePath } from '@babel/traverse';
 import dedent from 'dedent';
-import { getPropReplacement, isDeprecatedProp } from './deprecatedPropMap';
+import {
+  deprecatedPropMap,
+  getPropReplacement,
+  isDeprecatedProp,
+} from './deprecatedPropMap';
 
 const deArray = <T>(input: T | T[]) =>
   Array.isArray(input) ? input[0] : input;
 
 interface Context extends PluginPass {
   componentNames: Set<string>;
+  namespace: string | null;
 }
 
 type StringLiteralPath = NodePath<t.StringLiteral>;
-const updateStringLiteral = (path: StringLiteralPath, propName: string) => {
-  if (isDeprecatedProp(propName)) {
-    path.node.value = getPropReplacement(propName, path.node.value);
+const updateStringLiteral = (
+  path: StringLiteralPath,
+  componentName: string,
+  propName: string,
+) => {
+  if (isDeprecatedProp(componentName, propName)) {
+    path.node.value = getPropReplacement(
+      componentName,
+      propName,
+      path.node.value,
+    );
   }
 };
 
 interface SubVisitorContext extends Context {
+  componentName: string;
   propName: string;
   propLocation: t.SourceLocation;
   recurses: number;
@@ -71,7 +85,7 @@ const subVisitor: Visitor<SubVisitorContext> = {
       return;
     }
 
-    updateStringLiteral(path, this.propName);
+    updateStringLiteral(path, this.componentName, this.propName);
   },
   Identifier(path) {
     if (this.recurses > 9) {
@@ -92,7 +106,11 @@ const subVisitor: Visitor<SubVisitorContext> = {
       ) as NodePath<t.Expression>;
 
       if (t.isStringLiteral(initPath.node)) {
-        updateStringLiteral(initPath as StringLiteralPath, this.propName);
+        updateStringLiteral(
+          initPath as StringLiteralPath,
+          this.componentName,
+          this.propName,
+        );
       } else {
         initPath.traverse(subVisitor, {
           ...this,
@@ -132,6 +150,7 @@ export default function (): PluginObj<Context> {
   return {
     pre() {
       this.componentNames = new Set<string>();
+      this.namespace = null;
     },
     visitor: {
       Program: {
@@ -147,9 +166,13 @@ export default function (): PluginObj<Context> {
                 if (
                   t.isImportSpecifier(specifier) &&
                   t.isIdentifier(specifier.imported) &&
-                  specifier.imported.name === 'Box'
+                  Object.keys(deprecatedPropMap).includes(
+                    specifier.imported.name,
+                  )
                 ) {
                   this.componentNames.add(specifier.local.name);
+                } else if (t.isImportNamespaceSpecifier(specifier)) {
+                  this.namespace = specifier.local.name;
                 }
               }
             }
@@ -157,18 +180,22 @@ export default function (): PluginObj<Context> {
         },
       },
       JSXOpeningElement(path) {
+        let elementName = null as string | null;
+
         if (t.isJSXMemberExpression(path.node.name)) {
-          // Not handled yet
-          // path.node.name.property.name
-          return;
+          elementName =
+            t.isJSXIdentifier(path.node.name.object) &&
+            path.node.name.object.name === this.namespace
+              ? path.node.name.property.name
+              : null;
+        } else if (
+          typeof path.node.name.name === 'string' &&
+          this.componentNames.has(path.node.name.name)
+        ) {
+          elementName = path.node.name.name;
         }
 
-        const elementName = path.node.name.name;
-
-        if (
-          typeof elementName === 'string' &&
-          this.componentNames.has(elementName)
-        ) {
+        if (elementName) {
           path.get('attributes').forEach((attr) => {
             if (
               t.isJSXSpreadAttribute(attr.node) ||
@@ -182,12 +209,14 @@ export default function (): PluginObj<Context> {
             if (t.isStringLiteral(attributeValue.node)) {
               updateStringLiteral(
                 attributeValue as StringLiteralPath,
+                elementName,
                 attr.node.name.name,
               );
             }
 
             attributeValue.traverse(subVisitor, {
               ...this,
+              componentName: elementName,
               propName: attr.node.name.name,
               propLocation: attr.node.loc,
               recurses: 0,

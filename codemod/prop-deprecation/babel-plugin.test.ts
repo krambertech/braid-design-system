@@ -49,6 +49,31 @@ const tests: Parameters<typeof pluginTester>[0]['tests'] = [
     };`,
   },
   {
+    title: 'Visit Braid Box elements used as a member expression',
+    code: dedent`
+    import * as Braid from 'braid-design-system';
+    import Box from 'braid-design-system2';
+    export default () => {
+      return (
+        <div background="card">
+          <Braid.Box background="card" boxShadow="standard" />
+          <Box background="card" boxShadow="standard" />
+        </div>
+      );
+    };`,
+    output: dedent`
+    import * as Braid from 'braid-design-system';
+    import Box from 'braid-design-system2';
+    export default () => {
+      return (
+        <div background="card">
+          <Braid.Box background="surface" boxShadow="neutralLight" />
+          <Box background="card" boxShadow="standard" />
+        </div>
+      );
+    };`,
+  },
+  {
     title: 'Dont visit Box elements from other packages',
     code: dedent`
     import { Box } from 'package';
