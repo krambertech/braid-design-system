@@ -3,8 +3,6 @@ import dedent from 'dedent';
 
 import plugin from './babel-plugin';
 
-// import * as Braid from 'braid-design-system';
-
 const tests: Parameters<typeof pluginTester>[0]['tests'] = [
   {
     title: 'Visit Braid Box elements',
@@ -140,6 +138,106 @@ const tests: Parameters<typeof pluginTester>[0]['tests'] = [
       return (
         <div background="card">
           <Box background={bgColor} boxShadow={'neutralLight'} />
+        </div>
+      );
+    };`,
+  },
+  {
+    title: 'Follow spread object with non-computed keys as props',
+    code: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'card';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    const boxProps = {
+      background: bgColor,
+    };
+    export default () => {
+      return (
+        <div background="card">
+          <Box {...boxProps} />
+        </div>
+      );
+    };`,
+    output: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'surface';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    const boxProps = {
+      background: bgColor,
+    };
+    export default () => {
+      return (
+        <div background="card">
+          <Box {...boxProps} />
+        </div>
+      );
+    };`,
+  },
+  {
+    title: 'Follow spread object with computed string literal keys as props',
+    code: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'card';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    const boxProps = {
+      ['background']: bgColor,
+    };
+    export default () => {
+      return (
+        <div background="card">
+          <Box {...boxProps} />
+        </div>
+      );
+    };`,
+    output: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'surface';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    const boxProps = {
+      ['background']: bgColor,
+    };
+    export default () => {
+      return (
+        <div background="card">
+          <Box {...boxProps} />
+        </div>
+      );
+    };`,
+  },
+  {
+    title: 'Follow spread object literal as props',
+    code: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'card';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    export default () => {
+      return (
+        <div background="card">
+          <Box {...{
+              background: bgColor,
+            }}
+          />
+        </div>
+      );
+    };`,
+    output: dedent`
+    import { Box } from 'braid-design-system';
+    const cardBackground = 'surface';
+    const bodyBackground = 'body';
+    const bgColor = true ? cardBackground : bodyBackground;
+    export default () => {
+      return (
+        <div background="card">
+          <Box
+            {...{
+              background: bgColor,
+            }}
+          />
         </div>
       );
     };`,

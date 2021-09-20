@@ -33,8 +33,8 @@ const updateStringLiteral = (
 
 interface SubVisitorContext extends Context {
   componentName: string;
-  propName: string;
-  propLocation: t.SourceLocation;
+  propName?: string;
+  propLocation?: t.SourceLocation;
   recurses: number;
 }
 
@@ -87,6 +87,32 @@ const subVisitor: Visitor<SubVisitorContext> = {
 
     updateStringLiteral(path, this.componentName, this.propName);
   },
+  ObjectProperty(path) {
+    if (
+      !this.propName &&
+      !path.node.computed &&
+      t.isIdentifier(path.node.key)
+    ) {
+      this.propName = path.node.key.name;
+      this.propLocation = path.node.key.loc;
+    } else if (t.isStringLiteral(path.node.key)) {
+      this.propName = path.node.key.value;
+      this.propLocation = path.node.key.loc;
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(`
+Untraceable computed object property:
+  ${this.filename}
+
+The following object is being spread onto '${
+        this.componentName
+      }' and contains computed properties.
+You should check that there are no usages of deprecated properties in this object.
+
+${createHighlightedCodeFrame(this.file.code, path.node.key.loc)}
+        `);
+    }
+  },
   Identifier(path) {
     if (this.recurses > 9) {
       // eslint-disable-next-line no-console
@@ -130,9 +156,9 @@ const subVisitor: Visitor<SubVisitorContext> = {
         console.warn(`
 Untraceable import: ${this.filename}
 
-Variable \`${variableName}\` is assigned to the ${
-          this.propName
-        } prop of Box, but is imported from '${importSource}'.
+Variable \`${variableName}\` is assigned to the ${this.propName} prop of ${
+          this.componentName
+        }, but is imported from '${importSource}'.
 You should check that there are no usages of deprecated values in that file.
 
 Imported at
@@ -200,30 +226,35 @@ export default function (): PluginObj<Context> {
 
         if (elementName) {
           path.get('attributes').forEach((attr) => {
-            if (
-              t.isJSXSpreadAttribute(attr.node) ||
-              typeof attr.node.name.name !== 'string'
-            ) {
-              return;
+            if (t.isJSXAttribute(attr.node)) {
+              if (typeof attr.node.name.name !== 'string') {
+                return;
+              }
+
+              const attributeValue = deArray(attr.get('value'));
+
+              if (t.isStringLiteral(attributeValue.node)) {
+                updateStringLiteral(
+                  attributeValue as StringLiteralPath,
+                  elementName,
+                  attr.node.name.name,
+                );
+              }
+
+              attributeValue.traverse(subVisitor, {
+                ...this,
+                componentName: elementName,
+                propName: attr.node.name.name,
+                propLocation: attr.node.loc,
+                recurses: 0,
+              });
+            } else if (t.isJSXSpreadAttribute(attr.node)) {
+              attr.traverse(subVisitor, {
+                ...this,
+                componentName: elementName,
+                recurses: 0,
+              });
             }
-
-            const attributeValue = deArray(attr.get('value'));
-
-            if (t.isStringLiteral(attributeValue.node)) {
-              updateStringLiteral(
-                attributeValue as StringLiteralPath,
-                elementName,
-                attr.node.name.name,
-              );
-            }
-
-            attributeValue.traverse(subVisitor, {
-              ...this,
-              componentName: elementName,
-              propName: attr.node.name.name,
-              propLocation: attr.node.loc,
-              recurses: 0,
-            });
           });
         }
       },
