@@ -12,7 +12,7 @@ const deArray = <T>(input: T | T[]) =>
   Array.isArray(input) ? input[0] : input;
 
 interface Context extends PluginPass {
-  componentNames: Map<string, string>;
+  importNames: Map<string, string>;
   namespace: string | null;
 }
 
@@ -175,7 +175,7 @@ ${createHighlightedCodeFrame(this.file.code, this.propLocation)}
 export default function (): PluginObj<Context> {
   return {
     pre() {
-      this.componentNames = new Map<string, string>();
+      this.importNames = new Map<string, string>();
       this.namespace = null;
     },
     visitor: {
@@ -186,7 +186,7 @@ export default function (): PluginObj<Context> {
           for (const statement of bodyPath) {
             if (
               t.isImportDeclaration(statement.node) &&
-              statement.node.source.value === 'braid-design-system'
+              /braid-design-system(?:\/css)?$/.test(statement.node.source.value)
             ) {
               for (const specifier of statement.node.specifiers) {
                 if (
@@ -196,7 +196,7 @@ export default function (): PluginObj<Context> {
                     specifier.imported.name,
                   )
                 ) {
-                  this.componentNames.set(
+                  this.importNames.set(
                     specifier.local.name,
                     specifier.imported.name,
                   );
@@ -219,9 +219,9 @@ export default function (): PluginObj<Context> {
               : null;
         } else if (
           typeof path.node.name.name === 'string' &&
-          this.componentNames.has(path.node.name.name)
+          this.importNames.has(path.node.name.name)
         ) {
-          elementName = this.componentNames.get(path.node.name.name);
+          elementName = this.importNames.get(path.node.name.name);
         }
 
         if (elementName) {
@@ -239,15 +239,15 @@ export default function (): PluginObj<Context> {
                   elementName,
                   attr.node.name.name,
                 );
+              } else {
+                attributeValue.traverse(subVisitor, {
+                  ...this,
+                  componentName: elementName,
+                  propName: attr.node.name.name,
+                  propLocation: attr.node.loc,
+                  recurses: 0,
+                });
               }
-
-              attributeValue.traverse(subVisitor, {
-                ...this,
-                componentName: elementName,
-                propName: attr.node.name.name,
-                propLocation: attr.node.loc,
-                recurses: 0,
-              });
             } else if (t.isJSXSpreadAttribute(attr.node)) {
               attr.traverse(subVisitor, {
                 ...this,
@@ -257,6 +257,107 @@ export default function (): PluginObj<Context> {
             }
           });
         }
+      },
+      CallExpression(path) {
+        if (
+          t.isV8IntrinsicIdentifier(path.node.callee) ||
+          !t.isIdentifier(path.node.callee)
+        ) {
+          return;
+        }
+
+        const callee = this.importNames.get(path.node.callee.name);
+        if (callee) {
+          path.node.arguments.forEach((arg) => {
+            if (t.isIdentifier(arg)) {
+              const argBinding = path.scope.getBinding(arg.name);
+              if (!argBinding) {
+                return;
+              }
+              argBinding.path.traverse(subVisitor, {
+                ...this,
+                componentName: callee,
+                recurses: 0,
+              });
+            } else if (t.isObjectExpression(arg)) {
+              const argumentsValue = deArray(path.get('arguments'));
+              argumentsValue.traverse(subVisitor, {
+                ...this,
+                componentName: callee,
+                recurses: 0,
+              });
+            }
+          });
+        }
+      },
+    },
+  };
+}
+
+const walk = (
+  path: NodePath<t.Node>,
+  map: Record<string, string | Record<string, string>>,
+) => {
+  if (t.isMemberExpression(path.parent)) {
+    if (t.isIdentifier(path.parent.property)) {
+      const prop = map[path.parent.property.name];
+      if (typeof prop === 'object') {
+        walk(path.parentPath, prop);
+      }
+
+      if (typeof prop === 'string') {
+        path.parent.property.name = prop;
+      }
+    }
+  }
+  if (t.isVariableDeclarator(path.parent)) {
+    if (t.isIdentifier(path.parent.id)) {
+      const binding = path.scope.getBinding(path.parent.id.name);
+      if (binding) {
+        for (const refPath of binding.referencePaths) {
+          walk(refPath, map);
+        }
+      }
+    }
+
+    // isObjectPattern => handles destructuring, filter deprcated property values only
+  }
+};
+
+export function varsPlugin(): PluginObj<Context> {
+  return {
+    pre() {},
+    visitor: {
+      Program: {
+        enter(path) {
+          const bodyPath = path.get('body');
+
+          for (const statement of bodyPath) {
+            if (
+              t.isImportDeclaration(statement.node) &&
+              /braid-design-system(?:\/css)?$/.test(statement.node.source.value)
+            ) {
+              for (const specifier of statement.node.specifiers) {
+                if (
+                  t.isImportSpecifier(specifier) &&
+                  t.isIdentifier(specifier.imported) &&
+                  specifier.imported.name === 'vars'
+                ) {
+                  const binding = path.scope.getBinding(
+                    specifier.imported.name,
+                  );
+                  if (!binding) {
+                    return;
+                  }
+
+                  for (const refPath of binding.referencePaths) {
+                    walk(refPath, deprecatedPropMap.vars);
+                  }
+                }
+              }
+            }
+          }
+        },
       },
     },
   };
