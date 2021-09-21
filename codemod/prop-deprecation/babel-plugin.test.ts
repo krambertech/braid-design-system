@@ -336,6 +336,51 @@ const tests: Parameters<typeof pluginTester>[0]['tests'] = [
         border: border.neutralLight,
       });`,
   },
+  {
+    title: 'Visit Braid theme vars via destructuring',
+    code: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { borderColor, space, ...rest } = vars;
+      const className = style({
+        border: borderColor.standard,
+      });`,
+    output: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { borderColor, space, ...rest } = vars;
+      const className = style({
+        border: borderColor.neutralLight,
+      });`,
+  },
+  {
+    title: 'Visit Braid theme vars via destructuring with rename',
+    code: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { borderColor: border, space, ...rest } = vars;
+      const className = style({
+        border: border.standard,
+      });`,
+    output: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { borderColor: border, space, ...rest } = vars;
+      const className = style({
+        border: border.neutralLight,
+      });`,
+  },
+  {
+    title: 'Visit Braid theme vars via destructuring via rest',
+    code: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { space, ...rest } = vars;
+      const className = style({
+        border: rest.borderColor.standard,
+      });`,
+    output: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { space, ...rest } = vars;
+      const className = style({
+        border: rest.borderColor.neutralLight,
+      });`,
+  },
   // This one will need to be a regular jest test, with expect console to have been called
   // {
   //   title: 'Follow imports of variables of background props',

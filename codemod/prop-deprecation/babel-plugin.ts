@@ -296,11 +296,11 @@ export default function (): PluginObj<Context> {
 
 const walk = (
   path: NodePath<t.Node>,
-  map: Record<string, string | Record<string, string>>,
+  deprecationMap: Record<string, string | Record<string, string>>,
 ) => {
   if (t.isMemberExpression(path.parent)) {
     if (t.isIdentifier(path.parent.property)) {
-      const prop = map[path.parent.property.name];
+      const prop = deprecationMap[path.parent.property.name];
       if (typeof prop === 'object') {
         walk(path.parentPath, prop);
       }
@@ -315,12 +315,37 @@ const walk = (
       const binding = path.scope.getBinding(path.parent.id.name);
       if (binding) {
         for (const refPath of binding.referencePaths) {
-          walk(refPath, map);
+          walk(refPath, deprecationMap);
         }
       }
     }
-
-    // isObjectPattern => handles destructuring, filter deprcated property values only
+    if (t.isObjectPattern(path.parent.id)) {
+      for (const property of path.parent.id.properties) {
+        if (t.isObjectProperty(property)) {
+          if (t.isIdentifier(property.value) && t.isIdentifier(property.key)) {
+            const binding = path.scope.getBinding(property.value.name);
+            if (binding && deprecationMap[property.key.name]) {
+              for (const refPath of binding.referencePaths) {
+                walk(
+                  refPath,
+                  deprecationMap[property.key.name] as typeof deprecationMap, // why???
+                );
+              }
+            }
+          }
+        }
+        if (t.isRestElement(property)) {
+          if (t.isIdentifier(property.argument)) {
+            const binding = path.scope.getBinding(property.argument.name);
+            if (binding) {
+              for (const refPath of binding.referencePaths) {
+                walk(refPath, deprecationMap);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 };
 
