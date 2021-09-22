@@ -381,6 +381,51 @@ const tests: Parameters<typeof pluginTester>[0]['tests'] = [
         border: rest.borderColor.neutralLight,
       });`,
   },
+  {
+    title: 'Visit Braid theme vars via destructuring many vars via rest',
+    code: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { space, backgroundColor, ...rest } = vars;
+      const bg = backgroundColor.card;
+      const className = style({
+        border: rest.borderColor.standard,
+        background: bg,
+      });`,
+    output: dedent`
+      import { vars } from 'braid-design-system/css';
+      const { space, backgroundColor, ...rest } = vars;
+      const bg = backgroundColor.surface;
+      const className = style({
+        border: rest.borderColor.neutralLight,
+        background: bg,
+      });`,
+  },
+  {
+    title: 'Visit Braid theme vars with dynamic keys',
+    code: dedent`
+      import { vars } from 'braid-design-system/css';
+      const className = style({
+        border: vars['borderColor'].standard,
+      });`,
+    output: dedent`
+      import { vars } from 'braid-design-system/css';
+      const className = style({
+        border: vars['borderColor'].neutralLight,
+      });`,
+  },
+  {
+    title: 'Visit Braid theme vars when aliased',
+    code: dedent`
+      import { vars as themeVars } from 'braid-design-system/css';
+      const className = style({
+        border: themeVars.borderColor.standard,
+      });`,
+    output: dedent`
+      import { vars as themeVars } from 'braid-design-system/css';
+      const className = style({
+        border: themeVars.borderColor.neutralLight,
+      });`,
+  },
   // This one will need to be a regular jest test, with expect console to have been called
   // {
   //   title: 'Follow imports of variables of background props',

@@ -294,19 +294,49 @@ export default function (): PluginObj<Context> {
   };
 }
 
-const walk = (
-  path: NodePath<t.Node>,
-  deprecationMap: Record<string, string | Record<string, string>>,
-) => {
+const walk = ({
+  path,
+  deprecations,
+  code,
+  filename,
+}: {
+  path: NodePath<t.Node>;
+  deprecations: Record<string, string | Record<string, string>>;
+  code: string;
+  filename: string;
+}) => {
   if (t.isMemberExpression(path.parent)) {
     if (t.isIdentifier(path.parent.property)) {
-      const prop = deprecationMap[path.parent.property.name];
+      const prop = deprecations[path.parent.property.name];
       if (typeof prop === 'object') {
-        walk(path.parentPath, prop);
+        walk({ path: path.parentPath, deprecations: prop, code, filename });
       }
 
       if (typeof prop === 'string') {
         path.parent.property.name = prop;
+      }
+    }
+
+    if (path.parent.computed) {
+      if (t.isStringLiteral(path.parent.property)) {
+        const prop = deprecations[path.parent.property.value];
+        if (typeof prop === 'object') {
+          walk({ path: path.parentPath, deprecations: prop, code, filename });
+        }
+
+        if (typeof prop === 'string') {
+          path.parent.property.value = prop;
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(`
+Untraceable computed object property:
+  ${filename}
+
+You should check that there are no usages of deprecated properties in this object.
+
+${createHighlightedCodeFrame(code, path.parent.property.loc)}
+`);
       }
     }
   }
@@ -315,7 +345,7 @@ const walk = (
       const binding = path.scope.getBinding(path.parent.id.name);
       if (binding) {
         for (const refPath of binding.referencePaths) {
-          walk(refPath, deprecationMap);
+          walk({ path: refPath, deprecations, code, filename });
         }
       }
     }
@@ -324,12 +354,26 @@ const walk = (
         if (t.isObjectProperty(property)) {
           if (t.isIdentifier(property.value) && t.isIdentifier(property.key)) {
             const binding = path.scope.getBinding(property.value.name);
-            if (binding && deprecationMap[property.key.name]) {
+            const deprecationValue = deprecations[property.key.name];
+            if (typeof deprecationValue === 'string') {
+              throw new Error(`
+Untraceable object key:
+  ${filename}
+
+You should check that there are no usages of deprecated properties in this object.
+
+${createHighlightedCodeFrame(code, property.key.loc)}
+`);
+            }
+
+            if (binding && deprecationValue) {
               for (const refPath of binding.referencePaths) {
-                walk(
-                  refPath,
-                  deprecationMap[property.key.name] as typeof deprecationMap, // why???
-                );
+                walk({
+                  path: refPath,
+                  deprecations: deprecationValue,
+                  code,
+                  filename,
+                });
               }
             }
           }
@@ -339,7 +383,7 @@ const walk = (
             const binding = path.scope.getBinding(property.argument.name);
             if (binding) {
               for (const refPath of binding.referencePaths) {
-                walk(refPath, deprecationMap);
+                walk({ path: refPath, deprecations, code, filename });
               }
             }
           }
@@ -351,7 +395,6 @@ const walk = (
 
 export function varsPlugin(): PluginObj<Context> {
   return {
-    pre() {},
     visitor: {
       Program: {
         enter(path) {
@@ -368,15 +411,18 @@ export function varsPlugin(): PluginObj<Context> {
                   t.isIdentifier(specifier.imported) &&
                   specifier.imported.name === 'vars'
                 ) {
-                  const binding = path.scope.getBinding(
-                    specifier.imported.name,
-                  );
+                  const binding = path.scope.getBinding(specifier.local.name);
                   if (!binding) {
                     return;
                   }
 
                   for (const refPath of binding.referencePaths) {
-                    walk(refPath, deprecatedPropMap.vars);
+                    walk({
+                      path: refPath,
+                      deprecations: deprecatedPropMap.vars,
+                      code: this.file.code,
+                      filename: this.filename,
+                    });
                   }
                 }
               }
