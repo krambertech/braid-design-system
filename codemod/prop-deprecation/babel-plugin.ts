@@ -227,7 +227,10 @@ export default function (): PluginObj<Context> {
         if (elementName) {
           path.get('attributes').forEach((attr) => {
             if (t.isJSXAttribute(attr.node)) {
-              if (typeof attr.node.name.name !== 'string') {
+              if (
+                typeof attr.node.name.name !== 'string' ||
+                !deprecatedPropMap[elementName][attr.node.name.name]
+              ) {
                 return;
               }
 
