@@ -20,7 +20,7 @@ const defaultCodeshiftOptions = {
   stdin: false,
 };
 
-const paths = glob.sync('**/*.{tsx,ts,jsx,js}');
+const paths = glob.sync('src/**/*.{tsx,ts,jsx,js}');
 
 Runner.run(
   path.resolve(__dirname, defaultCodeshiftOptions.transform),
