@@ -4,6 +4,8 @@ const path = require('path');
 const glob = require('fast-glob');
 const Runner = require('jscodeshift/src/Runner.js');
 
+const pathGlob = process.argv[2];
+
 const defaultCodeshiftOptions = {
   transform: './codemod.ts',
   verbose: 0,
@@ -20,7 +22,7 @@ const defaultCodeshiftOptions = {
   stdin: false,
 };
 
-const paths = glob.sync('src/**/*.{tsx,ts,jsx,js}');
+const paths = glob.sync(pathGlob);
 
 Runner.run(
   path.resolve(__dirname, defaultCodeshiftOptions.transform),
