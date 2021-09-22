@@ -22,7 +22,7 @@ const defaultCodeshiftOptions = {
   stdin: false,
 };
 
-const paths = glob.sync(pathGlob);
+const paths = glob.sync(pathGlob, { ignore: ['**/node_modules/**', '*.d.ts'] });
 
 Runner.run(
   path.resolve(__dirname, defaultCodeshiftOptions.transform),
