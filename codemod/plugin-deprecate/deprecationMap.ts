@@ -1,4 +1,4 @@
-export const deprecatedPropMap = {
+export const deprecationMap = {
   Box: {
     background: {
       card: 'surface',
@@ -38,16 +38,16 @@ export const deprecatedPropMap = {
   },
 } as const;
 
-type DeprecatedProp = keyof typeof deprecatedPropMap;
+type DeprecatedProp = keyof typeof deprecationMap;
 
-export const isDeprecatedProp = (
+export const isDeprecated = (
   componentName: string,
   propName: string,
 ): propName is DeprecatedProp =>
-  Boolean(deprecatedPropMap[componentName]?.[propName]);
+  Boolean(deprecationMap[componentName]?.[propName]);
 
-export const getPropReplacement = (
+export const getReplacement = (
   componentName: string,
   propName: DeprecatedProp,
   inputValue: string,
-) => deprecatedPropMap[componentName]?.[propName]?.[inputValue] ?? inputValue;
+) => deprecationMap[componentName]?.[propName]?.[inputValue] ?? inputValue;
