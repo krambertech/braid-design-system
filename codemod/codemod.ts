@@ -2,7 +2,9 @@ import { parse, print } from 'recast';
 import { transformFromAstSync, parseSync } from '@babel/core';
 import { Transform } from 'jscodeshift';
 
-import boxPlugin, { varsPlugin } from './prop-deprecation/babel-plugin';
+import atomsPlugin from './plugin-deprecate/plugin-deprecate-atoms';
+import propsPlugin from './plugin-deprecate/plugin-deprecate-props';
+import varsPlugin from './plugin-deprecate/plugin-deprecate-vars';
 
 export function babelRecast(code: string, filename: string) {
   const ast = parse(code, {
@@ -29,7 +31,7 @@ export function babelRecast(code: string, filename: string) {
     code: false,
     ast: true,
     filename,
-    plugins: [boxPlugin, varsPlugin],
+    plugins: [propsPlugin, atomsPlugin, varsPlugin],
   };
 
   const { ast: transformedAST } = transformFromAstSync(ast, code, options);
