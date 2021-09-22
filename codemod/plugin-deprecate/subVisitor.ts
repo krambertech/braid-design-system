@@ -1,6 +1,7 @@
 import type { PluginPass, Visitor } from '@babel/core';
 import { types as t } from '@babel/core';
 import type { NodePath } from '@babel/traverse';
+import { deprecationMap } from './deprecationMap';
 import {
   deArray,
   updateStringLiteral,
@@ -30,29 +31,47 @@ export const subVisitor: Visitor<SubVisitorContext> = {
     updateStringLiteral(path, this.componentName, this.propName);
   },
   ObjectProperty(path) {
-    if (
-      !this.propName &&
-      !path.node.computed &&
-      t.isIdentifier(path.node.key)
-    ) {
-      this.propName = path.node.key.name;
-      this.propLocation = path.node.key.loc;
-    } else if (t.isStringLiteral(path.node.key)) {
-      this.propName = path.node.key.value;
-      this.propLocation = path.node.key.loc;
-    } else {
-      // eslint-disable-next-line no-console
-      console.warn(`
-Untraceable computed object property:
-  ${this.filename}
+    const deprecations = deprecationMap[this.componentName];
+    if (deprecations) {
+      if (
+        !path.node.computed &&
+        t.isIdentifier(path.node.key) &&
+        deprecations[path.node.key.name]
+      ) {
+        path.traverse(subVisitor, {
+          ...this,
+          propName: path.node.key.name,
+          propLocation: path.node.loc,
+          recurses: this.recurses + 1,
+        });
+      }
 
-The following object is being spread onto '${
-        this.componentName
-      }' and contains computed properties.
-You should check that there are no usages of deprecated properties in this object.
+      if (path.node.computed) {
+        if (
+          t.isStringLiteral(path.node.key) &&
+          deprecations[path.node.key.value]
+        ) {
+          path.traverse(subVisitor, {
+            ...this,
+            propName: path.node.key.value,
+            propLocation: path.node.loc,
+            recurses: this.recurses + 1,
+          });
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn(`
+  Untraceable computed object property:
+    ${this.filename}
 
-${createHighlightedCodeFrame(this.file.code, path.node.key.loc)}
-        `);
+  The following object is being spread onto '${
+    this.componentName
+  }' and contains computed properties.
+  You should check that there are no usages of deprecated properties in this object.
+
+  ${createHighlightedCodeFrame(this.file.code, path.node.key.loc)}
+          `);
+        }
+      }
     }
   },
   Identifier(path) {

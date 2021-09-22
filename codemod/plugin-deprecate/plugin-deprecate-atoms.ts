@@ -1,7 +1,6 @@
 import type { PluginObj, PluginPass } from '@babel/core';
 import { types as t } from '@babel/core';
 import { deprecationMap } from './deprecationMap';
-import { deArray } from './helpers';
 import { subVisitor } from './subVisitor';
 
 interface Context extends PluginPass {
@@ -53,9 +52,10 @@ export default function (): PluginObj<Context> {
 
         const callee = this.importNames.get(path.node.callee.name);
         if (callee) {
-          path.node.arguments.forEach((arg) => {
-            if (t.isIdentifier(arg)) {
-              const argBinding = path.scope.getBinding(arg.name);
+          const argumentsValue = path.get('arguments');
+          for (const argPath of argumentsValue) {
+            if (t.isIdentifier(argPath.node)) {
+              const argBinding = path.scope.getBinding(argPath.node.name);
               if (!argBinding) {
                 return;
               }
@@ -64,15 +64,14 @@ export default function (): PluginObj<Context> {
                 componentName: callee,
                 recurses: 0,
               });
-            } else if (t.isObjectExpression(arg)) {
-              const argumentsValue = deArray(path.get('arguments'));
-              argumentsValue.traverse(subVisitor, {
+            } else if (t.isObjectExpression(argPath.node)) {
+              argPath.traverse(subVisitor, {
                 ...this,
                 componentName: callee,
                 recurses: 0,
               });
             }
-          });
+          }
         }
       },
     },
