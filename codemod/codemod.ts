@@ -1,13 +1,17 @@
 import { parse, print } from 'recast';
 import { transformFromAstSync, parseSync } from '@babel/core';
-import { Transform } from 'jscodeshift';
+import { Transform, API } from 'jscodeshift';
 import prettier from 'prettier';
 
 import atomsPlugin from './plugin-deprecate/plugin-deprecate-atoms';
 import propsPlugin from './plugin-deprecate/plugin-deprecate-props';
 import varsPlugin from './plugin-deprecate/plugin-deprecate-vars';
 
-export function babelRecast(code: string, filename: string) {
+export function babelRecast(
+  code: string,
+  filename: string,
+  report: API['report'],
+) {
   const ast = parse(code, {
     parser: {
       parse: (source: string) =>
@@ -29,13 +33,23 @@ export function babelRecast(code: string, filename: string) {
 
   const options = {
     cloneInputAst: false,
+    configFile: false,
+    babelrc: false,
     code: false,
     ast: true,
     filename,
     plugins: [propsPlugin, atomsPlugin, varsPlugin],
   };
 
-  const { ast: transformedAST } = transformFromAstSync(ast, code, options);
+  const { ast: transformedAST, ...rest } = transformFromAstSync(
+    ast,
+    code,
+    options,
+  );
+
+  // @ts-expect-error
+  report(rest.metadata.warnings.join('\n'));
+
   const result = print(transformedAST).code;
 
   return filename.endsWith('.less.d.ts') || filename.endsWith('.vocab/index.ts')
@@ -48,6 +62,7 @@ export function babelRecast(code: string, filename: string) {
       });
 }
 
-const jsCodeShift: Transform = (file) => babelRecast(file.source, file.path);
+const jsCodeShift: Transform = (file, api) =>
+  babelRecast(file.source, file.path, api.report);
 
 export default jsCodeShift;

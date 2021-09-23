@@ -13,6 +13,8 @@ export default function (): PluginObj<Context> {
     pre() {
       this.importNames = new Map<string, string>();
       this.namespace = null;
+      // @ts-expect-error
+      this.file.metadata.warnings = [];
     },
     visitor: {
       Program: {

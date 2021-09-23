@@ -1,12 +1,13 @@
 import type { PluginPass, Visitor } from '@babel/core';
 import { types as t } from '@babel/core';
 import type { NodePath } from '@babel/traverse';
-import { deprecationMap } from './deprecationMap';
+
 import {
-  deArray,
-  updateStringLiteral,
-  createHighlightedCodeFrame,
-} from './helpers';
+  renderUntraceableImportWarning,
+  renderUntraceablePropertyWarning,
+} from '../warning-renderer/warning';
+import { deprecationMap } from './deprecationMap';
+import { deArray, updateStringLiteral } from './helpers';
 
 interface Context extends PluginPass {
   importNames: Map<string, string>;
@@ -58,18 +59,14 @@ export const subVisitor: Visitor<SubVisitorContext> = {
             recurses: this.recurses + 1,
           });
         } else {
-          // eslint-disable-next-line no-console
-          console.warn(`
-  Untraceable computed object property:
-    ${this.filename}
+          const warningString = renderUntraceablePropertyWarning({
+            code: this.file.code,
+            componentName: this.componentName,
+            propLocation: path.node.key.loc,
+          });
 
-  The following object is being spread onto '${
-    this.componentName
-  }' and contains computed properties.
-  You should check that there are no usages of deprecated properties in this object.
-
-  ${createHighlightedCodeFrame(this.file.code, path.node.key.loc)}
-          `);
+          // @ts-expect-error
+          this.file.metadata.warnings.push(warningString);
         }
       }
     }
@@ -109,25 +106,22 @@ export const subVisitor: Visitor<SubVisitorContext> = {
     if (t.isImportSpecifier(binding.path.node)) {
       const bindingPath = binding.path as NodePath<t.ImportSpecifier>;
       const variableName = bindingPath.node.local.name;
-      const variableLocation = bindingPath.node.loc;
+      const importLocation = bindingPath.node.loc;
       if (t.isImportDeclaration(bindingPath.parent)) {
         const importSource = bindingPath.parent.source.value;
 
-        // eslint-disable-next-line no-console
-        console.warn(`
-Untraceable import: ${this.filename}
+        const warningString = renderUntraceableImportWarning({
+          code: this.file.code,
+          componentName: this.componentName,
+          propLocation: path.node.loc,
+          propName: this.propName,
+          importLocation,
+          importSource,
+          variableName,
+        });
 
-Variable \`${variableName}\` is assigned to the ${this.propName} prop of ${
-          this.componentName
-        }, but is imported from '${importSource}'.
-You should check that there are no usages of deprecated values in that file.
-
-Imported at
-${createHighlightedCodeFrame(this.file.code, variableLocation)}
-
-Used at
-${createHighlightedCodeFrame(this.file.code, this.propLocation)}
-        `);
+        // @ts-expect-error
+        this.file.metadata.warnings.push(warningString);
       }
     }
   },
