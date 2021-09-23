@@ -1,6 +1,7 @@
 import { parse, print } from 'recast';
 import { transformFromAstSync, parseSync } from '@babel/core';
 import { Transform } from 'jscodeshift';
+import prettier from 'prettier';
 
 import atomsPlugin from './plugin-deprecate/plugin-deprecate-atoms';
 import propsPlugin from './plugin-deprecate/plugin-deprecate-props';
@@ -35,7 +36,12 @@ export function babelRecast(code: string, filename: string) {
   };
 
   const { ast: transformedAST } = transformFromAstSync(ast, code, options);
-  const result = print(transformedAST).code;
+  const result = prettier.format(print(transformedAST).code, {
+    parser: 'babel',
+    singleQuote: true,
+    tabWidth: 2,
+    trailingComma: 'all',
+  });
 
   return result;
 }
