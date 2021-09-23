@@ -36,14 +36,16 @@ export function babelRecast(code: string, filename: string) {
   };
 
   const { ast: transformedAST } = transformFromAstSync(ast, code, options);
-  const result = prettier.format(print(transformedAST).code, {
-    parser: 'babel',
-    singleQuote: true,
-    tabWidth: 2,
-    trailingComma: 'all',
-  });
+  const result = print(transformedAST).code;
 
-  return result;
+  return filename.endsWith('.less.d.ts') || filename.endsWith('.vocab/index.ts')
+    ? result
+    : prettier.format(result, {
+        parser: 'babel-ts',
+        singleQuote: true,
+        tabWidth: 2,
+        trailingComma: 'all',
+      });
 }
 
 const jsCodeShift: Transform = (file) => babelRecast(file.source, file.path);
