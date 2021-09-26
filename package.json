@@ -51,6 +51,9 @@
   },
   "homepage": "https://github.com/seek-oss/braid-design-system#readme",
   "dependencies": {
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@babel/register": "^7.15.3",
     "@capsizecss/core": "^3.0.0",
     "@capsizecss/vanilla-extract": "^1.0.0",
     "@types/autosuggest-highlight": "^3.1.1",
