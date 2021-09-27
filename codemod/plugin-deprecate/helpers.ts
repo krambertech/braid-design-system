@@ -7,9 +7,15 @@ export const updateStringLiteral = (
   path: StringLiteralPath,
   componentName: string,
   propName: string,
+  metadata: { hasChanged: boolean },
 ) => {
   if (isDeprecated(componentName, propName)) {
-    path.node.value = getReplacement(componentName, propName, path.node.value);
+    const oldValue = path.node.value;
+    const newValue = getReplacement(componentName, propName, path.node.value);
+    if (oldValue !== newValue) {
+      path.node.value = newValue;
+      metadata.hasChanged = true;
+    }
   }
 };
 

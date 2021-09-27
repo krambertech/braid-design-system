@@ -80,9 +80,9 @@ export default function (): PluginObj<Context> {
                   attributeValue as Parameters<typeof updateStringLiteral>[0],
                   elementName,
                   attr.node.name.name,
+                  // @ts-expect-error
+                  this.file.metadata,
                 );
-                // @ts-expect-error
-                this.file.metadata.hasChanged = true;
               } else {
                 attributeValue.traverse(subVisitor, {
                   ...this,
