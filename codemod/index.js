@@ -1,10 +1,5 @@
 #!/usr/bin/env node
 
-require('@babel/register')({
-  only: [/braid-design-system\/codemod/],
-  presets: ['@babel/preset-react', '@babel/preset-typescript'],
-});
-
 const path = require('path');
 const glob = require('fast-glob');
 const Runner = require('jscodeshift/src/Runner.js');
@@ -12,7 +7,7 @@ const Runner = require('jscodeshift/src/Runner.js');
 const pathGlob = process.argv[2];
 
 const defaultCodeshiftOptions = {
-  transform: './codemod.ts',
+  transform: './wrapper.js',
   verbose: 0,
   dry: false,
   print: false,
@@ -21,7 +16,7 @@ const defaultCodeshiftOptions = {
   ignorePattern: [],
   ignoreConfig: [],
   runInBand: false,
-  silent: false,
+  silent: true,
   parser: 'babel',
   failOnError: false,
   stdin: false,
@@ -33,4 +28,4 @@ Runner.run(
   path.resolve(__dirname, defaultCodeshiftOptions.transform),
   paths,
   defaultCodeshiftOptions,
-);
+).then((...args) => console.log(...args));

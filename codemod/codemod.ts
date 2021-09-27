@@ -48,7 +48,10 @@ export function babelRecast(
   );
 
   // @ts-expect-error
-  report(rest.metadata.warnings.join('\n'));
+  const warnings = rest.metadata.warnings;
+  if (warnings.length > 0) {
+    report(warnings.join('\n'));
+  }
 
   const result = print(transformedAST).code;
 
