@@ -69,6 +69,9 @@ export const subVisitor: Visitor<SubVisitorContext> = {
   CallExpression(path) {
     path.skip();
   },
+  LogicalExpression(path) {
+    path.skip();
+  },
   Identifier(path) {
     if (this.recurses > 9) {
       // @ts-expect-error
