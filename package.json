@@ -70,6 +70,7 @@
     "autosuggest-highlight": "^3.1.1",
     "chalk": "^4.1.2",
     "cli-highlight": "^2.1.11",
+    "cli-progress": "^3.9.1",
     "clsx": "^1.1.1",
     "csstype": "^3.0.6",
     "dedent": "0.7.0",
