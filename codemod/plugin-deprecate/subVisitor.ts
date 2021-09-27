@@ -3,6 +3,7 @@ import { types as t } from '@babel/core';
 import type { NodePath } from '@babel/traverse';
 
 import {
+  renderRecursiveDepthWarning,
   renderUntraceableImportWarning,
   renderUntraceablePropertyWarning,
 } from '../warning-renderer/warning';
@@ -23,12 +24,6 @@ interface SubVisitorContext extends Context {
 
 export const subVisitor: Visitor<SubVisitorContext> = {
   StringLiteral(path) {
-    if (this.recurses > 9) {
-      // eslint-disable-next-line no-console
-      console.error('Too many recurses');
-      return;
-    }
-
     updateStringLiteral(path, this.componentName, this.propName);
   },
   ObjectProperty(path) {
@@ -71,10 +66,17 @@ export const subVisitor: Visitor<SubVisitorContext> = {
       }
     }
   },
+  CallExpression(path) {
+    path.skip();
+  },
   Identifier(path) {
     if (this.recurses > 9) {
-      // eslint-disable-next-line no-console
-      console.error('Too many recurses');
+      // @ts-expect-error
+      this.file.metadata.warnings.push(
+        renderRecursiveDepthWarning({
+          filePath: this.filename,
+        }),
+      );
       return;
     }
 

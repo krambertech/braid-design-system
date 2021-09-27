@@ -97,3 +97,21 @@ export const UntraceablePropertyWarning = ({
 export const renderUntraceablePropertyWarning = (
   props: UntraceablePropertyWarningProps,
 ) => `\n${renderToString(<UntraceablePropertyWarning {...props} />)}\n\n`;
+
+interface RecursiveDepthProps {
+  filePath: string;
+}
+
+export const RecursiveDepthWarning = ({ filePath }: RecursiveDepthProps) => (
+  <Stack>
+    <Text>File parsing depth limit met.</Text>
+
+    <Fragment>
+      <Text>You may want to manually check the following file:</Text>
+      <Text>{filePath}</Text>
+    </Fragment>
+  </Stack>
+);
+
+export const renderRecursiveDepthWarning = (props: RecursiveDepthProps) =>
+  `\n${renderToString(<RecursiveDepthWarning {...props} />)}\n\n`;
