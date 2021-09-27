@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const glob = require('fast-glob');
 const workerpool = require('workerpool');
 
