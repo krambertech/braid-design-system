@@ -42,7 +42,7 @@
     "url": "https://github.com/seek-oss/braid-design-system.git"
   },
   "bin": {
-    "braid-codemod": "./codemod/index.js"
+    "braid-codemod": "./codemod/custom-runner.js"
   },
   "author": "SEEK",
   "license": "MIT",
