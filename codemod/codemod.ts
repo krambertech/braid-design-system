@@ -46,32 +46,40 @@ export function babelRecast(code: string, filename: string) {
   const result = print(transformedAST).code;
 
   return {
+    // @ts-expect-error
     warnings: metadata.warnings,
-    source:
-      filename.endsWith('.less.d.ts') || filename.endsWith('.vocab/index.ts')
-        ? result
-        : prettier.format(result, {
-            parser: 'babel-ts',
-            singleQuote: true,
-            tabWidth: 2,
-            trailingComma: 'all',
-          }),
+    // @ts-expect-error
+    hasChanged: metadata.hasChanged,
+    source: result,
   };
 }
 
 const runCodemod = async (filepath: string) => {
   const source = await fs.promises.readFile(filepath, { encoding: 'utf-8' });
 
-  const { source: newSource, warnings } = babelRecast(source, filepath);
+  const {
+    source: newSource,
+    warnings,
+    hasChanged,
+  } = babelRecast(source, filepath);
 
   const result = {
     filepath,
-    updated: source !== newSource,
+    updated: hasChanged,
     warnings,
   };
 
-  if (result.updated) {
-    await fs.promises.writeFile(filepath, newSource, { encoding: 'utf-8' });
+  if (hasChanged) {
+    await fs.promises.writeFile(
+      filepath,
+      prettier.format(newSource, {
+        parser: 'babel-ts',
+        singleQuote: true,
+        tabWidth: 2,
+        trailingComma: 'all',
+      }),
+      { encoding: 'utf-8' },
+    );
   }
 
   return result;

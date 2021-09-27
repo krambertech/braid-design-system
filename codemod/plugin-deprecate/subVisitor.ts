@@ -25,6 +25,8 @@ interface SubVisitorContext extends Context {
 export const subVisitor: Visitor<SubVisitorContext> = {
   StringLiteral(path) {
     updateStringLiteral(path, this.componentName, this.propName);
+    // @ts-expect-error
+    this.file.metadata.hasChanged = true;
   },
   ObjectProperty(path) {
     const deprecations = deprecationMap[this.componentName];
@@ -105,6 +107,8 @@ export const subVisitor: Visitor<SubVisitorContext> = {
           this.componentName,
           this.propName,
         );
+        // @ts-expect-error
+        this.file.metadata.hasChanged = true;
       } else {
         initPath.traverse(subVisitor, {
           ...this,

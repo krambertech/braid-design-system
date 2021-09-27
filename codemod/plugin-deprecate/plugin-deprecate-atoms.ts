@@ -14,7 +14,9 @@ export default function (): PluginObj<Context> {
       this.importNames = new Map<string, string>();
       this.namespace = null;
       // @ts-expect-error
-      this.file.metadata.warnings = [];
+      this.file.metadata.warnings = this.file.metadata.warnings ?? [];
+      // @ts-expect-error
+      this.file.metadata.hasChanged = this.file.metadata.hasChanged ?? false;
     },
     visitor: {
       Program: {

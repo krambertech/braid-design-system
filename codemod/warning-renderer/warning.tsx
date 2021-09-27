@@ -57,7 +57,7 @@ export const renderUntraceableImportWarning = (
 interface UntraceablePropertyWarningProps {
   code: string;
   propLocation: t.SourceLocation;
-  componentName: string;
+  componentName?: string;
 }
 
 const Stack = ({ children }: { children: React.ReactNode }) => (
@@ -80,10 +80,12 @@ export const UntraceablePropertyWarning = ({
     <Text>Untraceable computed object property.</Text>
 
     <Fragment>
-      <Text>
-        The following object is being spread onto {componentName} and contains
-        computed properties.
-      </Text>
+      {componentName ? (
+        <Text>
+          The following object is being spread onto {componentName} and contains
+          computed properties.
+        </Text>
+      ) : null}
       <Text>
         You should check that there are no usages of deprecated properties in
         this object.

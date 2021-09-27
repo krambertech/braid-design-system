@@ -1,29 +1,38 @@
 import type { PluginObj, PluginPass } from '@babel/core';
 import { types as t } from '@babel/core';
 import type { NodePath } from '@babel/traverse';
+import { renderUntraceablePropertyWarning } from '../warning-renderer/warning';
 import { deprecationMap } from './deprecationMap';
-import { createHighlightedCodeFrame } from './helpers';
 
 const walk = ({
   path,
   deprecations,
   code,
   filename,
+  metadata,
 }: {
   path: NodePath<t.Node>;
   deprecations: Record<string, string | Record<string, string>>;
   code: string;
   filename: string;
+  metadata: { hasChanged: boolean };
 }) => {
   if (t.isMemberExpression(path.parent)) {
     if (t.isIdentifier(path.parent.property)) {
       const prop = deprecations[path.parent.property.name];
       if (typeof prop === 'object') {
-        walk({ path: path.parentPath, deprecations: prop, code, filename });
+        walk({
+          path: path.parentPath,
+          deprecations: prop,
+          code,
+          filename,
+          metadata,
+        });
       }
 
       if (typeof prop === 'string') {
         path.parent.property.name = prop;
+        metadata.hasChanged = true;
       }
     }
 
@@ -31,22 +40,24 @@ const walk = ({
       if (t.isStringLiteral(path.parent.property)) {
         const prop = deprecations[path.parent.property.value];
         if (typeof prop === 'object') {
-          walk({ path: path.parentPath, deprecations: prop, code, filename });
+          walk({
+            path: path.parentPath,
+            deprecations: prop,
+            code,
+            filename,
+            metadata,
+          });
         }
 
         if (typeof prop === 'string') {
           path.parent.property.value = prop;
+          metadata.hasChanged = true;
         }
       } else {
-        // eslint-disable-next-line no-console
-        console.warn(`
-Untraceable computed object property:
-  ${filename}
-
-You should check that there are no usages of deprecated properties in this object.
-
-${createHighlightedCodeFrame(code, path.parent.property.loc)}
-`);
+        renderUntraceablePropertyWarning({
+          code,
+          propLocation: path.parent.property.loc,
+        });
       }
     }
   }
@@ -55,7 +66,7 @@ ${createHighlightedCodeFrame(code, path.parent.property.loc)}
       const binding = path.scope.getBinding(path.parent.id.name);
       if (binding) {
         for (const refPath of binding.referencePaths) {
-          walk({ path: refPath, deprecations, code, filename });
+          walk({ path: refPath, deprecations, code, filename, metadata });
         }
       }
     }
@@ -66,14 +77,11 @@ ${createHighlightedCodeFrame(code, path.parent.property.loc)}
             const binding = path.scope.getBinding(property.value.name);
             const deprecationValue = deprecations[property.key.name];
             if (typeof deprecationValue === 'string') {
-              throw new Error(`
-Untraceable object key:
-  ${filename}
-
-You should check that there are no usages of deprecated properties in this object.
-
-${createHighlightedCodeFrame(code, property.key.loc)}
-`);
+              renderUntraceablePropertyWarning({
+                code,
+                propLocation: property.key.loc,
+              });
+              throw new Error();
             }
 
             if (binding && deprecationValue) {
@@ -83,6 +91,7 @@ ${createHighlightedCodeFrame(code, property.key.loc)}
                   deprecations: deprecationValue,
                   code,
                   filename,
+                  metadata,
                 });
               }
             }
@@ -93,7 +102,7 @@ ${createHighlightedCodeFrame(code, property.key.loc)}
             const binding = path.scope.getBinding(property.argument.name);
             if (binding) {
               for (const refPath of binding.referencePaths) {
-                walk({ path: refPath, deprecations, code, filename });
+                walk({ path: refPath, deprecations, code, filename, metadata });
               }
             }
           }
@@ -105,6 +114,10 @@ ${createHighlightedCodeFrame(code, property.key.loc)}
 
 export default function (): PluginObj<PluginPass> {
   return {
+    pre() {
+      // @ts-expect-error
+      this.file.metadata.hasChanged = this.file.metadata.hasChanged ?? false;
+    },
     visitor: {
       Program: {
         enter(path) {
@@ -132,6 +145,8 @@ export default function (): PluginObj<PluginPass> {
                       deprecations: deprecationMap.vars,
                       code: this.file.code,
                       filename: this.filename,
+                      // @ts-expect-error
+                      metadata: this.file.metadata,
                     });
                   }
                 }
