@@ -4,6 +4,7 @@
 const glob = require('fast-glob');
 const workerpool = require('workerpool');
 const cliProgress = require('cli-progress');
+const chalk = require('chalk');
 
 const pathGlob = process.argv[2];
 
@@ -11,8 +12,10 @@ const paths = glob.sync(pathGlob, { ignore: ['**/node_modules/**', '*.d.ts'] });
 
 const progress = new cliProgress.SingleBar(
   {
-    format: 'Analyzing code',
+    format: 'Analyzing code [{bar}] {value}/{total}',
     hideCursor: true,
+    barCompleteChar: '=',
+    barIncompleteChar: '-',
   },
   cliProgress.Presets.shades_classic,
 ).on('SIGINT', () => {
@@ -52,21 +55,28 @@ Promise.all(jobs)
     }
 
     const updateCount = results.filter(({ updated }) => updated).length;
+    const warningCount = results.filter(
+      ({ warnings }) => warnings.length > 0,
+    ).length;
 
-    if (warnings.length > 0) {
+    if (warningCount > 0) {
       console.warn(
-        `Completed with ${warnings.length} warning${
-          warnings.length !== 1 ? 's' : ''
-        } (see above).`,
+        chalk.yellow(
+          `Completed with ${warningCount} file${
+            warningCount !== 1 ? 's' : ''
+          } containing warnings (see above).`,
+        ),
       );
     } else if (updateCount > 0) {
       console.log(
-        `Successfully updated ${updatedCount} file${
-          updateCount !== 1 ? 's' : ''
-        }.`,
+        chalk.green(
+          `Successfully updated ${updatedCount} file${
+            updateCount !== 1 ? 's' : ''
+          }.`,
+        ),
       );
     } else {
-      console.log(`You're up to date!`);
+      console.log(chalk.green("You're up to date!"));
     }
   })
   .finally(() => {
