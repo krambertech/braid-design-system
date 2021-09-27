@@ -60,8 +60,8 @@
     "@types/autosuggest-highlight": "^3.1.1",
     "@types/classnames": "^2.2.11",
     "@types/dedent": "^0.7.0",
-    "@types/lodash": "^4.14.168",
     "@types/jscodeshift": "^0.11.2",
+    "@types/lodash": "^4.14.168",
     "@types/react": "^16.8.8",
     "@types/uuid": "^8.3.0",
     "@vanilla-extract/css": "^1.0.0",
@@ -88,7 +88,8 @@
     "react-popper-tooltip": "^4.0.1",
     "react-remove-scroll": "^2.4.1",
     "utility-types": "^3.10.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "workerpool": "^6.1.5"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17",

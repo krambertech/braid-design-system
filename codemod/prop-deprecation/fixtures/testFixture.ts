@@ -7,6 +7,6 @@ const atomProps = {
 
 const className = atoms({
   top: 0,
-  boxShadow: myShadow,
+  boxShadow: 'borderNeutralLight',
   ...atomProps,
 });

@@ -9,4 +9,8 @@ require('@babel/register')({
   extensions: ['.ts', '.tsx'],
 });
 
-module.exports = require('./codemod.ts');
+const workerpool = require('workerpool');
+
+workerpool.worker({
+  codemod: require('./codemod.ts').default,
+});

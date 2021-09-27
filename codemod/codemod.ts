@@ -1,17 +1,13 @@
+import fs from 'fs';
 import { parse, print } from 'recast';
 import { transformFromAstSync, parseSync } from '@babel/core';
-import { Transform, API } from 'jscodeshift';
 import prettier from 'prettier';
 
 import atomsPlugin from './plugin-deprecate/plugin-deprecate-atoms';
 import propsPlugin from './plugin-deprecate/plugin-deprecate-props';
 import varsPlugin from './plugin-deprecate/plugin-deprecate-vars';
 
-export function babelRecast(
-  code: string,
-  filename: string,
-  report: API['report'],
-) {
+export function babelRecast(code: string, filename: string) {
   const ast = parse(code, {
     parser: {
       parse: (source: string) =>
@@ -41,31 +37,44 @@ export function babelRecast(
     plugins: [propsPlugin, atomsPlugin, varsPlugin],
   };
 
-  const { ast: transformedAST, ...rest } = transformFromAstSync(
+  const { ast: transformedAST, metadata } = transformFromAstSync(
     ast,
     code,
     options,
   );
 
-  // @ts-expect-error
-  const warnings = rest.metadata.warnings;
-  if (warnings.length > 0) {
-    report(warnings.join('\n'));
-  }
-
   const result = print(transformedAST).code;
 
-  return filename.endsWith('.less.d.ts') || filename.endsWith('.vocab/index.ts')
-    ? result
-    : prettier.format(result, {
-        parser: 'babel-ts',
-        singleQuote: true,
-        tabWidth: 2,
-        trailingComma: 'all',
-      });
+  return {
+    warnings: metadata.warnings,
+    source:
+      filename.endsWith('.less.d.ts') || filename.endsWith('.vocab/index.ts')
+        ? result
+        : prettier.format(result, {
+            parser: 'babel-ts',
+            singleQuote: true,
+            tabWidth: 2,
+            trailingComma: 'all',
+          }),
+  };
 }
 
-const jsCodeShift: Transform = (file, api) =>
-  babelRecast(file.source, file.path, api.report);
+const runCodemod = async (filepath: string) => {
+  const source = await fs.promises.readFile(filepath, { encoding: 'utf-8' });
 
-export default jsCodeShift;
+  const { source: newSource, warnings } = babelRecast(source, filepath);
+
+  const result = {
+    filepath,
+    updated: source !== newSource,
+    warnings,
+  };
+
+  if (result.updated) {
+    await fs.promises.writeFile(filepath, newSource, { encoding: 'utf-8' });
+  }
+
+  return result;
+};
+
+export default runCodemod;
