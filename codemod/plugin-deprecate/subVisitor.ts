@@ -77,6 +77,11 @@ export const subVisitor: Visitor<SubVisitorContext> = {
       console.error('Too many recurses');
       return;
     }
+
+    if (t.isConditionalExpression(path.parent, { test: path.node })) {
+      return;
+    }
+
     const identifierName = path.node.name;
     const binding = path.scope.getBinding(identifierName);
 
